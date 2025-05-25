@@ -2,16 +2,27 @@
   "name": "ggoomdole-service",
   "private": true,
   "scripts": {
-    "build": "turbo run build",
-    "dev": "turbo run dev",
-    "lint": "turbo run lint",
-    "format": "prettier --write \"**/*.{ts,tsx,md}\"",
-    "check-types": "turbo run check-types"
+    "build": "turbo build",
+    "build:web": "turbo run build --filter=ggoomdole-fe --filter=@repo/types",
+    "build:api": "turbo run build --filter=ggoomdole-be --filter=@repo/types",
+    "dev": "turbo dev",
+    "dev:web": "turbo dev --filter=ggoomdole-fe --filter=@repo/types",
+    "dev:api": "turbo dev --filter=ggoomdole-be --filter=@repo/types",
+    "lint": "turbo lint -- --fix",
+    "format": "turbo format",
+    "prepare": "husky"
   },
   "devDependencies": {
-    "prettier": "^3.5.3",
+    "@eslint/eslintrc": "^3",
+    "@types/node": "^20",
+    "eslint": "^9.27.0",
+    "eslint-config-next": "15.2.0",
+    "eslint-plugin-simple-import-sort": "^12.1.1",
+    "husky": "^9.1.7",
+    "prettier": "^3.5.2",
+    "prettier-plugin-tailwindcss": "^0.6.11",
     "turbo": "^2.5.3",
-    "typescript": "5.8.2"
+    "typescript": "^5.8.2"
   },
   "packageManager": "pnpm@9.0.0",
   "engines": {
