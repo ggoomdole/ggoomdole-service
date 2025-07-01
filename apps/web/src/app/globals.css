@@ -61,5 +61,5 @@
 }
 
 body {
-  @apply min-h-body max-w-mobile mx-auto;
+  @apply min-h-body max-w-mobile mx-auto text-gray-900;
 }
