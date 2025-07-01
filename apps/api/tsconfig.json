@@ -7,7 +7,8 @@
     "baseUrl": ".",
     "paths": {
       "@/*": ["src/*"]
-    }
+    },
+    "types": ["@repo/types"]
   },
   "exclude": ["node_modules"],
   "include": ["src"]
