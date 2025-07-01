@@ -1,5 +1,13 @@
 import OnboardingPage from "@/page/onboarding";
 
-export default function Onboarding() {
-  return <OnboardingPage />;
+interface OnboardingPageProps {
+  searchParams: Promise<{
+    step: string;
+  }>;
+}
+
+export default async function Onboarding({ searchParams }: OnboardingPageProps) {
+  const { step } = await searchParams;
+
+  return <OnboardingPage step={step ?? "1"} />;
 }
