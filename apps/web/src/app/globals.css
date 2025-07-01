@@ -36,7 +36,21 @@
   --color-main-300: #fff2cd;
   --color-main-100: #fffaee;
 
-  --shadow-bottom-nav: 0 0 4px rgba(0, 0, 0, 0.25);
+  --shadow-layout: 0 0 4px rgba(0, 0, 0, 0.25);
+}
+
+@layer base {
+  body {
+    @apply max-w-mobile mx-auto text-gray-900;
+  }
+
+  button {
+    cursor: pointer;
+
+    &:disabled {
+      cursor: not-allowed;
+    }
+  }
 }
 
 @layer utilities {
@@ -64,8 +78,4 @@
     font-size: 0.5rem;
     font-weight: 400;
   }
-}
-
-body {
-  @apply max-w-mobile mx-auto text-gray-900;
 }
