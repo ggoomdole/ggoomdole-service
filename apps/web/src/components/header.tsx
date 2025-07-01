@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 
 import ArrowLeft from "@/assets/arrow-left.svg";
@@ -11,15 +12,15 @@ interface HeaderProps {
   logoHeader?: boolean;
   rightElement?: React.ReactNode;
   children?: React.ReactNode;
-  onClickLeft?: () => void;
+  onClickBack?: () => void;
 }
 
-export default function Header({ logoHeader, rightElement, children, onClickLeft }: HeaderProps) {
+export default function Header({ logoHeader, rightElement, children, onClickBack }: HeaderProps) {
   const router = useRouter();
 
-  const onClickLeftButton = () => {
-    if (onClickLeft) {
-      return onClickLeft();
+  const onClickBackButton = () => {
+    if (onClickBack) {
+      return onClickBack();
     }
     router.back();
   };
@@ -27,9 +28,11 @@ export default function Header({ logoHeader, rightElement, children, onClickLeft
   return (
     <header className="h-header shadow-layout z-50 flex items-center justify-between gap-2.5 bg-white px-5">
       {logoHeader ? (
-        <Image src={logo} alt="순례해유 로고" width={100} height={24} />
+        <Link href="/home">
+          <Image src={logo} alt="순례해유 로고" width={100} height={24} />
+        </Link>
       ) : (
-        <button onClick={onClickLeftButton}>
+        <button onClick={onClickBackButton}>
           <ArrowLeft />
         </button>
       )}
