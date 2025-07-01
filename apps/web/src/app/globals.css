@@ -1,2 +1,38 @@
 @import "tailwindcss";
 @plugin "tailwindcss-animate";
+
+@theme {
+  /* Header (72px, 4.5rem), BottomNav (60px, 3.75rem) 총 132px (8.25rem) */
+  --spacing-body: calc(100dvh - 8.25rem);
+  /* 최대 모바일 화면 (600px, 37.5rem) */
+  --spacing-mobile: 37.5rem;
+
+  --color-gold-500: #f2dc1d;
+  --color-silver-500: #cccccc;
+  --color-bronze-500: #935600;
+  --color-blue-900: #005cb2;
+  --color-blue-500: #7187de;
+  --color-blue-100: #add7ff;
+  --color-green-900: #21c904;
+  --color-green-500: #73d482;
+  --color-green-100: #d6ffd0;
+  --color-red-900: #d20101;
+  --color-red-700: #ff4545;
+  --color-red-500: #ff8080;
+  --color-red-300: #ffbaba;
+  --color-red-100: #ffdbdb;
+  --color-gray-900: #222222;
+  --color-gray-700: #353535;
+  --color-gray-500: #808080;
+  --color-gray-300: #a8a8a8;
+  --color-gray-100: #e9e9e9;
+  --color-main-900: #f3bf30;
+  --color-main-700: #ffdb79;
+  --color-main-500: #ffe9aa;
+  --color-main-300: #fff2cd;
+  --color-main-100: #fffaee;
+}
+
+body {
+  @apply min-h-body max-w-mobile mx-auto;
+}
