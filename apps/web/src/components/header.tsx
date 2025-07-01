@@ -36,7 +36,7 @@ export default function Header({ logoHeader, rightElement, children, onClickBack
           <ArrowLeft />
         </button>
       )}
-      {!logoHeader && <div className="text-semibold flex-1 text-center">{children}</div>}
+      {!logoHeader && <div className="typo-semibold flex-1 text-center">{children}</div>}
       <div className="flex min-w-6 items-center">{rightElement}</div>
     </header>
   );

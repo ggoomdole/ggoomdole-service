@@ -2,12 +2,10 @@
 @plugin "tailwindcss-animate";
 
 @theme {
-  /* Header (72px, 4.5rem), BottomNav (60px, 3.75rem) 총 132px (8.25rem) */
   --spacing-header: 4.5rem;
-  --spacing-bottom-nav: 3.75rem;
-  --spacing-with-layout: calc(100dvh - var(--spacing-header) - var(--spacing-bottom-nav));
-  --spacing-without-layout: 100dvh;
-  --spacing-without-navigation: calc(100dvh - var(--spacing-header));
+  --spacing-navigation: 3.75rem;
+  --spacing-with-navigation: calc(100dvh - var(--spacing-navigation));
+  --spacing-without-navigation: 100dvh;
   /* 최대 모바일 화면 (600px, 37.5rem) */
   --spacing-mobile: 37.5rem;
 
@@ -47,6 +45,8 @@
 
   main {
     flex: 1;
+    display: flex;
+    flex-direction: column;
   }
 
   button {
@@ -59,27 +59,27 @@
 }
 
 @layer utilities {
-  .text-bold {
+  .typo-bold {
     font-size: 2rem;
     font-weight: 700;
   }
-  .text-semibold {
+  .typo-semibold {
     font-size: 1.25rem;
     font-weight: 600;
   }
-  .text-medium {
+  .typo-medium {
     font-size: 1rem;
     font-weight: 500;
   }
-  .text-regular {
+  .typo-regular {
     font-size: 0.75rem;
     font-weight: 400;
   }
-  .text-label {
+  .typo-label {
     font-size: 0.5rem;
     font-weight: 500;
   }
-  .text-light {
+  .typo-light {
     font-size: 0.5rem;
     font-weight: 400;
   }

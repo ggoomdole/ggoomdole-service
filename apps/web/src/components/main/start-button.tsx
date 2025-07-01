@@ -17,10 +17,10 @@ export default function StartButton() {
 
   return (
     <section className="mb-24 flex flex-col items-center">
-      <button className="text-regular mb-4 text-gray-700 underline" onClick={onRouteOnboarding}>
+      <button className="typo-regular mb-4 text-gray-700 underline" onClick={onRouteOnboarding}>
         시작하기에 앞서
       </button>
-      <div className="text-medium space-y-2">
+      <div className="typo-medium space-y-2">
         <button className="bg-kakao flex w-[90vw] items-center justify-center gap-2 rounded-xl py-2">
           <KakaoIcon className="size-4" />
           <p>카카오 로그인</p>

@@ -7,7 +7,7 @@ const logo = "/static/logo.png";
 
 export default function MainPage() {
   return (
-    <main className="flex flex-col">
+    <main>
       <section className="flex flex-1 flex-col items-center justify-center">
         <Image
           src={miniGgoomdole}
@@ -17,7 +17,7 @@ export default function MainPage() {
           className="translate-y-5"
         />
         <Image src={logo} alt="순례해유 로고" width={248} height={60} className="z-10" />
-        <p className="text-regular mt-2.5">나만의 순례길을 만들어봐요!!</p>
+        <p className="typo-regular mt-2.5">나만의 순례길을 만들어봐요!!</p>
       </section>
       <StartButton />
     </main>

@@ -36,7 +36,7 @@ function QueryTabNavWithoutSuspense({ navKey, navs }: QueryTabNavProps) {
 
   return (
     <nav className="relative">
-      <ul className="text-regular flex">
+      <ul className="typo-regular flex">
         {navs.map((nav) => (
           <li
             key={nav.name}
