@@ -3,7 +3,11 @@
 
 @theme {
   /* Header (72px, 4.5rem), BottomNav (60px, 3.75rem) 총 132px (8.25rem) */
-  --spacing-body: calc(100dvh - 8.25rem);
+  --spacing-header: 4.5rem;
+  --spacing-bottom-nav: 3.75rem;
+  --spacing-with-layout: calc(100dvh - var(--spacing-header) - var(--spacing-bottom-nav));
+  --spacing-without-layout: 100dvh;
+  --spacing-without-navigation: calc(100dvh - var(--spacing-header));
   /* 최대 모바일 화면 (600px, 37.5rem) */
   --spacing-mobile: 37.5rem;
 
@@ -31,6 +35,8 @@
   --color-main-500: #ffe9aa;
   --color-main-300: #fff2cd;
   --color-main-100: #fffaee;
+
+  --shadow-bottom-nav: 0 0 4px rgba(0, 0, 0, 0.25);
 }
 
 @layer utilities {
@@ -61,5 +67,5 @@
 }
 
 body {
-  @apply min-h-body max-w-mobile mx-auto text-gray-900;
+  @apply max-w-mobile mx-auto text-gray-900;
 }
