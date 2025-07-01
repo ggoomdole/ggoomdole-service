@@ -33,6 +33,33 @@
   --color-main-100: #fffaee;
 }
 
+@layer utilities {
+  .text-bold {
+    font-size: 2rem;
+    font-weight: 700;
+  }
+  .text-semibold {
+    font-size: 1.25rem;
+    font-weight: 600;
+  }
+  .text-medium {
+    font-size: 1rem;
+    font-weight: 500;
+  }
+  .text-regular {
+    font-size: 0.75rem;
+    font-weight: 400;
+  }
+  .text-label {
+    font-size: 0.5rem;
+    font-weight: 500;
+  }
+  .text-light {
+    font-size: 0.5rem;
+    font-weight: 400;
+  }
+}
+
 body {
   @apply min-h-body max-w-mobile mx-auto;
 }
