@@ -3,7 +3,9 @@
 
 @theme {
   /* Header (72px, 4.5rem), BottomNav (60px, 3.75rem) 총 132px (8.25rem) */
-  --spacing-body: calc(100dvh - 8.25rem);
+  --spacing-with-layout: calc(100dvh - 8.25rem);
+  --spacing-without-layout: 100dvh;
+  --spacing-without-navigation: calc(100dvh - 4.5rem);
   /* 최대 모바일 화면 (600px, 37.5rem) */
   --spacing-mobile: 37.5rem;
 
@@ -61,5 +63,5 @@
 }
 
 body {
-  @apply min-h-body max-w-mobile mx-auto text-gray-900;
+  @apply max-w-mobile mx-auto text-gray-900;
 }
