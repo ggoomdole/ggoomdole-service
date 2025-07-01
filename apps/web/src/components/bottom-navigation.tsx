@@ -32,7 +32,7 @@ export default function BottomNavigation() {
   const pathname = usePathname();
 
   return (
-    <nav className="max-w-mobile h-bottom-nav shadow-layout fixed bottom-0 z-50 flex w-full">
+    <nav className="max-w-mobile h-navigation shadow-layout fixed bottom-0 z-50 flex w-full">
       {BOTTOM_NAVS.map((nav) => (
         <div
           key={nav.href}
