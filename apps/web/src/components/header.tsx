@@ -7,19 +7,14 @@ import ArrowLeft from "@/assets/arrow-left.svg";
 
 const logo = "/static/logo.png";
 
-interface CommonHeaderProps {
+interface HeaderProps {
   logoHeader?: boolean;
   rightElement?: React.ReactNode;
   children: React.ReactNode;
   onClickLeft?: () => void;
 }
 
-export default function CommonHeader({
-  logoHeader,
-  rightElement,
-  children,
-  onClickLeft,
-}: CommonHeaderProps) {
+export default function Header({ logoHeader, rightElement, children, onClickLeft }: HeaderProps) {
   const router = useRouter();
 
   const onClickLeftButton = () => {
