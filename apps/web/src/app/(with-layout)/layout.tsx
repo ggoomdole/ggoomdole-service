@@ -2,7 +2,7 @@ import BottomNavigation from "@/components/bottom-navigation";
 
 export default function WithLayoutLayout({ children }: { children: React.ReactNode }) {
   return (
-    <div className="min-h-with-layout">
+    <div className="min-h-with-layout flex flex-col">
       {children}
       <BottomNavigation />
     </div>
