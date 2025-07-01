@@ -10,7 +10,7 @@ const logo = "/static/logo.png";
 interface HeaderProps {
   logoHeader?: boolean;
   rightElement?: React.ReactNode;
-  children: React.ReactNode;
+  children?: React.ReactNode;
   onClickLeft?: () => void;
 }
 
