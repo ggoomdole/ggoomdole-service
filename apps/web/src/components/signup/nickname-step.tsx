@@ -42,6 +42,7 @@ export default function NicknameStep({ form, onNext }: NameStepProps) {
             onChange={onNicknameChange}
             placeholder="입력해주세요"
             className="w-full"
+            maxLength={10}
           />
         </div>
       </main>
