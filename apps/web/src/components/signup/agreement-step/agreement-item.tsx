@@ -4,7 +4,7 @@ import { useRef, useState } from "react";
 
 import ArrowRight from "@/assets/arrow-right.svg";
 import Checkbox from "@/components/checkbox";
-import { cn } from "@/utils/cn";
+import { cn } from "@/lib/utils";
 
 interface AgreementItemProps {
   checked: boolean;

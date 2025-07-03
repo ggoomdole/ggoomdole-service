@@ -7,7 +7,7 @@ import Home from "@/assets/home.svg";
 import Inbox from "@/assets/inbox.svg";
 import List from "@/assets/list.svg";
 import User from "@/assets/user.svg";
-import { cn } from "@/utils/cn";
+import { cn } from "@/lib/utils";
 
 const BOTTOM_NAVS = [
   {
