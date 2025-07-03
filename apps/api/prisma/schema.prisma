@@ -1,0 +1,125 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model SearchKeyword {
+  id        Int      @id @default(autoincrement())
+  userId    Int
+  word      String? 
+  createAt  Int?
+  updateAt  Int?
+
+  user      User     @relation(fields: [userId], references: [id])
+}
+
+model Place {
+  id        Int     @id @default(autoincrement())
+  name      String?
+  phone     String?
+  address   String?
+  latitude  Float?
+  longitude Float?
+  hours     String?
+  avgRate   Int?
+
+  reviews   Review[]
+  pilgrimageSpots PilgrimageSpot[]
+}
+
+model Review {
+  id        Int     @id @default(autoincrement())
+  userId    Int
+  placeId   Int
+  text      String?
+  rate      Int?
+  createAt  DateTime?
+
+  user      User     @relation(fields: [userId], references: [id])
+  place     Place    @relation(fields: [placeId], references: [id])
+}
+
+model PilgrimageSpot {
+  pilgrimageId Int
+  spotId       Int
+  number       Int?
+  introSpot    String?
+  request      Boolean?
+  createAT     DateTime?
+  updateAt     DateTime?
+
+  pilgrimage   Pilgrimage @relation(fields: [pilgrimageId], references: [id])
+  place        Place      @relation(fields: [spotId], references: [id])
+
+  @@id([pilgrimageId, spotId])
+}
+
+model PilgrimageCategory {
+  pilgrimageId Int
+  categoryId   Int
+  createAt     DateTime?
+
+  pilgrimage   Pilgrimage @relation(fields: [pilgrimageId], references: [id])
+  category     Category   @relation(fields: [categoryId], references: [id])
+
+  @@id([pilgrimageId, categoryId])
+}
+
+model PilgrimageParticipant {
+  userId       Int
+  pilgrimageId Int
+  type         Boolean?
+  createAt     DateTime?
+  updateAt     DateTime?
+
+  user         User        @relation(fields: [userId], references: [id])
+  pilgrimage   Pilgrimage  @relation(fields: [pilgrimageId], references: [id])
+
+  @@id([userId, pilgrimageId])
+}
+
+model Pilgrimage {
+  id         Int     @id @default(autoincrement())
+  title      String?
+  imageUrl   String?
+  intro      String?
+  search     Int?
+  public     Boolean?
+  createAt   DateTime?
+  updateAt   DateTime?
+
+  spots      PilgrimageSpot[]
+  categories PilgrimageCategory[]
+  participants PilgrimageParticipant[]
+}
+
+model User {
+  id           Int            @id @default(autoincrement())
+  nickName     String?
+  profileImage String?
+  native       Native?
+  createAt     DateTime?
+  updateAt     DateTime?
+
+  searchKeywords SearchKeyword[]
+  reviews        Review[]
+  pilgrimages    PilgrimageParticipant[]
+}
+
+model Category {
+  id         Int     @id @default(autoincrement())
+  name       String?
+
+  pilgrimages PilgrimageCategory[]
+}
+
+enum Native {
+  SHORT_TERM
+  MID_TERM
+  LONG_TERM
+  RESIDENT
+}
