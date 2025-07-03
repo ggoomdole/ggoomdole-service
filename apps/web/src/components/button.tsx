@@ -8,7 +8,7 @@ export default function Button(props: React.ButtonHTMLAttributes<HTMLButtonEleme
   return (
     <button
       className={cn(
-        "from-main-700 to-main-900 typo-semibold rounded-xl bg-gradient-to-r py-5 text-white disabled:from-gray-100 disabled:to-gray-100 disabled:text-gray-300",
+        "from-main-700 to-main-900 typo-semibold rounded-xl bg-gradient-to-r py-5 text-white transition-colors disabled:from-gray-100 disabled:to-gray-100 disabled:text-gray-300",
         className
       )}
       {...restProps}

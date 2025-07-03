@@ -79,7 +79,7 @@ export default function AgreementStep({ form, onNext }: AgreementStepProps) {
       <Button
         onClick={onClickNext}
         disabled={!isAllAgreementChecked}
-        className="max-w-floating-button fixed bottom-10 w-full self-center"
+        className="max-w-floating-button fixed bottom-10 w-[calc(100%-1.25rem)] self-center"
       >
         다음
       </Button>

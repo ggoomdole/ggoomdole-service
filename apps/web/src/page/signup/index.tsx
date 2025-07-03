@@ -4,8 +4,8 @@ import { useRouter } from "next/navigation";
 
 import AgreementStep from "@/components/signup/agreement-step";
 import CompleteStep from "@/components/signup/complete-step";
-import NameStep from "@/components/signup/name-step";
 import NativeStep from "@/components/signup/native-step";
+import NicknameStep from "@/components/signup/nickname-step";
 import ProfileStep from "@/components/signup/profile-step";
 import { SignUpForm, signUpFormSchema } from "@/schemas/signup";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -28,7 +28,6 @@ export default function SignupPage({ step }: SignupPageProps) {
       nickname: "",
       native: 0,
     },
-    shouldUnregister: true,
   });
 
   const onNext = () => router.push(`?step=${+step + 1}`);
@@ -44,7 +43,7 @@ export default function SignupPage({ step }: SignupPageProps) {
     case "1":
       return <ProfileStep form={form} onNext={onNext} />;
     case "2":
-      return <NameStep onNext={onNext} />;
+      return <NicknameStep form={form} onNext={onNext} />;
     case "3":
       return <NativeStep onSubmit={onSubmit} />;
     case "4":
