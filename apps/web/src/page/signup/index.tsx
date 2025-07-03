@@ -42,7 +42,7 @@ export default function SignupPage({ step }: SignupPageProps) {
     case "0":
       return <AgreementStep form={form} onNext={onNext} />;
     case "1":
-      return <ProfileStep onNext={onNext} />;
+      return <ProfileStep form={form} onNext={onNext} />;
     case "2":
       return <NameStep onNext={onNext} />;
     case "3":
