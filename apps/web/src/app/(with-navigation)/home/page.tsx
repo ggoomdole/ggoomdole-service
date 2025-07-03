@@ -1,5 +1,21 @@
+import Link from "next/link";
+
+import Search from "@/assets/search.svg";
+import Header from "@/components/header";
 import HomePage from "@/page/home";
 
 export default function Home() {
-  return <HomePage />;
+  return (
+    <>
+      <Header
+        logoHeader
+        rightElement={
+          <Link href="/search">
+            <Search />
+          </Link>
+        }
+      />
+      <HomePage />
+    </>
+  );
 }
