@@ -1,5 +1,6 @@
 "use client";
 
+import { useRef } from "react";
 import { useRouter } from "next/navigation";
 
 import AgreementStep from "@/components/signup/agreement-step";
@@ -17,6 +18,8 @@ interface SignupPageProps {
 }
 
 export default function SignupPage({ step }: SignupPageProps) {
+  const signupComplete = useRef(false);
+
   const router = useRouter();
 
   const form = useForm<SignUpForm>({
@@ -35,7 +38,13 @@ export default function SignupPage({ step }: SignupPageProps) {
   const onSubmit = () => {
     const values = form.getValues();
     console.log(values);
+    signupComplete.current = true;
+    onNext();
   };
+
+  if (+step < 4 && signupComplete.current) {
+    // bad request 처리하기
+  }
 
   switch (step) {
     case "0":
@@ -45,7 +54,7 @@ export default function SignupPage({ step }: SignupPageProps) {
     case "2":
       return <NicknameStep form={form} onNext={onNext} />;
     case "3":
-      return <NativeStep onSubmit={onSubmit} />;
+      return <NativeStep form={form} onSubmit={onSubmit} />;
     case "4":
       return <CompleteStep />;
   }

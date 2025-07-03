@@ -19,8 +19,10 @@ export default async function Signup({ searchParams }: SignupProps) {
 
   return (
     <>
-      <Header />
-      <ProgessBar step={step ?? "0"} />
+      <div className="sticky top-0 z-50">
+        <Header />
+        <ProgessBar step={step ?? "0"} />
+      </div>
       <SignupPage step={step ?? "0"} />
     </>
   );
