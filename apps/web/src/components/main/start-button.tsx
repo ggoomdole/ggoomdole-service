@@ -21,12 +21,12 @@ export default function StartButton() {
         시작하기에 앞서
       </button>
       <div className="typo-medium space-y-2">
-        <button className="bg-kakao flex w-[90vw] items-center justify-center gap-2 rounded-xl py-2">
+        <button className="bg-kakao max-w-mobile flex w-[90vw] items-center justify-center gap-2 rounded-xl py-2">
           <KakaoIcon className="size-4" />
           <p>카카오 로그인</p>
         </button>
         <button
-          className="border-kakao w-[90vw] rounded-xl border bg-white py-2 text-center"
+          className="border-kakao max-w-mobile w-[90vw] rounded-xl border bg-white py-2 text-center"
           onClick={onRouteHome}
         >
           로그인 없이 둘러보기
