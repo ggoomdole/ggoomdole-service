@@ -1,0 +1,61 @@
+"use client";
+
+import { useRef } from "react";
+import { useRouter } from "next/navigation";
+
+import AgreementStep from "@/components/signup/agreement-step";
+import CompleteStep from "@/components/signup/complete-step";
+import NativeStep from "@/components/signup/native-step";
+import NicknameStep from "@/components/signup/nickname-step";
+import ProfileStep from "@/components/signup/profile-step";
+import { SignUpForm, signUpFormSchema } from "@/schemas/signup";
+import { zodResolver } from "@hookform/resolvers/zod";
+
+import { useForm } from "react-hook-form";
+
+interface SignupPageProps {
+  step: string;
+}
+
+export default function SignupPage({ step }: SignupPageProps) {
+  const signupComplete = useRef(false);
+
+  const router = useRouter();
+
+  const form = useForm<SignUpForm>({
+    mode: "onChange",
+    resolver: zodResolver(signUpFormSchema),
+    defaultValues: {
+      agreement: false,
+      profileImage: undefined,
+      nickname: "",
+      native: 0,
+    },
+  });
+
+  const onNext = () => router.push(`?step=${+step + 1}`);
+
+  const onSubmit = () => {
+    const values = form.getValues();
+    console.log(values);
+    signupComplete.current = true;
+    onNext();
+  };
+
+  if (+step < 4 && signupComplete.current) {
+    // bad request 처리하기
+  }
+
+  switch (step) {
+    case "0":
+      return <AgreementStep form={form} onNext={onNext} />;
+    case "1":
+      return <ProfileStep form={form} onNext={onNext} />;
+    case "2":
+      return <NicknameStep form={form} onNext={onNext} />;
+    case "3":
+      return <NativeStep form={form} onSubmit={onSubmit} />;
+    case "4":
+      return <CompleteStep />;
+  }
+}
