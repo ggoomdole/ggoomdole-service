@@ -1,5 +1,7 @@
-"use client";
+interface ProfileStepProps {
+  onNext: () => void;
+}
 
-export default function ProfileStep() {
+export default function ProfileStep({ onNext }: ProfileStepProps) {
   return <div>ProfileStep</div>;
 }

@@ -8,6 +8,8 @@
   --spacing-without-navigation: 100dvh;
   /* 최대 모바일 화면 (600px, 37.5rem) */
   --spacing-mobile: 37.5rem;
+  --spacing-floating-button: calc(100dvw - 1.25rem);
+  --spacing-with-floating-button: 6.875rem;
 
   --color-gold-500: #f2dc1d;
   --color-silver-500: #cccccc;
