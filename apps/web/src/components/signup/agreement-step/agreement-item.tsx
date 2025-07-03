@@ -30,11 +30,15 @@ export default function AgreementItem({
   return (
     <div>
       <div className="flex items-center justify-between">
-        <div className="flex items-center gap-2.5">
-          <Checkbox checked={checked} onChange={(e) => onChecked(e.target.checked)} />
-          <p className="typo-medium">
+        <div className="flex w-full items-center gap-2.5">
+          <Checkbox
+            id={`agreement-item-${title}`}
+            checked={checked}
+            onChange={(e) => onChecked(e.target.checked)}
+          />
+          <label htmlFor={`agreement-item-${title}`} className="typo-medium w-full">
             {title}({agreementTypeText})
-          </p>
+          </label>
         </div>
         <button onClick={() => setIsOpen(!isOpen)}>
           <ArrowRight

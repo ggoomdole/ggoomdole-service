@@ -63,8 +63,14 @@ export default function AgreementStep({ form, onNext }: AgreementStepProps) {
           <h1 className="typo-bold">환영합니다!</h1>
           <div className="space-y-5">
             <div className="flex items-center gap-2.5">
-              <Checkbox checked={isAllAgreementChecked} onChange={onToggleAllAgreement} />
-              <p className="typo-medium">약관 전체동의</p>
+              <Checkbox
+                id="all-agreement"
+                checked={isAllAgreementChecked}
+                onChange={onToggleAllAgreement}
+              />
+              <label htmlFor="all-agreement" className="typo-medium">
+                약관 전체동의
+              </label>
             </div>
             {agreementItems.map((item) => (
               <AgreementItem
