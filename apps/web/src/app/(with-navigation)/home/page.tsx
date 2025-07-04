@@ -14,6 +14,7 @@ export default function Home() {
             <Search />
           </Link>
         }
+        className="sticky top-0"
       />
       <HomePage />
     </>
