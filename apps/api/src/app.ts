@@ -1,7 +1,10 @@
 import cors from "cors";
 import express from "express";
 
+import { errorHandler } from './middlewares/errorHandler';
+
 const app = express();
+
 app
   .use(cors())
   .use(express.urlencoded({ extended: true }))
@@ -9,7 +12,9 @@ app
 
   .get("/", (_, res) => {
     return res.json({ message: "서버 실행 완료" });
-  });
+  })
+
+  .use(errorHandler);
 
 const port = process.env.PORT || 8000;
 
