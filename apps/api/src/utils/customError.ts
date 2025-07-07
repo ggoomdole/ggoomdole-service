@@ -40,10 +40,17 @@ class InternalServerError extends CustomError {
     }
 }
 
+class KakaoError extends CustomError {
+    constructor(message = '카카오 관련 에러') {
+        super(message, 501)
+    }
+}
+
 export {
     NotFoundError,
     NotFoundUserError,
     BadRequestError,
     UnauthorizedError,
-    InternalServerError
+    InternalServerError,
+    KakaoError
 };
