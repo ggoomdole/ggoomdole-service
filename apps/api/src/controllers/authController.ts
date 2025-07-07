@@ -1,7 +1,7 @@
 import { NextFunction,Request, Response } from 'express';
 
 import AuthService from '../services/authService';
-import { BadRequestError, UnauthorizedError } from '../utils/customError';
+import { BadRequestError } from '../utils/customError';
 
 class AuthController {
   async kakaoLogin(req: Request, res: Response, next: NextFunction) {

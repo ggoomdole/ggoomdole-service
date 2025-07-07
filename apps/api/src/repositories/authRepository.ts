@@ -2,7 +2,7 @@ import { PrismaClient } from '@prisma/client';
 const prisma = new PrismaClient();
 
 
-class UserRepository {
+class AuthRepository {
   async findUserByKakaoId(kakaoId: string) {
     return prisma.user.findUnique({ where: { kakaoId } });
   }
@@ -18,4 +18,4 @@ class UserRepository {
   }  
 }
 
-export default new UserRepository();
+export default new AuthRepository();

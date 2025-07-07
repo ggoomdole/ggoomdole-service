@@ -1,6 +1,6 @@
   import axios from 'axios';
 
-  import UserRepository from '../repositories/authRepository';
+  import AuthRepository from '../repositories/authRepository';
   import { KakaoError } from '../utils/customError';
 
   class AuthService {
@@ -31,9 +31,9 @@
       }
 
       // DB에서 사용자 찾고 없으면 생성
-      let user = await UserRepository.findUserByKakaoId(String(kakaoId));
+      let user = await AuthRepository.findUserByKakaoId(String(kakaoId));
       if (!user) {
-        user = await UserRepository.createUser({
+        user = await AuthRepository.createUser({
           kakaoId: String(kakaoId)
         });
       }
@@ -66,7 +66,7 @@
       if (!kakaoId) { throw new KakaoError('카카오 사용자 정보를 받지 못했습니다.');}
 
       // DB에서 사용자 삭제
-      const deletedUser = await UserRepository.deleteUserByKakaoId(String(kakaoId));
+      const deletedUser = await AuthRepository.deleteUserByKakaoId(String(kakaoId));
 
       return { deletedUserId: deletedUser.id };
     }

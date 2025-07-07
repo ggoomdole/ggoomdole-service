@@ -34,6 +34,12 @@ class UnauthorizedError extends CustomError {
     }
 }
 
+class ExistsError extends CustomError {
+    constructor(message = '이미 존재하는 리소스 입니다.') {
+    super(message, 409);
+    }
+}
+
 class InternalServerError extends CustomError {
     constructor(message = '서버 에러') {
     super(message, 500);
@@ -52,5 +58,6 @@ export {
     BadRequestError,
     UnauthorizedError,
     InternalServerError,
-    KakaoError
+    KakaoError,
+    ExistsError
 };

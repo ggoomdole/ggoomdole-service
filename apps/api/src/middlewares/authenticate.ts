@@ -19,7 +19,10 @@ export default function authenticate(req: Request, res: Response, next: NextFunc
     const decoded = jwt.verify(token, secret) as JwtPayload;
     if (!decoded.userId) { throw new UnauthorizedError('유효하지 않은 토큰입니다.'); }
 
-    req.user = { userId: decoded.userId };
+    const userIdInt = parseInt(decoded.userId, 10);
+    if (isNaN(userIdInt)) throw new UnauthorizedError('토큰에 저장된 userId가 유효하지 않습니다.');
+
+    req.user = { userId: userIdInt };
     next();
   } catch (error) {
     next(error);
