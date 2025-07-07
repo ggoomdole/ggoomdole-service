@@ -10,11 +10,12 @@ import { getParams } from "@/utils/params";
 
 interface SearchHeaderProps {
   query: string;
-  category: string;
+  [key: string]: string;
 }
 
-export default function SearchHeader({ query, category }: SearchHeaderProps) {
-  const [searchQuery, setSearchQuery] = useState(query);
+export default function SearchHeader(props: SearchHeaderProps) {
+  const { query, ...restProps } = props;
+  const [searchQuery, setSearchQuery] = useState(query || "");
 
   const router = useRouter();
 
@@ -26,7 +27,7 @@ export default function SearchHeader({ query, category }: SearchHeaderProps) {
     e.preventDefault();
     if (!searchQuery.trim()) return;
     recentSearchUtils.addRecentSearch(searchQuery);
-    const params = getParams({ query: searchQuery, category });
+    const params = getParams(restProps, { query: searchQuery });
     router.push(`?${params}`);
   };
 

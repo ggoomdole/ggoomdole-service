@@ -6,27 +6,9 @@ import { Carousel, CarouselItem } from "@/components/carousel";
 import CourseCard from "@/components/common/card/course-card";
 import NearbyTouristSpotItem from "@/components/home/nearby-tourist-spot-item";
 import QueryTabNav from "@/components/query-tab-nav";
+import { COURSE_CATEGORIES } from "@/constants/category";
 
 const carouselExample = "/static/carousel-example.png";
-
-const COURSE_CATEGORIES = [
-  {
-    name: "전체",
-    path: "",
-  },
-  {
-    name: "음식",
-    path: "food",
-  },
-  {
-    name: "관광",
-    path: "tour",
-  },
-  {
-    name: "힐링",
-    path: "healing",
-  },
-];
 
 const dummyCourses = [
   {
