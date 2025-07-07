@@ -1,4 +1,4 @@
-import Header from "@/components/header";
+import Header from "@/components/common/header";
 import FirstStep from "@/components/onboarding/first-step";
 import SecondStep from "@/components/onboarding/second-step";
 import ThirdStep from "@/components/onboarding/third-step";

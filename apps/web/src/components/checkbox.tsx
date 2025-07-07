@@ -1,6 +1,6 @@
 "use client";
 
-import { cn } from "@/utils/cn";
+import { cn } from "@/lib/utils";
 
 export default function Checkbox(props: React.InputHTMLAttributes<HTMLInputElement>) {
   const { className, ...rest } = props;

@@ -5,17 +5,19 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 
 import ArrowLeft from "@/assets/arrow-left.svg";
+import { cn } from "@/lib/utils";
 
 const logo = "/static/logo.png";
 
-interface HeaderProps {
+interface HeaderProps extends React.HTMLAttributes<HTMLDivElement> {
   logoHeader?: boolean;
   rightElement?: React.ReactNode;
-  children?: React.ReactNode;
   onClickBack?: () => void;
 }
 
-export default function Header({ logoHeader, rightElement, children, onClickBack }: HeaderProps) {
+export default function Header(props: HeaderProps) {
+  const { logoHeader, rightElement, onClickBack, children, className, ...restProps } = props;
+
   const router = useRouter();
 
   const onClickBackButton = () => {
@@ -26,7 +28,13 @@ export default function Header({ logoHeader, rightElement, children, onClickBack
   };
 
   return (
-    <header className="h-header shadow-layout z-50 flex items-center justify-between gap-2.5 bg-white px-5">
+    <header
+      className={cn(
+        "h-header shadow-layout z-50 flex items-center justify-between gap-2.5 bg-white px-5",
+        className
+      )}
+      {...restProps}
+    >
       {logoHeader ? (
         <Link href="/home">
           <Image src={logo} alt="순례해유 로고" width={100} height={24} />

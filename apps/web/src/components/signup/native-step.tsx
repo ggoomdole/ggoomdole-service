@@ -1,5 +1,5 @@
+import { cn } from "@/lib/utils";
 import { SignUpForm } from "@/schemas/signup";
-import { cn } from "@/utils/cn";
 
 import { UseFormReturn } from "react-hook-form";
 

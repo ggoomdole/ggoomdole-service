@@ -4,7 +4,7 @@ import { Suspense } from "react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 
-import { cn } from "@/utils/cn";
+import { cn } from "@/lib/utils";
 
 interface QueryTabNavProps {
   /**
@@ -35,7 +35,7 @@ function QueryTabNavWithoutSuspense({ navKey, navs }: QueryTabNavProps) {
   const currentStatus = searchParams.get(navKey) || "";
 
   return (
-    <nav className="relative">
+    <nav className="relative py-2.5">
       <ul className="typo-regular flex">
         {navs.map((nav) => (
           <li
