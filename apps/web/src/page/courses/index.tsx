@@ -83,7 +83,7 @@ export default function CoursesPage({ category, sortOption }: CoursesPageProps) 
   };
 
   return (
-    <main>
+    <main className="pb-navigation">
       <QueryTabNav navKey="category" navs={COURSE_CATEGORIES} />
       <Drawer>
         <DrawerTrigger className="typo-regular mr-5 w-max self-end">

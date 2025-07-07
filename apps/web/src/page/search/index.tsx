@@ -75,7 +75,7 @@ export default function SearchPage() {
   };
 
   return (
-    <main className="space-y-5 px-5 py-2.5">
+    <main className="pb-navigation space-y-5 px-5 py-2.5">
       <section className="space-y-2.5">
         <div className="flex items-center gap-2.5">
           <h2 className="typo-semibold">최근 검색어</h2>

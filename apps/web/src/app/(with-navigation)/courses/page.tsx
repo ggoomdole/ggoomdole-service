@@ -23,6 +23,7 @@ export default async function Courses({ searchParams }: CoursesPageProps) {
             <Search />
           </Link>
         }
+        sticky
       />
       <CoursesPage {...params} />
     </>

@@ -78,7 +78,7 @@ const dummyNearbyTourists = [
 
 export default function HomePage() {
   return (
-    <main>
+    <main className="pb-navigation">
       <Carousel className="py-5" interval={3000}>
         <CarouselItem className="rounded-2xl p-4 shadow-lg">
           <h1 className="typo-bold">
