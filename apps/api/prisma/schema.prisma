@@ -99,6 +99,7 @@ model Pilgrimage {
 
 model User {
   id           Int            @id @default(autoincrement())
+  kakaoId      String   @unique
   nickName     String?
   profileImage String?
   native       Native?
