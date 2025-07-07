@@ -1,6 +1,7 @@
-import UserRepository from '../repositories/userRepository';
-import s3 from '../config/s3-config';
 import { PutObjectCommand } from '@aws-sdk/client-s3';
+
+import s3 from '../config/s3-config';
+import UserRepository from '../repositories/userRepository';
 import { ExistsError } from '../utils/customError';
 
 class UserService {
