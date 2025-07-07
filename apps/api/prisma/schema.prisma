@@ -11,8 +11,8 @@ model SearchKeyword {
   id        Int      @id @default(autoincrement())
   userId    Int
   word      String? 
-  createAt  Int?
-  updateAt  Int?
+  createAt  DateTime?
+  updateAt  DateTime?
 
   user      User     @relation(fields: [userId], references: [id])
 }
@@ -69,7 +69,7 @@ model PilgrimageCategory {
   @@id([pilgrimageId, categoryId])
 }
 
-model PilgrimageParticipant {
+model PilgrimageUser {
   userId       Int
   pilgrimageId Int
   type         Boolean?
@@ -94,12 +94,13 @@ model Pilgrimage {
 
   spots      PilgrimageSpot[]
   categories PilgrimageCategory[]
-  participants PilgrimageParticipant[]
+  participants PilgrimageUser[]
 }
 
 model User {
   id           Int            @id @default(autoincrement())
-  nickName     String?
+  kakaoId      String         @unique
+  nickName     String?        @unique
   profileImage String?
   native       Native?
   createAt     DateTime?
@@ -107,7 +108,7 @@ model User {
 
   searchKeywords SearchKeyword[]
   reviews        Review[]
-  pilgrimages    PilgrimageParticipant[]
+  pilgrimages    PilgrimageUser[]
 }
 
 model Category {

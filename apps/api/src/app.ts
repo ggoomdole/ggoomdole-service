@@ -2,6 +2,8 @@ import cors from "cors";
 import express from "express";
 
 import { errorHandler } from './middlewares/errorHandler';
+import authRoute from './routes/authRoute';
+import userRoute from './routes/userRoute';
 
 const app = express();
 
@@ -13,6 +15,9 @@ app
   .get("/", (_, res) => {
     return res.json({ message: "서버 실행 완료" });
   })
+
+  .use('/login', authRoute)
+  .use('/users', userRoute)
 
   .use(errorHandler);
 

@@ -9,12 +9,12 @@ export function errorHandler(
     next: NextFunction
 ) {
     const statusCode = (err instanceof CustomError && err.statusCode) || 500;
-    const message = err.message || 'Internal Server Error';
+    const message = err.message || '서버 에러';
 
     console.error(`[Error] ${req.method} ${req.url} - ${message}`);
+    console.error(err.stack);
 
     res.status(statusCode).json({
-        success: false,
         message,
     });
 }
