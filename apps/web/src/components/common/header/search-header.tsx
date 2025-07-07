@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 
 import SearchIcon from "@/assets/search.svg";
@@ -30,6 +30,10 @@ export default function SearchHeader(props: SearchHeaderProps) {
     const params = getParams(restProps, { query: searchQuery });
     router.push(`?${params}`);
   };
+
+  useEffect(() => {
+    setSearchQuery(query || "");
+  }, [query]);
 
   return (
     <Header
