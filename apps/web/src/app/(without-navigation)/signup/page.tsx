@@ -1,6 +1,6 @@
 import { notFound } from "next/navigation";
 
-import Header from "@/components/header";
+import Header from "@/components/common/header";
 import ProgessBar from "@/components/signup/progess-bar";
 import SignupPage from "@/page/signup";
 
