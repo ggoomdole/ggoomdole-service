@@ -4,15 +4,16 @@ import SearchPage from "@/page/search";
 interface SearchProps {
   searchParams: Promise<{
     query: string;
+    category: string;
   }>;
 }
 
 export default async function Search({ searchParams }: SearchProps) {
-  const { query } = await searchParams;
+  const resolvedSearchParams = await searchParams;
 
   return (
     <>
-      <SearchHeader query={query || ""} />
+      <SearchHeader {...resolvedSearchParams} />
       <SearchPage />
     </>
   );
