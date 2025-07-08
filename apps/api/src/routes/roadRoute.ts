@@ -16,5 +16,6 @@ router.patch("/:roadId", authenticate, upload.single('update-road-image'), roadC
 router.get("/:roadId", roadController.loadDetail);
 router.get("/name", roadController.checkName);
 
+router.get("/participation", authenticate, roadController.loadParticipation);
 
 export default router;

@@ -32,7 +32,7 @@ export interface ParticipantDTO {
 }
 
 
-export interface AllRoadResponseDTO {
+export interface RoadListResponseDTO {
     roadId: number;
     title: string;
     intro: string;

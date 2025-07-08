@@ -1,7 +1,7 @@
 import { Prisma,PrismaClient } from '@prisma/client';
 const prisma = new PrismaClient();
 
-import { AllRoadResponseDTO,RoadRequestDTO } from '@repo/types';
+import { RoadRequestDTO } from '@repo/types';
 
 class roadRepository {
   async allRoadList(categoryId?: number) {
@@ -178,6 +178,42 @@ class roadRepository {
       data: { search: { increment: 1 } },
     });
   }
+
+  async findRoadsByParticipation(userId: number, maker: boolean, categoryId?: number) {
+    const whereClause: any = {
+      ...(categoryId && { categoryId }),
+    };
+  
+    if (maker) {
+      // 내가 만든 순례길만 조회
+      whereClause.makerId = userId;
+    } else {
+      // 내가 참여했고, 내가 만든 순례길은 제외
+      whereClause.AND = [
+        {
+          participants: {
+            some: { userId },
+          },
+        },
+        {
+          NOT: {
+            makerId: userId,
+          },
+        },
+      ];
+    }
+  
+    return await prisma.pilgrimage.findMany({
+      where: whereClause,
+      include: {
+        participants: {
+          include: {
+            user: true,
+          },
+        },
+      },
+    });
+  }  
 }
 
 export default new roadRepository();

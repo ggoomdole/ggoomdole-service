@@ -93,6 +93,22 @@ class roadController {
       next(error);
     }
   }
+
+  async loadParticipation(req: Request, res: Response, next: NextFunction) {
+    try {
+      const userId = req.user.userId;
+      const maker = req.query.maker === 'true';
+      if (maker) throw new NotFoundError('maker 여부는 필수입니다.');
+
+      const categoryId = req.query.categoryId ? parseInt(req.query.categoryId as string) : undefined;
+      if (categoryId) throw new NotFoundError('카테고리가 존재하지 않습니다.');
+  
+      const participationList = await roadService.getParticipatedRoads(userId, maker, categoryId);
+      return res.status(200).json(participationList);
+    } catch (error) {
+      next(error);
+    }
+  }  
 }
 
 function isAddRoadDTO(obj: any): obj is RoadRequestDTO {

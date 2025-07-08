@@ -1,5 +1,5 @@
 import { PutObjectCommand } from '@aws-sdk/client-s3';
-import { AllRoadResponseDTO,OneRoadResponseDTO,ParticipantDTO, RoadRequestDTO, RoadResponseDTO, SpotDTO } from '@repo/types';
+import { RoadListResponseDTO, OneRoadResponseDTO,ParticipantDTO, RoadRequestDTO, RoadResponseDTO, SpotDTO } from '@repo/types';
 
 import s3 from '../config/s3-config';
 import roadRepository from '../repositories/roadRepository';
@@ -8,7 +8,7 @@ import { ExistsError, NotFoundError, UnauthorizedError } from '../utils/customEr
 class roadService {
   private BUCKET_NAME = process.env.AWS_S3_BUCKET_NAME!;
 
-  async loadAllRoad(categoryId?: number, sortBy: string = 'popular'): Promise<AllRoadResponseDTO[]> {
+  async loadAllRoad(categoryId?: number, sortBy: string = 'popular'): Promise<RoadListResponseDTO[]> {
     const rawPilgrimages = await roadRepository.allRoadList(categoryId);
     if (!rawPilgrimages || rawPilgrimages.length === 0) throw new NotFoundError('순례길이 존재하지 않습니다.');
   
@@ -31,7 +31,7 @@ class roadService {
         break;
     }
   
-    return sortedPilgrimages.map((p): AllRoadResponseDTO => ({
+    return sortedPilgrimages.map((p): RoadListResponseDTO => ({
       roadId: p.id,
       title: p.title,
       intro: p.intro,
@@ -42,7 +42,7 @@ class roadService {
     }));
   }
 
-  async getPopularRoads(categoryId?: number): Promise<AllRoadResponseDTO[]> {
+  async getPopularRoads(categoryId?: number): Promise<RoadListResponseDTO[]> {
     const pilgrimages = await roadRepository.allRoadList(categoryId);
   
     if (!pilgrimages || pilgrimages.length === 0) { throw new NotFoundError('순례길이 존재하지 않습니다.'); }
@@ -213,6 +213,21 @@ class roadService {
       })),
     };
   }
+
+  async getParticipatedRoads(userId: number, maker: boolean, categoryId?: number): Promise<RoadListResponseDTO[]> {
+    const roads = await roadRepository.findRoadsByParticipation(userId, maker, categoryId);
+    if (!roads || roads.length === 0) throw new NotFoundError('참여한 순례길이 없습니다.');
+  
+    return roads.map((p): RoadListResponseDTO => ({
+      roadId: p.id,
+      title: p.title,
+      intro: p.intro,
+      imageUrl: p.imageUrl ?? null,
+      categoryId: p.categoryId,
+      participants: p.participants.length,
+      native: p.participants[0]?.user.native ?? null,
+    }));
+  }  
 }
 
 // 평균 평점 숫자 조정
