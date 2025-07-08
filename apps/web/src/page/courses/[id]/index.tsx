@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Image from "next/image";
+import Link from "next/link";
 
 import List from "@/assets/list.svg";
 import Star from "@/assets/star.svg";
@@ -9,6 +10,10 @@ import Header from "@/components/common/header";
 import Map from "@/components/common/map";
 import FloatingActionButton from "@/components/courses/floating-action-button";
 import type { TMapMarkerClickEvent } from "@/types/tmap";
+
+interface CourseDetailPageProps {
+  id: string;
+}
 
 const dummyLatLngs = [
   {
@@ -39,7 +44,7 @@ const dummyCourse = {
   rating: 4.3,
 };
 
-export default function CourseDetailPage() {
+export default function CourseDetailPage({ id }: CourseDetailPageProps) {
   const [selectedMarker, setSelectedMarker] = useState<number | null>(null);
 
   const onClickMap = () => {
@@ -54,9 +59,9 @@ export default function CourseDetailPage() {
     <>
       <Header
         rightElement={
-          <button>
+          <Link href={`/courses/${id}/list`}>
             <List />
-          </button>
+          </Link>
         }
         sticky
       >

@@ -30,7 +30,7 @@ export default function FloatingActionButton() {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <div className="absolute bottom-5 right-5">
+    <div className="fixed bottom-[calc(var(--spacing-navigation)+1.25rem)] mr-5 self-end">
       <button
         className="bg-main-100 text-main-900 shadow-floating-action-button relative z-10 rounded-full p-4"
         onClick={() => setIsOpen(!isOpen)}
