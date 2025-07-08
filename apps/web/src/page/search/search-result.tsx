@@ -11,7 +11,7 @@ import { cn } from "@/lib/utils";
 import { getParams } from "@/utils/params";
 
 interface SearchResultPageProps {
-  sortOption: string;
+  sort: string;
   [key: string]: string;
 }
 
@@ -68,15 +68,15 @@ const SORT_OPTIONS = [
 ];
 
 export default function SearchResultPage(props: SearchResultPageProps) {
-  const { sortOption, ...restProps } = props;
-  const currentSortOption = sortOption || "";
+  const { sort, ...restProps } = props;
+  const currentSortOption = sort || "";
   const selectedSortOption = SORT_OPTIONS.find((option) => option.value === currentSortOption);
 
   const router = useRouter();
 
   const onSortChange = (value: string) => {
     const params = getParams(restProps, {
-      sortOption: value,
+      sort: value,
     });
     router.push(`?${params}`);
   };

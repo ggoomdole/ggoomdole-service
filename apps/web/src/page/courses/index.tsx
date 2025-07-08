@@ -12,7 +12,7 @@ import { getParams } from "@/utils/params";
 
 interface CoursesPageProps {
   category: string;
-  sortOption: string;
+  sort: string;
 }
 
 const SORT_OPTIONS = [
@@ -67,9 +67,9 @@ const dummyCourses = [
   },
 ];
 
-export default function CoursesPage({ category, sortOption }: CoursesPageProps) {
+export default function CoursesPage({ category, sort }: CoursesPageProps) {
   // 무한 스크롤 구현하기
-  const currentSortOption = sortOption || "";
+  const currentSortOption = sort || "";
   const selectedSortOption = SORT_OPTIONS.find((option) => option.value === currentSortOption);
 
   const router = useRouter();
@@ -77,7 +77,7 @@ export default function CoursesPage({ category, sortOption }: CoursesPageProps) 
   const onSortChange = (value: string) => {
     const params = getParams({
       category,
-      sortOption: value,
+      sort: value,
     });
     router.push(`?${params}`);
   };

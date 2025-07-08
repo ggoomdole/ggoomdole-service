@@ -6,7 +6,7 @@ interface SearchProps {
   searchParams: Promise<{
     query: string;
     category: string;
-    sortOption: string;
+    sort: string;
   }>;
 }
 

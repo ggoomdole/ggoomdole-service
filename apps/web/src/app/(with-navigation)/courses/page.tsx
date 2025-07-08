@@ -7,7 +7,7 @@ import CoursesPage from "@/page/courses";
 interface CoursesPageProps {
   searchParams: Promise<{
     category: string;
-    sortOption: string;
+    sort: string;
   }>;
 }
 

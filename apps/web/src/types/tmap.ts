@@ -54,14 +54,17 @@ export interface TMapEvent {
 export interface TMapMarkerOptions {
   map: TMap;
   position: TMapLatLng;
+  color?: string;
+  anchor?: string;
+  icon?: string;
+  zIndex?: number;
   iconHTML?: string;
   iconSize?: TMapSize;
+  offset?: TMapPoint;
   label?: string;
-  icon?: string;
-  draggable?: boolean;
-  clickable?: boolean;
-  zIndex?: number;
+  labelSize?: string;
   opacity?: number;
+  visible?: boolean;
   title?: string;
 }
 
@@ -79,11 +82,14 @@ export interface TMapLatLng {
 }
 
 export interface TMapMarker {
-  setMap: (map: TMap | null) => void;
   getPosition: () => TMapLatLng;
+  getOffset: () => TMapPoint;
+  getIconSize: () => TMapSize;
+  getIcon: () => string;
+  setMap: (map: TMap | null) => void;
   setPosition: (latLng: TMapLatLng) => void;
-  setLabel: (HTML: string) => void;
-  on: (eventType: EventType, listener: (event: TMapEvent) => void) => void;
+  setVisible: (visible: boolean) => void;
+  on: (eventType: EventType, listener: (event: TMapMarkerClickEvent) => void) => void;
 }
 
 export interface TMapSize {
