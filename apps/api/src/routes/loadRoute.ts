@@ -7,7 +7,7 @@ import authenticate from '../middlewares/authenticate';
 const router = Router();
 const upload = multer({ storage: multer.memoryStorage() });
 
-router.post("/", authenticate, upload.single('image'), loadController.createLoad);
+router.post("/", authenticate, upload.single('load-image'), loadController.createLoad);
 // router.patch("/{loadId}", authenticate, loadController.updateLoad);
 
 export default router;
