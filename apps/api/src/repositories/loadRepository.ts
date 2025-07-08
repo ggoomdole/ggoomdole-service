@@ -3,57 +3,49 @@ const prisma = new PrismaClient();
 
 import { SpotDTO } from '@repo/types';
 
-interface CreateLoadParams {
+class loadRepository {
+  async createLoad(data: {
     title: string;
     intro: string;
     categoryId: number;
+    spots: { spotId: number; number: number; introSpot: string }[];
     imageUrl: string | null;
     userId: number;
-    spots: SpotDTO[];
-}
-
-class loadRepository {
-  async createLoad(params: CreateLoadParams) {
+  }) {
       return await prisma.$transaction(async (tx) => {
         const newLoad = await tx.pilgrimage.create({
           data: {
-            title: params.title,
-            intro: params.intro,
-            imageUrl: params.imageUrl,
+            title: data.title,
+            intro: data.intro,
+            imageUrl: data.imageUrl,
+            search: 0,
             public: true,
             createAt: new Date(),
             updateAt: new Date(),
+            category: {
+              connect: { id: data.categoryId }
+            },
             spots: {
-              create: params.spots.map((spot) => ({
+              create: data.spots.map((spot) => ({
                 spotId: spot.spotId,
                 number: spot.number,
                 introSpot: spot.introSpot,
+                request: false,
                 createAt: new Date(),
                 updateAt: new Date(),
               })),
             },
             participants: {
               create: {
-                userId: params.userId,
-                type: true, // 관리자 
+                userId: data.userId,
+                type: true, // 관리자로 등록
                 createAt: new Date(),
                 updateAt: new Date(),
               },
-            },
-            categories: {
-              create: [
-                {
-                  category: {
-                    connect: { id: params.categoryId }
-                  },
-                  createAt: new Date()
-                }
-              ]
             }
           },
           include: {
             spots: true,
-            categories: true,
             participants: true
           },
         });

@@ -1,4 +1,4 @@
-import { AddLoadRequestDTO } from '@repo/types';
+import { AddLoadRequestDTO, AddLoadResponseDTO, ParticipantDTO,SpotDTO } from '@repo/types';
 
 import { NextFunction,Request, Response } from 'express';
 
@@ -20,8 +20,28 @@ class loadController {
             categoryId: dto.categoryId,
             spots: dto.spots
         }, userId, imageFile);
+
+        const response: AddLoadResponseDTO = {
+          loadId: newPilgrimage.id,
+          title: newPilgrimage.title,
+          intro: newPilgrimage.intro,
+          imageUrl: newPilgrimage.imageUrl ?? null,
+          public: newPilgrimage.public ?? true,
+          createAt: newPilgrimage.createAt,
+          updateAt: newPilgrimage.updateAt,
+          categoryId: newPilgrimage.categoryId,
+          spots: newPilgrimage.spots.map((spot): SpotDTO => ({
+            spotId: spot.spotId,
+            number: spot.number,
+            introSpot: spot.introSpot,
+          })),
+          participants: newPilgrimage.participants.map((part): ParticipantDTO => ({
+            userId: part.userId,
+            type: part.type
+          }))
+        };
     
-        res.status(201).json(newPilgrimage);
+        res.status(200).json(response);
       } catch (error) {
       next(error);
     }

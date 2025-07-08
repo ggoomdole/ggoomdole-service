@@ -25,7 +25,7 @@ class userController {
       if (typeof nickname !== "string") { throw new BadRequestError('닉네임은 문자열이어야 합니다.'); }
       
       const newNickname = await userService.createNickname(userId, nickname);
-      res.status(201).json({ message: "닉네임 생성 완료", nickname: newNickname });
+      res.status(200).json({ message: "닉네임 생성 완료", nickname: newNickname });
     } catch (error: any) {
       next(error);
     }
