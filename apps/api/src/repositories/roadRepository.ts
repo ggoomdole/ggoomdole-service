@@ -1,7 +1,7 @@
-import { PrismaClient, Prisma } from '@prisma/client';
+import { Prisma,PrismaClient } from '@prisma/client';
 const prisma = new PrismaClient();
 
-import { RoadRequestDTO, AllRoadResponseDTO } from '@repo/types';
+import { AllRoadResponseDTO,RoadRequestDTO } from '@repo/types';
 
 class roadRepository {
   async allRoadList(categoryId?: number) {
@@ -115,6 +115,23 @@ class roadRepository {
     });
   }
 
+  async findRoadById(roadId: number) {
+    return prisma.pilgrimage.findUnique({
+      where: { id: roadId },
+      include: {
+        spots: {
+          orderBy: { number: 'asc' },
+        },
+        participants: {
+          include: {
+            user: true,
+          },
+        },
+        category: true,
+      },
+    });
+  }
+  
   async checkPilgrimageOwner(userId: number, pilgrimageId: number): Promise<boolean> {
     const record = await prisma.pilgrimageUser.findUnique({
       where: {
@@ -137,6 +154,24 @@ class roadRepository {
     });
     return existing !== null;
   }
+
+  async findRoadWithSpots(roadId: number) {
+    return prisma.pilgrimage.findUnique({
+      where: { id: roadId },
+      include: {
+        spots: {
+          include: {
+            place: {
+              include: {
+                reviews: true,
+              },
+            },
+          },
+        },
+      },
+    });
+  }
+  
 }
 
 export default new roadRepository();

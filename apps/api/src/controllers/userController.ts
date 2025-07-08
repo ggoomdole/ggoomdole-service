@@ -6,7 +6,7 @@ import { BadRequestError, UnauthorizedError } from '../utils/customError';
 class userController {
   async checkNickname(req: Request, res: Response, next: NextFunction) {
     try {
-        const { nickname } = req.body;
+        const { nickname } = req.query;
         if (!nickname) { throw new BadRequestError('닉네임은 필수입니다.'); }
         if (typeof nickname !== "string") { throw new BadRequestError('닉네임은 문자열이어야 합니다.'); }
         

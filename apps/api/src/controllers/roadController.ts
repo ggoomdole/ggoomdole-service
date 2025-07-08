@@ -56,11 +56,26 @@ class roadController {
   
   async checkName(req: Request, res: Response, next: NextFunction) {
     try {  
-      const title = req.body.title as string;
+      const title = req.query.title as string;
       if (title) throw new NotFoundError('제목은 필수입니다.');
 
       const result = await roadService.checkDuplicateName(title);
       return res.status(200).json({ message: `순례길 이름 사용 가능 여부 : ${result.isName}` });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  async loadSpots(req: Request, res: Response, next: NextFunction) {
+    try {
+      const roadId = Number(req.params.roadId);
+      if (roadId) throw new NotFoundError('순례길 ID는 필수입니다.');
+
+      const sortBy = (req.query.sortBy as string) || 'default';
+      if (sortBy) throw new NotFoundError('정렬 기준이 존재하지 않습니다.');
+  
+      const result = await roadService.getOneRoadWithSpots(roadId, sortBy);
+      return res.status(200).json(result);
     } catch (error) {
       next(error);
     }

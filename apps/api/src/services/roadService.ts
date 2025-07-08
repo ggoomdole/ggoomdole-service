@@ -1,5 +1,5 @@
 import { PutObjectCommand } from '@aws-sdk/client-s3';
-import { RoadRequestDTO, RoadResponseDTO, SpotDTO, ParticipantDTO, AllRoadResponseDTO } from '@repo/types';
+import { AllRoadResponseDTO,ParticipantDTO, RoadRequestDTO, RoadResponseDTO, SpotDTO, OneRoadResponseDTO } from '@repo/types';
 
 import s3 from '../config/s3-config';
 import roadRepository from '../repositories/roadRepository';
@@ -96,6 +96,9 @@ class roadService {
     const isAdmin = await roadRepository.checkPilgrimageOwner(userId, roadId);
     if (!isAdmin) { throw new UnauthorizedError('관리자 권한이 없습니다.'); }
 
+    const road = await roadRepository.findRoadById(roadId);
+    if (!road) throw new NotFoundError('해당 순례길이 존재하지 않습니다.');
+
     let imageUrl: string | undefined;
   
     if (imageFile) {
@@ -145,23 +148,61 @@ class roadService {
 
     return { isName: false };
   }
+
+  async getOneRoadWithSpots(roadId: number, sortBy: string): Promise<OneRoadResponseDTO> {
+    const road = await roadRepository.findRoadWithSpots(roadId);
+    if (!road) throw new NotFoundError('순례길이 존재하지 않습니다.');
+  
+    let spots = road.spots;
+  
+    // 스팟 정렬 (기본: number 순서)
+    if (sortBy === 'popular') {
+      // 인기순: 스팟별 평균 평점 내림차순
+      spots = spots.sort((a, b) => {
+        const avgA = averageRate(a);
+        const avgB = averageRate(b);
+        return avgB - avgA;
+      });
+    } else if (sortBy === 'review') {
+      // 후기순: 스팟별 리뷰 개수 내림차순
+      spots = spots.sort((a, b) => b.place.reviews.length - a.place.reviews.length);
+    } else {
+      // 기본: number 오름차순
+      spots = spots.sort((a, b) => a.number - b.number);
+    }
+  
+    return {
+      roadId: road.id,
+      title: road.title,
+      intro: road.intro,
+      imageUrl: road.imageUrl ?? null,
+      categoryId: road.categoryId,
+      spots: spots.map((spot) => ({
+        spotId: spot.spotId,
+        number: spot.number,
+        introSpot: spot.introSpot,
+        avgReview: averageRateStr(spot),
+        numReview: spot.place.reviews.length.toString(),
+      })),
+    };
+  }
 }
 
-function averageRate(p: any): number {
-  const allRates: number[] = [];
+// 평균 평점 숫자 조정
+function averageRateStr(spot: any): string {
+  const avg = averageRate(spot);
+  return avg ? avg.toFixed(1) : '0.0';
+}
 
-  for (const spot of p.spots) {
-    if (spot.place?.reviews) {
-      for (const r of spot.place.reviews) {
-        if (typeof r.rate === 'number') allRates.push(r.rate);
-      }
-    }
-  }
+// 평균 평점 계산
+function averageRate(spot: any): number {
+  const reviews = spot?.place?.reviews ?? [];
+  const rates = reviews
+    .filter((r: any) => r.rate !== null && r.rate !== undefined)
+    .map((r: any) => r.rate);
 
-  if (allRates.length === 0) return 0;
-
-  const sum = allRates.reduce((a: number, b: number) => a + b, 0);
-  return sum / allRates.length;
+  if (rates.length === 0) return 0;
+  return rates.reduce((a: number, b: number) => a + b, 0) / rates.length;
 }
 
 export default new roadService();
