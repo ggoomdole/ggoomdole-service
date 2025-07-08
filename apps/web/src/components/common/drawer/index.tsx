@@ -3,6 +3,8 @@ import { createContext, ReactNode, useContext, useEffect, useState } from "react
 import { useOutsideClick } from "@/hooks/use-outside-click";
 import { cn } from "@/lib/utils";
 
+import { createPortal } from "react-dom";
+
 interface DrawerContextType {
   isOpen: boolean;
   open: () => void;
@@ -92,7 +94,7 @@ const DrawerContent = ({ children, className }: ContentProps) => {
 
   if (!rendered) return null;
 
-  return (
+  return createPortal(
     <>
       <div
         className={cn(
@@ -113,7 +115,8 @@ const DrawerContent = ({ children, className }: ContentProps) => {
       >
         {children}
       </div>
-    </>
+    </>,
+    document.body
   );
 };
 
