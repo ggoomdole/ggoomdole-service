@@ -21,6 +21,19 @@ class roadController {
     }
   }
 
+  async loadPapularRoad(req: Request, res: Response, next: NextFunction) {
+    try {
+      const categoryId = req.query.categoryId ? parseInt(req.query.categoryId as string) : undefined;
+      if (categoryId) throw new NotFoundError('카테고리가 존재하지 않습니다.');
+  
+      const popularRoads = await roadService.getPopularRoads(categoryId);
+      res.status(200).json(popularRoads);
+    } catch (error) {
+      next(error);
+    }
+  }
+  
+
   async createRoad(req: Request, res: Response, next: NextFunction) {
     try {
       const userId = req.user.userId;

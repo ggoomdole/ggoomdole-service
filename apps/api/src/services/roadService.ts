@@ -40,7 +40,31 @@ class roadService {
       participants: p.participants.length,
       native: p.participants[0]?.user.native ?? null
     }));
-  }   
+  }
+
+  async getPopularRoads(categoryId?: number): Promise<AllRoadResponseDTO[]> {
+    const pilgrimages = await roadRepository.allRoadList(categoryId);
+  
+    if (!pilgrimages || pilgrimages.length === 0) { throw new NotFoundError('순례길이 존재하지 않습니다.'); }
+  
+    // 조회수 기준 내림차순 정렬
+    pilgrimages.sort((a, b) => b.search - a.search);
+  
+    // 상위 3개씩만 필터링
+    const top3Roads = categoryId
+      ? pilgrimages.slice(0, 3)
+      : pilgrimages.slice(0, 3);
+  
+    return top3Roads.map(p => ({
+      roadId: p.id,
+      title: p.title,
+      intro: p.intro,
+      imageUrl: p.imageUrl ?? null,
+      categoryId: p.categoryId,
+      participants: p.participants.length,
+      native: p.participants[0]?.user.native ?? null,
+    }));
+  }
 
   async createRoad(data: RoadRequestDTO, userId: number, imageFile?: Express.Multer.File): Promise<RoadResponseDTO> {
     const exists = await roadRepository.findRoadByTitle(data.title);
