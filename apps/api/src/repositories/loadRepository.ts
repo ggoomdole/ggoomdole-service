@@ -1,7 +1,7 @@
 import { PrismaClient } from '@prisma/client';
 const prisma = new PrismaClient();
 
-import { SpotDTO } from '@repo/types';
+import { LoadRequestDTO } from '@repo/types';
 
 class loadRepository {
   async createLoad(data: {
@@ -58,6 +58,66 @@ class loadRepository {
       where: { title },
       select: { id: true },
     });
+  }
+
+  async updateLoad(
+    loadId: number,
+    userId: number,
+    data: Partial<LoadRequestDTO & { imageUrl?: string }>
+  ) {
+    return await prisma.$transaction(async (tx) => {
+      // 기존 데이터 업데이트
+      const updated = await tx.pilgrimage.update({
+        where: { id: loadId },
+        data: {
+          ...(data.title && { title: data.title }),
+          ...(data.intro && { intro: data.intro }),
+          ...(data.categoryId && { category: { connect: { id: data.categoryId } } }),
+          ...(data.imageUrl && { imageUrl: data.imageUrl }),
+          updateAt: new Date(),
+        },
+      });
+  
+      // spots 업데이트 (기존 삭제 후 새로 삽입)
+      if (data.spots && Array.isArray(data.spots)) {
+        await tx.pilgrimageSpot.deleteMany({ where: { pilgrimageId: loadId } });
+  
+        await tx.pilgrimageSpot.createMany({
+          data: data.spots.map((spot) => ({
+            pilgrimageId: loadId,
+            spotId: spot.spotId,
+            number: spot.number,
+            introSpot: spot.introSpot,
+            request: false,
+            createAt: new Date(),
+            updateAt: new Date(),
+          })),
+        });
+      }
+  
+      const final = await tx.pilgrimage.findUnique({
+        where: { id: loadId },
+        include: { spots: true, participants: true },
+      });
+  
+      return final!;
+    });
+  }
+
+  async checkPilgrimageOwner(userId: number, pilgrimageId: number): Promise<boolean> {
+    const record = await prisma.pilgrimageUser.findUnique({
+      where: {
+        userId_pilgrimageId: {
+          userId,
+          pilgrimageId,
+        },
+      },
+      select: {
+        type: true,
+      },
+    });
+
+    return record?.type === true;
   }
 }
 

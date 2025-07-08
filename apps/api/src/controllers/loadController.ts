@@ -1,4 +1,4 @@
-import { AddLoadRequestDTO, AddLoadResponseDTO, ParticipantDTO,SpotDTO } from '@repo/types';
+import { LoadRequestDTO, LoadResponseDTO, ParticipantDTO, SpotDTO, UpdateLoadResponseDTO } from '@repo/types';
 
 import { NextFunction,Request, Response } from 'express';
 
@@ -9,7 +9,7 @@ class loadController {
   async createLoad(req: Request, res: Response, next: NextFunction) {
     try {
         const userId = req.user.userId;
-        const dto = req.body as AddLoadRequestDTO;
+        const dto = req.body as LoadRequestDTO;
         const imageFile = req.file;
 
         if (!isAddLoadDTO(dto)) { throw new BadRequestError('요청 형식이 잘못되었습니다.'); }
@@ -21,7 +21,7 @@ class loadController {
             spots: dto.spots
         }, userId, imageFile);
 
-        const response: AddLoadResponseDTO = {
+        const response: LoadResponseDTO = {
           loadId: newPilgrimage.id,
           title: newPilgrimage.title,
           intro: newPilgrimage.intro,
@@ -46,9 +46,48 @@ class loadController {
       next(error);
     }
   }
+
+  async updateLoad(req: Request, res: Response, next: NextFunction) {
+    try {
+      const userId = req.user.userId;
+      const loadId = parseInt(req.params.loadId);
+      const dto = req.body as Partial<LoadRequestDTO>;
+      const imageFile = req.file;
+  
+      if (isNaN(loadId)) throw new BadRequestError('유효하지 않은 loadId입니다.');
+      if ( !imageFile && !dto.title && !dto.intro && !dto.categoryId && (!dto.spots || dto.spots.length === 0)
+      ) { throw new BadRequestError('변경사항이 없습니다.'); }
+  
+      const updatedLoad = await loadService.updateLoad(loadId, userId, dto, imageFile);
+  
+      const response: LoadResponseDTO = {
+        loadId: updatedLoad.id,
+        title: updatedLoad.title,
+        intro: updatedLoad.intro,
+        imageUrl: updatedLoad.imageUrl,
+        public: updatedLoad.public,
+        createAt: updatedLoad.createAt,
+        updateAt: updatedLoad.updateAt,
+        categoryId: updatedLoad.categoryId,
+        spots: updatedLoad.spots.map(spot => ({
+          spotId: spot.spotId,
+          number: spot.number,
+          introSpot: spot.introSpot
+        })),
+        participants: updatedLoad.participants.map(part => ({
+          userId: part.userId,
+          type: part.type
+        }))
+      };
+
+      res.status(200).json(response);
+    } catch (error) {
+      next(error);
+    }
+  }  
 }
 
-function isAddLoadDTO(obj: any): obj is AddLoadRequestDTO {
+function isAddLoadDTO(obj: any): obj is LoadRequestDTO {
   return (
     typeof obj.title === 'string' &&
     typeof obj.intro === 'string' &&

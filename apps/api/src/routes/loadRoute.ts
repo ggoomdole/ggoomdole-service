@@ -8,6 +8,6 @@ const router = Router();
 const upload = multer({ storage: multer.memoryStorage() });
 
 router.post("/", authenticate, upload.single('load-image'), loadController.createLoad);
-// router.patch("/{loadId}", authenticate, loadController.updateLoad);
+router.patch("/:loadId", authenticate, upload.single('update-load-image'), loadController.updateLoad);
 
 export default router;
