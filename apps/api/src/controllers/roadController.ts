@@ -1,28 +1,28 @@
-import { LoadRequestDTO, LoadResponseDTO, ParticipantDTO, SpotDTO, UpdateLoadResponseDTO } from '@repo/types';
+import { RoadRequestDTO, RoadResponseDTO, ParticipantDTO, SpotDTO, UpdateRoadResponseDTO } from '@repo/types';
 
 import { NextFunction,Request, Response } from 'express';
 
-import loadService from '../services/loadService';
+import roadService from '../services/roadService';
 import { BadRequestError, InternalServerError } from '../utils/customError';
 
-class loadController {
-  async createLoad(req: Request, res: Response, next: NextFunction) {
+class roadController {
+  async createRoad(req: Request, res: Response, next: NextFunction) {
     try {
         const userId = req.user.userId;
-        const dto = req.body as LoadRequestDTO;
+        const dto = req.body as RoadRequestDTO;
         const imageFile = req.file;
 
-        if (!isAddLoadDTO(dto)) { throw new BadRequestError('요청 형식이 잘못되었습니다.'); }
+        if (!isAddRoadDTO(dto)) { throw new BadRequestError('요청 형식이 잘못되었습니다.'); }
     
-        const newPilgrimage = await loadService.createLoad({
+        const newPilgrimage = await roadService.createRoad({
             title: dto.title,
             intro: dto.intro,
             categoryId: dto.categoryId,
             spots: dto.spots
         }, userId, imageFile);
 
-        const response: LoadResponseDTO = {
-          loadId: newPilgrimage.id,
+        const response: RoadResponseDTO = {
+          roadId: newPilgrimage.id,
           title: newPilgrimage.title,
           intro: newPilgrimage.intro,
           imageUrl: newPilgrimage.imageUrl ?? null,
@@ -47,34 +47,34 @@ class loadController {
     }
   }
 
-  async updateLoad(req: Request, res: Response, next: NextFunction) {
+  async updateRoad(req: Request, res: Response, next: NextFunction) {
     try {
       const userId = req.user.userId;
-      const loadId = parseInt(req.params.loadId);
-      const dto = req.body as Partial<LoadRequestDTO>;
+      const roadId = parseInt(req.params.roadId);
+      const dto = req.body as Partial<RoadRequestDTO>;
       const imageFile = req.file;
   
-      if (isNaN(loadId)) throw new BadRequestError('유효하지 않은 loadId입니다.');
+      if (isNaN(roadId)) throw new BadRequestError('유효하지 않은 roadId입니다.');
       if ( !imageFile && !dto.title && !dto.intro && !dto.categoryId && (!dto.spots || dto.spots.length === 0)
       ) { throw new BadRequestError('변경사항이 없습니다.'); }
   
-      const updatedLoad = await loadService.updateLoad(loadId, userId, dto, imageFile);
+      const updatedRoad = await roadService.updateRoad(roadId, userId, dto, imageFile);
   
-      const response: LoadResponseDTO = {
-        loadId: updatedLoad.id,
-        title: updatedLoad.title,
-        intro: updatedLoad.intro,
-        imageUrl: updatedLoad.imageUrl,
-        public: updatedLoad.public,
-        createAt: updatedLoad.createAt,
-        updateAt: updatedLoad.updateAt,
-        categoryId: updatedLoad.categoryId,
-        spots: updatedLoad.spots.map(spot => ({
+      const response: RoadResponseDTO = {
+        roadId: updatedRoad.id,
+        title: updatedRoad.title,
+        intro: updatedRoad.intro,
+        imageUrl: updatedRoad.imageUrl,
+        public: updatedRoad.public,
+        createAt: updatedRoad.createAt,
+        updateAt: updatedRoad.updateAt,
+        categoryId: updatedRoad.categoryId,
+        spots: updatedRoad.spots.map(spot => ({
           spotId: spot.spotId,
           number: spot.number,
           introSpot: spot.introSpot
         })),
-        participants: updatedLoad.participants.map(part => ({
+        participants: updatedRoad.participants.map(part => ({
           userId: part.userId,
           type: part.type
         }))
@@ -87,7 +87,7 @@ class loadController {
   }  
 }
 
-function isAddLoadDTO(obj: any): obj is LoadRequestDTO {
+function isAddRoadDTO(obj: any): obj is RoadRequestDTO {
   return (
     typeof obj.title === 'string' &&
     typeof obj.intro === 'string' &&
@@ -95,4 +95,4 @@ function isAddLoadDTO(obj: any): obj is LoadRequestDTO {
   );
 }
 
-export default new loadController();
+export default new roadController();

@@ -1,10 +1,10 @@
 import { PrismaClient } from '@prisma/client';
 const prisma = new PrismaClient();
 
-import { LoadRequestDTO } from '@repo/types';
+import { RoadRequestDTO } from '@repo/types';
 
-class loadRepository {
-  async createLoad(data: {
+class roadRepository {
+  async createRoad(data: {
     title: string;
     intro: string;
     categoryId: number;
@@ -13,7 +13,7 @@ class loadRepository {
     userId: number;
   }) {
       return await prisma.$transaction(async (tx) => {
-        const newLoad = await tx.pilgrimage.create({
+        const newRoad = await tx.pilgrimage.create({
           data: {
             title: data.title,
             intro: data.intro,
@@ -49,26 +49,26 @@ class loadRepository {
             participants: true
           },
         });
-        return newLoad;
+        return newRoad;
       });
   }
 
-  async findLoadByTitle(title: string) {  
+  async findRoadByTitle(title: string) {  
     return await prisma.pilgrimage.findFirst({
       where: { title },
       select: { id: true },
     });
   }
 
-  async updateLoad(
-    loadId: number,
+  async updateRoad(
+    roadId: number,
     userId: number,
-    data: Partial<LoadRequestDTO & { imageUrl?: string }>
+    data: Partial<RoadRequestDTO & { imageUrl?: string }>
   ) {
     return await prisma.$transaction(async (tx) => {
       // 기존 데이터 업데이트
       const updated = await tx.pilgrimage.update({
-        where: { id: loadId },
+        where: { id: roadId },
         data: {
           ...(data.title && { title: data.title }),
           ...(data.intro && { intro: data.intro }),
@@ -80,11 +80,11 @@ class loadRepository {
   
       // spots 업데이트 (기존 삭제 후 새로 삽입)
       if (data.spots && Array.isArray(data.spots)) {
-        await tx.pilgrimageSpot.deleteMany({ where: { pilgrimageId: loadId } });
+        await tx.pilgrimageSpot.deleteMany({ where: { pilgrimageId: roadId } });
   
         await tx.pilgrimageSpot.createMany({
           data: data.spots.map((spot) => ({
-            pilgrimageId: loadId,
+            pilgrimageId: roadId,
             spotId: spot.spotId,
             number: spot.number,
             introSpot: spot.introSpot,
@@ -96,7 +96,7 @@ class loadRepository {
       }
   
       const final = await tx.pilgrimage.findUnique({
-        where: { id: loadId },
+        where: { id: roadId },
         include: { spots: true, participants: true },
       });
   
@@ -121,4 +121,4 @@ class loadRepository {
   }
 }
 
-export default new loadRepository();
+export default new roadRepository();

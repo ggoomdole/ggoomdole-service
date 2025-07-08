@@ -18,7 +18,7 @@ model SearchKeyword {
 }
 
 model Place {
-  id        Int     @id @default(autoincrement())
+  id        String
   name      String
   phone     String?
   address   String?

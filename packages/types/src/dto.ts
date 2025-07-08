@@ -1,4 +1,4 @@
-export interface AddLoadDTO {
+export interface AddRoadDTO {
     title: string;
     intro: string;
     categoryId: number;

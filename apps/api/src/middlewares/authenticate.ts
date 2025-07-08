@@ -3,7 +3,7 @@ import jwt from 'jsonwebtoken';
 
 import { BadRequestError,UnauthorizedError } from '../utils/customError';
 
-interface JwtPayload {
+interface JwtPayRoad {
   userId: string;
 }
 
@@ -16,7 +16,7 @@ export default function authenticate(req: Request, res: Response, next: NextFunc
     const token = authHeader.split(' ')[1];
     const secret = process.env.JWT_SECRET!;
 
-    const decoded = jwt.verify(token, secret) as JwtPayload;
+    const decoded = jwt.verify(token, secret) as JwtPayRoad;
     if (!decoded.userId) { throw new UnauthorizedError('유효하지 않은 토큰입니다.'); }
 
     const userIdInt = parseInt(decoded.userId, 10);
