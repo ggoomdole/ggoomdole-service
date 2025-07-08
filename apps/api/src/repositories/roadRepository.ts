@@ -1,17 +1,32 @@
-import { PrismaClient } from '@prisma/client';
+import { PrismaClient, Prisma } from '@prisma/client';
 const prisma = new PrismaClient();
 
-import { RoadRequestDTO } from '@repo/types';
+import { RoadRequestDTO, AllRoadResponseDTO } from '@repo/types';
 
 class roadRepository {
-  async createRoad(data: {
-    title: string;
-    intro: string;
-    categoryId: number;
-    spots: { spotId: number; number: number; introSpot: string }[];
-    imageUrl: string | null;
-    userId: number;
-  }) {
+  async allRoadList(categoryId?: number) {
+    return await prisma.pilgrimage.findMany({
+      where: categoryId ? { categoryId } : undefined,
+      include: {
+        spots: {
+          include: {
+            place: {
+              include: {
+                reviews: true,
+              },
+            },
+          },
+        },
+        participants: {
+          include: {
+            user: true,
+          },
+        },
+      },
+    });
+  }
+
+  async createRoad(data: {title: string; intro: string; categoryId: number; spots: { spotId: number; number: number; introSpot: string }[]; imageUrl: string | null; userId: number; }) {
       return await prisma.$transaction(async (tx) => {
         const newRoad = await tx.pilgrimage.create({
           data: {
@@ -60,11 +75,7 @@ class roadRepository {
     });
   }
 
-  async updateRoad(
-    roadId: number,
-    userId: number,
-    data: Partial<RoadRequestDTO & { imageUrl?: string }>
-  ) {
+  async updateRoad(roadId: number, userId: number, data: Partial<RoadRequestDTO & { imageUrl?: string }>) {
     return await prisma.$transaction(async (tx) => {
       // 기존 데이터 업데이트
       const updated = await tx.pilgrimage.update({
@@ -118,6 +129,13 @@ class roadRepository {
     });
 
     return record?.type === true;
+  }
+
+  async existsPilgrimageName(title: string): Promise<boolean> {
+    const existing = await prisma.pilgrimage.findUnique({
+      where: { title }
+    });
+    return existing !== null;
   }
 }
 

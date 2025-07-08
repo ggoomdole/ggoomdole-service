@@ -7,7 +7,12 @@ import authenticate from '../middlewares/authenticate';
 const router = Router();
 const upload = multer({ storage: multer.memoryStorage() });
 
+router.get("/", roadController.loadAllRoad);
 router.post("/", authenticate, upload.single('road-image'), roadController.createRoad);
 router.patch("/:roadId", authenticate, upload.single('update-road-image'), roadController.updateRoad);
+
+router.get("/:roadId", roadController.loadSpots);
+router.get("/name", roadController.checkName);
+
 
 export default router;

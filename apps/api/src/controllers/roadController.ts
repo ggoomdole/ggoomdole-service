@@ -1,48 +1,37 @@
-import { ParticipantDTO, RoadRequestDTO, RoadResponseDTO, SpotDTO, UpdateRoadResponseDTO } from '@repo/types';
+import { RoadRequestDTO } from '@repo/types';
 
 import { NextFunction,Request, Response } from 'express';
 
 import roadService from '../services/roadService';
-import { BadRequestError, InternalServerError } from '../utils/customError';
+import { BadRequestError, NotFoundError } from '../utils/customError';
 
 class roadController {
+  async loadAllRoad(req: Request, res: Response, next: NextFunction) {
+    try {  
+      const categoryId = req.query.categoryId ? parseInt(req.query.categoryId as string) : undefined;
+      if (categoryId) throw new NotFoundError('카테고리가 존재하지 않습니다.');
+
+      const sortBy = (req.query.sortBy as string) || 'popular';
+      if (sortBy) throw new NotFoundError('정렬 기준이 존재하지 않습니다.');
+
+      const allPilgrimage = await roadService.loadAllRoad(categoryId, sortBy);
+      res.status(200).json(allPilgrimage);
+    } catch (error) {
+      next(error);
+    }
+  }
+
   async createRoad(req: Request, res: Response, next: NextFunction) {
     try {
-        const userId = req.user.userId;
-        const dto = req.body as RoadRequestDTO;
-        const imageFile = req.file;
+      const userId = req.user.userId;
+      const dto = req.body as RoadRequestDTO;
+      const imageFile = req.file;
 
-        if (!isAddRoadDTO(dto)) { throw new BadRequestError('요청 형식이 잘못되었습니다.'); }
-    
-        const newPilgrimage = await roadService.createRoad({
-            title: dto.title,
-            intro: dto.intro,
-            categoryId: dto.categoryId,
-            spots: dto.spots
-        }, userId, imageFile);
-
-        const response: RoadResponseDTO = {
-          roadId: newPilgrimage.id,
-          title: newPilgrimage.title,
-          intro: newPilgrimage.intro,
-          imageUrl: newPilgrimage.imageUrl ?? null,
-          public: newPilgrimage.public ?? true,
-          createAt: newPilgrimage.createAt,
-          updateAt: newPilgrimage.updateAt,
-          categoryId: newPilgrimage.categoryId,
-          spots: newPilgrimage.spots.map((spot): SpotDTO => ({
-            spotId: spot.spotId,
-            number: spot.number,
-            introSpot: spot.introSpot,
-          })),
-          participants: newPilgrimage.participants.map((part): ParticipantDTO => ({
-            userId: part.userId,
-            type: part.type
-          }))
-        };
-    
-        res.status(200).json(response);
-      } catch (error) {
+      if (!isAddRoadDTO(dto)) { throw new BadRequestError('요청 형식이 잘못되었습니다.'); }
+      
+      const newPilgrimage = await roadService.createRoad(dto, userId, imageFile);
+      res.status(200).json({ message: "순례길 생성 완료", newPilgrimage });
+    } catch (error) {
       next(error);
     }
   }
@@ -59,32 +48,23 @@ class roadController {
       ) { throw new BadRequestError('변경사항이 없습니다.'); }
   
       const updatedRoad = await roadService.updateRoad(roadId, userId, dto, imageFile);
-  
-      const response: RoadResponseDTO = {
-        roadId: updatedRoad.id,
-        title: updatedRoad.title,
-        intro: updatedRoad.intro,
-        imageUrl: updatedRoad.imageUrl,
-        public: updatedRoad.public,
-        createAt: updatedRoad.createAt,
-        updateAt: updatedRoad.updateAt,
-        categoryId: updatedRoad.categoryId,
-        spots: updatedRoad.spots.map(spot => ({
-          spotId: spot.spotId,
-          number: spot.number,
-          introSpot: spot.introSpot
-        })),
-        participants: updatedRoad.participants.map(part => ({
-          userId: part.userId,
-          type: part.type
-        }))
-      };
-
-      res.status(200).json(response);
+      res.status(200).json({ message: "순례길 수정 완료", updatedRoad });
     } catch (error) {
       next(error);
     }
-  }  
+  } 
+  
+  async checkName(req: Request, res: Response, next: NextFunction) {
+    try {  
+      const title = req.body.title as string;
+      if (title) throw new NotFoundError('제목은 필수입니다.');
+
+      const result = await roadService.checkDuplicateName(title);
+      return res.status(200).json({ message: `순례길 이름 사용 가능 여부 : ${result.isName}` });
+    } catch (error) {
+      next(error);
+    }
+  }
 }
 
 function isAddRoadDTO(obj: any): obj is RoadRequestDTO {

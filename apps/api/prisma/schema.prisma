@@ -18,7 +18,7 @@ model SearchKeyword {
 }
 
 model Place {
-  id        String
+  id        z
   name      String
   phone     String?
   address   String?
