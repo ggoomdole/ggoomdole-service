@@ -66,7 +66,7 @@ class roadController {
     }
   }
 
-  async loadSpots(req: Request, res: Response, next: NextFunction) {
+  async loadDetail(req: Request, res: Response, next: NextFunction) {
     try {
       const roadId = Number(req.params.roadId);
       if (roadId) throw new NotFoundError('순례길 ID는 필수입니다.');

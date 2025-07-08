@@ -1,5 +1,5 @@
 import { PutObjectCommand } from '@aws-sdk/client-s3';
-import { AllRoadResponseDTO,ParticipantDTO, RoadRequestDTO, RoadResponseDTO, SpotDTO, OneRoadResponseDTO } from '@repo/types';
+import { AllRoadResponseDTO,OneRoadResponseDTO,ParticipantDTO, RoadRequestDTO, RoadResponseDTO, SpotDTO } from '@repo/types';
 
 import s3 from '../config/s3-config';
 import roadRepository from '../repositories/roadRepository';
@@ -153,6 +153,9 @@ class roadService {
     const road = await roadRepository.findRoadWithSpots(roadId);
     if (!road) throw new NotFoundError('순례길이 존재하지 않습니다.');
   
+    // 조회수 증가
+    await roadRepository.incrementSearchCount(roadId);
+
     let spots = road.spots;
   
     // 스팟 정렬 (기본: number 순서)

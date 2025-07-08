@@ -171,7 +171,13 @@ class roadRepository {
       },
     });
   }
-  
+
+  async incrementSearchCount(roadId: number): Promise<void> {
+    await prisma.pilgrimage.update({
+      where: { id: roadId },
+      data: { search: { increment: 1 } },
+    });
+  }
 }
 
 export default new roadRepository();

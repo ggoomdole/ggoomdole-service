@@ -76,7 +76,7 @@ model Pilgrimage {
   title      String @unique
   imageUrl   String?
   intro      String
-  search     Int
+  search     Int      @default(0)
   public     Boolean
   createAt   DateTime
   updateAt   DateTime
