@@ -3,6 +3,7 @@ import express from "express";
 
 import { errorHandler } from './middlewares/errorHandler';
 import authRoute from './routes/authRoute';
+import loadRoute from './routes/loadRoute';
 import userRoute from './routes/userRoute';
 
 const app = express();
@@ -18,6 +19,7 @@ app
 
   .use('/login', authRoute)
   .use('/users', userRoute)
+  .use('/load', loadRoute)
 
   .use(errorHandler);
 
