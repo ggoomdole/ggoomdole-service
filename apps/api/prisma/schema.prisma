@@ -49,7 +49,7 @@ model PilgrimageSpot {
   number       Int?
   introSpot    String?
   request      Boolean?
-  createAT     DateTime?
+  createAt     DateTime?
   updateAt     DateTime?
 
   pilgrimage   Pilgrimage @relation(fields: [pilgrimageId], references: [id])
@@ -84,7 +84,7 @@ model PilgrimageUser {
 
 model Pilgrimage {
   id         Int     @id @default(autoincrement())
-  title      String?
+  title      String? @unique
   imageUrl   String?
   intro      String?
   search     Int?
