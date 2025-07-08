@@ -1,5 +1,5 @@
 import { PutObjectCommand } from '@aws-sdk/client-s3';
-import { RoadListResponseDTO, OneRoadResponseDTO,ParticipantDTO, RoadRequestDTO, RoadResponseDTO, SpotDTO } from '@repo/types';
+import { OneRoadResponseDTO,ParticipantDTO, RoadListResponseDTO, RoadRequestDTO, RoadResponseDTO, SpotDTO } from '@repo/types';
 
 import s3 from '../config/s3-config';
 import roadRepository from '../repositories/roadRepository';
@@ -100,7 +100,57 @@ class roadService {
       title: newRoad.title,
       intro: newRoad.intro,
       imageUrl: newRoad.imageUrl ?? null,
-      public: newRoad.public ?? true,
+      public: true,
+      createAt: newRoad.createAt,
+      updateAt: newRoad.updateAt,
+      categoryId: newRoad.categoryId,
+      spots: newRoad.spots.map((spot): SpotDTO => ({
+        spotId: spot.spotId,
+        number: spot.number,
+        introSpot: spot.introSpot,
+      })),
+      participants: newRoad.participants.map((part): ParticipantDTO => ({
+        userId: part.userId,
+        type: part.type,
+      })),
+    };
+  }
+
+  async createMyRoad(data: RoadRequestDTO, userId: number, imageFile?: Express.Multer.File): Promise<RoadResponseDTO> {
+    const exists = await roadRepository.findRoadByTitle(data.title);
+    if (exists) throw new ExistsError('이미 존재하는 순례길 이름입니다.');
+
+    let imageUrl: string | null = null;
+    if (imageFile) {
+      const fileExt = imageFile.originalname.split('.').pop();
+      const key = `road-image/${data.title}.${fileExt}`;
+  
+      await s3.send(new PutObjectCommand({
+          Bucket: this.BUCKET_NAME,
+          Key: key,
+          Body: imageFile.buffer,
+          ContentType: imageFile.mimetype,
+          ACL: 'public-read',
+        }));
+  
+      imageUrl = `https://${this.BUCKET_NAME}.s3.${process.env.AWS_REGION}.amazonaws.com/${key}`;
+    }
+  
+    const newRoad = await roadRepository.createRoad({
+      title: data.title,
+      intro: data.intro,
+      categoryId: data.categoryId,
+      spots: data.spots,
+      imageUrl,
+      userId
+    });
+
+    return {
+      roadId: newRoad.id,
+      title: newRoad.title,
+      intro: newRoad.intro,
+      imageUrl: newRoad.imageUrl ?? null,
+      public: false,
       createAt: newRoad.createAt,
       updateAt: newRoad.updateAt,
       categoryId: newRoad.categoryId,

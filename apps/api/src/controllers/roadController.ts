@@ -49,6 +49,21 @@ class roadController {
     }
   }
 
+  async createMyRoad(req: Request, res: Response, next: NextFunction) {
+    try {
+      const userId = req.user.userId;
+      const dto = req.body as RoadRequestDTO;
+      const imageFile = req.file;
+
+      if (!isAddRoadDTO(dto)) { throw new BadRequestError('요청 형식이 잘못되었습니다.'); }
+      
+      const newPilgrimage = await roadService.createMyRoad(dto, userId, imageFile);
+      res.status(200).json({ message: "순례길 생성 완료", newPilgrimage });
+    } catch (error) {
+      next(error);
+    }
+  }
+
   async updateRoad(req: Request, res: Response, next: NextFunction) {
     try {
       const userId = req.user.userId;
