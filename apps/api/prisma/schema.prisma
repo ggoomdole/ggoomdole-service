@@ -10,16 +10,16 @@ datasource db {
 model SearchKeyword {
   id        Int      @id @default(autoincrement())
   userId    Int
-  word      String? 
-  createAt  DateTime?
-  updateAt  DateTime?
+  word      String
+  createAt  DateTime
+  updateAt  DateTime
 
   user      User     @relation(fields: [userId], references: [id])
 }
 
 model Place {
   id        Int     @id @default(autoincrement())
-  name      String?
+  name      String
   phone     String?
   address   String?
   latitude  Float?
@@ -35,9 +35,9 @@ model Review {
   id        Int     @id @default(autoincrement())
   userId    Int
   placeId   Int
-  text      String?
+  text      String
   rate      Int?
-  createAt  DateTime?
+  createAt  DateTime
 
   user      User     @relation(fields: [userId], references: [id])
   place     Place    @relation(fields: [placeId], references: [id])
@@ -46,11 +46,11 @@ model Review {
 model PilgrimageSpot {
   pilgrimageId Int
   spotId       Int
-  number       Int?
-  introSpot    String?
-  request      Boolean?
-  createAt     DateTime?
-  updateAt     DateTime?
+  number       Int
+  introSpot    String
+  request      Boolean
+  createAt     DateTime
+  updateAt     DateTime
 
   pilgrimage   Pilgrimage @relation(fields: [pilgrimageId], references: [id])
   place        Place      @relation(fields: [spotId], references: [id])
@@ -58,23 +58,12 @@ model PilgrimageSpot {
   @@id([pilgrimageId, spotId])
 }
 
-model PilgrimageCategory {
-  pilgrimageId Int
-  categoryId   Int
-  createAt     DateTime?
-
-  pilgrimage   Pilgrimage @relation(fields: [pilgrimageId], references: [id])
-  category     Category   @relation(fields: [categoryId], references: [id])
-
-  @@id([pilgrimageId, categoryId])
-}
-
 model PilgrimageUser {
   userId       Int
   pilgrimageId Int
-  type         Boolean?
-  createAt     DateTime?
-  updateAt     DateTime?
+  type         Boolean
+  createAt     DateTime
+  updateAt     DateTime
 
   user         User        @relation(fields: [userId], references: [id])
   pilgrimage   Pilgrimage  @relation(fields: [pilgrimageId], references: [id])
@@ -84,27 +73,29 @@ model PilgrimageUser {
 
 model Pilgrimage {
   id         Int     @id @default(autoincrement())
-  title      String? @unique
+  title      String @unique
   imageUrl   String?
-  intro      String?
-  search     Int?
-  public     Boolean?
-  createAt   DateTime?
-  updateAt   DateTime?
+  intro      String
+  search     Int
+  public     Boolean
+  createAt   DateTime
+  updateAt   DateTime
+
+  categoryId  Int
+  category    Category   @relation(fields: [categoryId], references: [id])
 
   spots      PilgrimageSpot[]
-  categories PilgrimageCategory[]
   participants PilgrimageUser[]
 }
 
 model User {
   id           Int            @id @default(autoincrement())
   kakaoId      String         @unique
-  nickName     String?        @unique
+  nickName     String         @unique
   profileImage String?
   native       Native?
-  createAt     DateTime?
-  updateAt     DateTime?
+  createAt     DateTime
+  updateAt     DateTime
 
   searchKeywords SearchKeyword[]
   reviews        Review[]
@@ -113,9 +104,9 @@ model User {
 
 model Category {
   id         Int     @id @default(autoincrement())
-  name       String?
+  name       String
 
-  pilgrimages PilgrimageCategory[]
+  pilgrimages Pilgrimage[]
 }
 
 enum Native {
