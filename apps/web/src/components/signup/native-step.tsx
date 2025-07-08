@@ -73,7 +73,7 @@ export default function NativeStep({ form, onSubmit }: NativeStepProps) {
       <Button
         onClick={onClickNext}
         disabled={!isNativeValid}
-        className="max-w-floating-button fixed bottom-10 w-[calc(100%-1.25rem)] self-center"
+        className="max-w-floating-button fixed bottom-10 w-[calc(100%-2.5rem)] self-center"
       >
         다음
       </Button>

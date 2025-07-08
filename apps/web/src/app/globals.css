@@ -10,7 +10,7 @@
   --spacing-without-navigation: 100dvh;
   /* 최대 모바일 화면 (600px, 37.5rem) */
   --spacing-mobile: 37.5rem;
-  --spacing-floating-button: calc(var(--spacing-mobile) - 1.25rem);
+  --spacing-floating-button: calc(var(--spacing-mobile) - 2.5rem);
   --spacing-with-floating-button: 7.5rem;
 
   --color-gold-500: #f2dc1d;
