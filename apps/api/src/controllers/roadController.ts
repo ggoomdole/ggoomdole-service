@@ -1,4 +1,4 @@
-import { RoadRequestDTO, RoadResponseDTO, ParticipantDTO, SpotDTO, UpdateRoadResponseDTO } from '@repo/types';
+import { ParticipantDTO, RoadRequestDTO, RoadResponseDTO, SpotDTO, UpdateRoadResponseDTO } from '@repo/types';
 
 import { NextFunction,Request, Response } from 'express';
 
