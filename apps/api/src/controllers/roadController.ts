@@ -32,7 +32,6 @@ class roadController {
       next(error);
     }
   }
-  
 
   async createRoad(req: Request, res: Response, next: NextFunction) {
     try {
@@ -123,7 +122,21 @@ class roadController {
     } catch (error) {
       next(error);
     }
-  }  
+  }
+
+  async loadCustom(req: Request, res: Response, next: NextFunction) {
+    try {
+      const userId = req.user.userId;
+
+      const categoryId = req.query.categoryId ? parseInt(req.query.categoryId as string) : undefined;
+      if (categoryId) throw new NotFoundError('카테고리가 존재하지 않습니다.');
+  
+      const participationList = await roadService.loadCustomRoad(userId, categoryId);
+      return res.status(200).json(participationList);
+    } catch (error) {
+      next(error);
+    }
+  }
 }
 
 function isAddRoadDTO(obj: any): obj is RoadRequestDTO {

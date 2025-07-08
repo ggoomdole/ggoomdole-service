@@ -18,5 +18,6 @@ router.get("/:roadId", roadController.loadDetail);
 router.get("/name", roadController.checkName);
 
 router.get("/participation", authenticate, roadController.loadParticipation);
+router.get("/custom", authenticate, roadController.loadCustom);
 
 export default router;

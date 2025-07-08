@@ -181,6 +181,7 @@ class roadRepository {
 
   async findRoadsByParticipation(userId: number, maker: boolean, categoryId?: number) {
     const whereClause: any = {
+      public: true,
       ...(categoryId && { categoryId }),
     };
   
@@ -202,6 +203,25 @@ class roadRepository {
         },
       ];
     }
+  
+    return await prisma.pilgrimage.findMany({
+      where: whereClause,
+      include: {
+        participants: {
+          include: {
+            user: true,
+          },
+        },
+      },
+    });
+  }  
+
+  async findMyPrivateRoads(userId: number, categoryId?: number) {
+    const whereClause: any = {
+      public: false,        // 비공개 순례길만
+      makerId: userId,      // 내가 만든 순례길만
+      ...(categoryId && { categoryId }),
+    };
   
     return await prisma.pilgrimage.findMany({
       where: whereClause,

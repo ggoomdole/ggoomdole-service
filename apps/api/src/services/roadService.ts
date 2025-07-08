@@ -277,6 +277,23 @@ class roadService {
       participants: p.participants.length,
       native: p.participants[0]?.user.native ?? null,
     }));
+  }
+
+  async loadCustomRoad(userId: number, categoryId?: number): Promise<RoadListResponseDTO[]> {
+    const rawPilgrimages = await roadRepository.findMyPrivateRoads(userId, categoryId);
+  
+    if (!rawPilgrimages || rawPilgrimages.length === 0)
+      throw new NotFoundError('커스텀 순례길이 존재하지 않습니다.');
+  
+    return rawPilgrimages.map((p): RoadListResponseDTO => ({
+      roadId: p.id,
+      title: p.title,
+      intro: p.intro,
+      imageUrl: p.imageUrl ?? null,
+      categoryId: p.categoryId,
+      participants: p.participants.length,
+      native: p.participants[0]?.user.native ?? null
+    }));
   }  
 }
 
