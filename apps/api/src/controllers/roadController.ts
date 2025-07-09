@@ -5,7 +5,7 @@ import { NextFunction,Request, Response } from 'express';
 import roadService from '../services/roadService';
 import { BadRequestError, NotFoundError } from '../utils/customError';
 
-class roadController {
+class RoadController {
   async loadAllRoad(req: Request, res: Response, next: NextFunction) {
     try {  
       const categoryId = req.query.categoryId ? parseInt(req.query.categoryId as string) : undefined;
@@ -147,4 +147,4 @@ function isAddRoadDTO(obj: any): obj is RoadRequestDTO {
   );
 }
 
-export default new roadController();
+export default new RoadController();

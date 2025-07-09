@@ -11,14 +11,14 @@ model SearchKeyword {
   id        Int      @id @default(autoincrement())
   userId    Int
   word      String
-  createAt  DateTime
-  updateAt  DateTime
+  createAt  DateTime @default(now())
+  updateAt  DateTime @updatedAt
 
   user      User     @relation(fields: [userId], references: [id])
 }
 
-model Place {
-  id        z
+model Spot {
+  id        String  @id
   name      String
   phone     String?
   address   String?
@@ -32,28 +32,28 @@ model Place {
 }
 
 model Review {
-  id        Int     @id @default(autoincrement())
+  id        Int               @id @default(autoincrement())
   userId    Int
-  placeId   Int
+  spotId   String
   text      String
   rate      Int?
-  createAt  DateTime
+  createAt     DateTime       @default(now())
 
   user      User     @relation(fields: [userId], references: [id])
-  place     Place    @relation(fields: [placeId], references: [id])
+  spot     Spot    @relation(fields: [spotId], references: [id])
 }
 
 model PilgrimageSpot {
   pilgrimageId Int
-  spotId       Int
+  spotId       String
   number       Int
   introSpot    String
   request      Boolean
-  createAt     DateTime
-  updateAt     DateTime
+  createAt     DateTime       @default(now())
+  updateAt     DateTime       @updatedAt
 
   pilgrimage   Pilgrimage @relation(fields: [pilgrimageId], references: [id])
-  place        Place      @relation(fields: [spotId], references: [id])
+  spot        Spot      @relation(fields: [spotId], references: [id])
 
   @@id([pilgrimageId, spotId])
 }
@@ -62,8 +62,8 @@ model PilgrimageUser {
   userId       Int
   pilgrimageId Int
   type         Boolean
-  createAt     DateTime
-  updateAt     DateTime
+  createAt     DateTime       @default(now())
+  updateAt     DateTime       @updatedAt
 
   user         User        @relation(fields: [userId], references: [id])
   pilgrimage   Pilgrimage  @relation(fields: [pilgrimageId], references: [id])
@@ -72,14 +72,14 @@ model PilgrimageUser {
 }
 
 model Pilgrimage {
-  id         Int     @id @default(autoincrement())
-  title      String @unique
+  id         Int        @id @default(autoincrement())
+  title      String     @unique
   imageUrl   String?
   intro      String
-  search     Int      @default(0)
+  search     Int        @default(0)
   public     Boolean
-  createAt   DateTime
-  updateAt   DateTime
+  createAt   DateTime   @default(now())
+  updateAt   DateTime   @updatedAt
 
   categoryId  Int
   category    Category   @relation(fields: [categoryId], references: [id])
@@ -94,8 +94,8 @@ model User {
   nickName     String         @unique
   profileImage String?
   native       Native?
-  createAt     DateTime
-  updateAt     DateTime
+  createAt     DateTime       @default(now())
+  updateAt     DateTime       @updatedAt
 
   searchKeywords SearchKeyword[]
   reviews        Review[]
