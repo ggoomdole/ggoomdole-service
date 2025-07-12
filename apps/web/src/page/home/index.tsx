@@ -2,8 +2,8 @@ import Image from "next/image";
 import Link from "next/link";
 
 import ArrowRight from "@/assets/arrow-right.svg";
-import { Carousel, CarouselItem } from "@/components/carousel";
 import CourseCard from "@/components/common/card/course-card";
+import { Carousel, CarouselItem } from "@/components/common/carousel";
 import NearbyTouristSpotItem from "@/components/home/nearby-tourist-spot-item";
 import QueryTabNav from "@/components/query-tab-nav";
 import { COURSE_CATEGORIES } from "@/constants/category";

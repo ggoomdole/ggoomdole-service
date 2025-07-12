@@ -3,9 +3,10 @@
 import Image from "next/image";
 import Link from "next/link";
 
-import Star from "@/assets/star.svg";
 import { useGeolocation } from "@/hooks/use-geolocation";
 import { calculateDistance } from "@/lib/utils";
+
+import StarRating from "../common/star-rating";
 
 interface NearbyTouristSpotItemProps {
   id: number;
@@ -40,12 +41,7 @@ export default function NearbyTouristSpotItem({
       <Image src={image} alt={name} width={160} height={160} />
       <div className="space-y-0.5 bg-white p-1">
         <p className="typo-medium truncate">{name}</p>
-        <div className="typo-regular flex items-center gap-1 text-gray-500">
-          <Star className="size-3.5" />
-          <p>
-            {rating}({participants})
-          </p>
-        </div>
+        <StarRating rating={rating} participants={participants} />
         <p className="typo-regular">
           {loading
             ? "위치 확인 중..."

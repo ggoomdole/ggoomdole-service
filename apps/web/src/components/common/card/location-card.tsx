@@ -1,7 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 
-import Star from "@/assets/star.svg";
+import StarRating from "../star-rating";
 
 interface LocationCardProps {
   id: number;
@@ -41,12 +41,7 @@ export default function LocationCard({
       </div>
       <div>
         <h2 className="typo-semibold line-clamp-1">{name}</h2>
-        <div className="typo-regular flex items-center gap-1 text-gray-500">
-          <Star className="size-3.5" />
-          <p>
-            {rating}({participants})
-          </p>
-        </div>
+        <StarRating rating={rating} participants={participants} />
         <p className="typo-medium line-clamp-1">{intro}</p>
       </div>
     </Link>
