@@ -85,7 +85,6 @@ const onUpdateMarkerSelection = ({
   markers.forEach((marker, index) => {
     const prevMarker = prevMarkers[index];
     const isSelected = selectedId === prevMarker.id;
-    console.log(isSelected, selectedId, prevMarker.id);
 
     // 마커를 새로 생성하여 아이콘과 크기 변경
     const newMarker: TMapMarker = new window.Tmapv3.Marker({

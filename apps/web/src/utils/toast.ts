@@ -9,6 +9,15 @@ export const successToast = (message: string) => {
   });
 };
 
+export const infoToast = (message: string) => {
+  toast.info(message, {
+    style: {
+      backgroundColor: "var(--color-orange-100)",
+      color: "var(--color-orange-700)",
+    },
+  });
+};
+
 export const errorToast = (message: string) => {
   toast.error(message, {
     style: {
