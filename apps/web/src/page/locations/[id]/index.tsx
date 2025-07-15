@@ -1,12 +1,43 @@
 import { DragCarousel, DragCarouselItem } from "@/components/common/carousel/drag-carousel";
 import Header from "@/components/common/header";
 import StarRating from "@/components/common/star-rating";
+import CourseTab from "@/components/locations/course-tab";
+import HomeTab from "@/components/locations/home-tab";
+import ReviewTab from "@/components/locations/review-tab";
+import QueryTabNav from "@/components/query-tab-nav";
 
 interface LocationsPageProps {
   id: string;
+  tab: string;
 }
 
-export default function LocationsPage({ id }: LocationsPageProps) {
+const NAVS = [
+  {
+    name: "홈",
+    path: "",
+  },
+  {
+    name: "후기",
+    path: "review",
+  },
+  {
+    name: "주변 관광지",
+    path: "course",
+  },
+];
+
+const renderTab = (tab: string) => {
+  switch (tab) {
+    case "review":
+      return <ReviewTab />;
+    case "course":
+      return <CourseTab />;
+    default:
+      return <HomeTab />;
+  }
+};
+
+export default function LocationsPage({ id, tab }: LocationsPageProps) {
   return (
     <>
       <Header sticky>
@@ -18,7 +49,7 @@ export default function LocationsPage({ id }: LocationsPageProps) {
           </div>
         </div>
       </Header>
-      <main>
+      <main className="pb-navigation">
         <section className="bg-main-100 space-y-5 p-5">
           <div className="flex items-center justify-between gap-2.5">
             <div className="space-y-1">
@@ -37,6 +68,10 @@ export default function LocationsPage({ id }: LocationsPageProps) {
               <div className="aspect-thumbnail w-32 shrink-0 rounded-sm bg-gray-300" />
             </DragCarouselItem>
           </DragCarousel>
+        </section>
+        <section>
+          <QueryTabNav navKey="tab" navs={NAVS} />
+          {renderTab(tab)}
         </section>
       </main>
     </>
