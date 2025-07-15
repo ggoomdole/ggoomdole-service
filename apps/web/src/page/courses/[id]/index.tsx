@@ -7,7 +7,7 @@ import Link from "next/link";
 import List from "@/assets/list.svg";
 import Header from "@/components/common/header";
 import Map from "@/components/common/map";
-import StarRating from "@/components/common/star-rating";
+import AverageStarRating from "@/components/common/star/average-star-rating";
 import FloatingActionButton from "@/components/courses/floating-action-button";
 import type { TMapMarkerClickEvent } from "@/types/tmap";
 
@@ -87,7 +87,7 @@ export default function CourseDetailPage({ id }: CourseDetailPageProps) {
             />
             <div>
               <h2 className="typo-semibold line-clamp-1">{dummyCourse.placeName}</h2>
-              <StarRating rating={dummyCourse.rating} participants={dummyCourse.people} />
+              <AverageStarRating rating={dummyCourse.rating} participants={dummyCourse.people} />
               <p className="typo-regular line-clamp-1 text-gray-500">{dummyCourse.address}</p>
               <p className="typo-medium line-clamp-1">{dummyCourse.intro}</p>
               <div className="typo-regular flex gap-2.5 text-gray-500">

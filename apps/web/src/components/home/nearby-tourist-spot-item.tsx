@@ -6,7 +6,7 @@ import Link from "next/link";
 import { useGeolocation } from "@/hooks/use-geolocation";
 import { calculateDistance } from "@/lib/utils";
 
-import StarRating from "../common/star-rating";
+import AverageStarRating from "../common/star/average-star-rating";
 
 interface NearbyTouristSpotItemProps {
   id: number;
@@ -41,7 +41,7 @@ export default function NearbyTouristSpotItem({
       <Image src={image} alt={name} width={160} height={160} />
       <div className="space-y-0.5 bg-white p-1">
         <p className="typo-medium truncate">{name}</p>
-        <StarRating rating={rating} participants={participants} />
+        <AverageStarRating rating={rating} participants={participants} />
         <p className="typo-regular">
           {loading
             ? "위치 확인 중..."

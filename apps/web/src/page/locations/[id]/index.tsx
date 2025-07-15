@@ -1,6 +1,6 @@
 import { DragCarousel, DragCarouselItem } from "@/components/common/carousel/drag-carousel";
 import Header from "@/components/common/header";
-import StarRating from "@/components/common/star-rating";
+import AverageStarRating from "@/components/common/star/average-star-rating";
 import CourseTab from "@/components/locations/course-tab";
 import HomeTab from "@/components/locations/home-tab";
 import ReviewTab from "@/components/locations/review-tab";
@@ -54,7 +54,7 @@ export default function LocationsPage({ id, tab }: LocationsPageProps) {
           <div className="flex items-center justify-between gap-2.5">
             <div className="space-y-1">
               <h1 className="typo-semibold line-clamp-1 text-gray-700">성심당 대전역</h1>
-              <StarRating rating={4.3} participants={474} />
+              <AverageStarRating rating={4.3} participants={474} />
               <p className="typo-regular line-clamp-1 text-gray-500">
                 대전광역시 동구 중앙로 215 대전역사 2F
               </p>
