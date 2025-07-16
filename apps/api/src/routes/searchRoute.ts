@@ -9,7 +9,7 @@ router.get("/road", authenticate, searchController.searchRoad);
 
 router.delete("/", authenticate, searchController.deleteSearchWord);
 router.delete("/all", authenticate, searchController.deleteSearchAllWord);
-router.get("/recent", authenticate, searchController.searchRoad);
+router.get("/recent", authenticate, searchController.getRecentSearchWords);
 
 
 export default router;
