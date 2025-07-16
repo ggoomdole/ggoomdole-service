@@ -5,7 +5,7 @@ import { SignUpForm } from "@/schemas/signup";
 
 import { UseFormReturn } from "react-hook-form";
 
-import Button from "../button";
+import FloatingButton from "../common/button/floating-button";
 
 interface ProfileStepProps {
   form: UseFormReturn<SignUpForm>;
@@ -71,13 +71,9 @@ export default function ProfileStep({ form, onNext }: ProfileStepProps) {
           />
         </section>
       </main>
-      <Button
-        onClick={onClickNext}
-        disabled={!previewImage}
-        className="max-w-floating-button fixed bottom-10 w-[calc(100%-2.5rem)] self-center"
-      >
+      <FloatingButton onClick={onClickNext} disabled={!previewImage}>
         다음
-      </Button>
+      </FloatingButton>
     </>
   );
 }
