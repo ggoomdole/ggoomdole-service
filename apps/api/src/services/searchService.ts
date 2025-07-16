@@ -1,7 +1,9 @@
+import { RoadListResponseDTO } from '@repo/types';
+
 import axios from 'axios';
+
 import { averageRate } from './roadService';
 import searchRepository from '../repositories/searchRepository';
-import { RoadListResponseDTO } from '@repo/types';
 
 class SearchService {
   async searchRoad(userId: number, word: string, orderBy: string = 'popular'): Promise<{ results: RoadListResponseDTO[] }> {
