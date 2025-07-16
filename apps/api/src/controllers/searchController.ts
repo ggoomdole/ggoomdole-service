@@ -15,7 +15,7 @@ class SearchController {
         if (sortBy) throw new NotFoundError('정렬 기준이 존재하지 않습니다.');
 
         const result = await searchService.searchRoad(userId, word, sortBy);
-        res.status(200).json({result});
+        res.status(200).json(result);
     } catch (error) {
         next(error);
     }
@@ -49,7 +49,7 @@ class SearchController {
     try{
         const userId = req.user.userId;
         const recentList = await searchService.getRecentSearchWords(userId);
-        res.status(200).json({recentList});
+        res.status(200).json(recentList);
     } catch (error) {
         next(error);
     }
