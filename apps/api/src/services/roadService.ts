@@ -304,7 +304,7 @@ function averageRateStr(spot: any): string {
 }
 
 // 평균 평점 계산
-function averageRate(spot: any): number {
+export function averageRate(spot: any): number {
   const reviews = spot?.place?.reviews ?? [];
   const rates = reviews
     .filter((r: any) => r.rate !== null && r.rate !== undefined)
