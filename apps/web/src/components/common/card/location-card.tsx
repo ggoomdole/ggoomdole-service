@@ -35,9 +35,11 @@ export default function LocationCard({
           height={80}
           className="aspect-square rounded-sm object-cover"
         />
-        <p className="typo-medium typo-regular bg-main-900 absolute -left-2.5 -top-2.5 flex size-5 items-center justify-center rounded-full text-white">
-          {rank}
-        </p>
+        {rank && (
+          <p className="typo-medium typo-regular bg-main-900 absolute -left-2.5 -top-2.5 flex size-5 items-center justify-center rounded-full text-white">
+            {rank}
+          </p>
+        )}
       </div>
       <div>
         <h2 className="typo-semibold line-clamp-1">{name}</h2>
