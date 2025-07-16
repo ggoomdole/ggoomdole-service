@@ -1,17 +1,22 @@
 import { NextFunction, Request, Response } from 'express';
 
 import searchService from '../services/searchService';
-import { BadRequestError } from '../utils/customError';
+import { BadRequestError, NotFoundError } from '../utils/customError';
 
 class SearchController {
   async searchRoad(req: Request, res: Response, next: NextFunction) {
     try{
-        const { word } = req.query;
         const userId = req.user.userId;
+
+        const word = req.query.word;
+        if (!word || typeof word !== 'string') { throw new BadRequestError('검색어는 필수입니다.'); }
+
+        const sortBy = (req.query.sortBy as string) || 'popular';
+        if (sortBy) throw new NotFoundError('정렬 기준이 존재하지 않습니다.');
 
         if (!word || typeof word !== 'string') { throw new BadRequestError('검색어는 필수입니다.'); }
 
-        const result = await searchService.searchRoad(userId, word);
+        const result = await searchService.searchRoad(userId, word, sortBy);
         res.status(200).json({result});
     } catch (error) {
         next(error);

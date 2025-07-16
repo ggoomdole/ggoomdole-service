@@ -6,7 +6,7 @@ import { averageRate } from './roadService';
 import searchRepository from '../repositories/searchRepository';
 
 class SearchService {
-  async searchRoad(userId: number, word: string, orderBy: string = 'popular'): Promise<{ results: RoadListResponseDTO[] }> {
+  async searchRoad(userId: number, word: string, sortBy: string = 'popular'): Promise<{ results: RoadListResponseDTO[] }> {
     const response = await axios.post(
       'https://dapi.kakao.com/v2/nlp/morph',
       { text: word },
@@ -30,7 +30,7 @@ class SearchService {
 
     const sortedResults = [...rawResults];
 
-    switch (orderBy) {
+    switch (sortBy) {
       case 'latest':
         rawResults.sort((a, b) => +new Date(b.createAt) - +new Date(a.createAt));
         break;
