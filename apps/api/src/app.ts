@@ -4,6 +4,7 @@ import express from "express";
 import { errorHandler } from './middlewares/errorHandler';
 import authRoute from './routes/authRoute';
 import roadRoute from './routes/roadRoute';
+import searchRoute from './routes/searchRoute';
 import userRoute from './routes/userRoute';
 
 const app = express();
@@ -20,6 +21,7 @@ app
   .use('/login', authRoute)
   .use('/users', userRoute)
   .use('/road', roadRoute)
+  .use('/search', searchRoute)
 
   .use(errorHandler);
 

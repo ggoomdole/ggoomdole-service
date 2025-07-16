@@ -5,7 +5,7 @@ import s3 from '../config/s3-config';
 import roadRepository from '../repositories/roadRepository';
 import { ExistsError, NotFoundError, UnauthorizedError } from '../utils/customError';
 
-class roadService {
+class RoadService {
   private BUCKET_NAME = process.env.AWS_S3_BUCKET_NAME!;
 
   async loadAllRoad(categoryId?: number, sortBy: string = 'popular'): Promise<RoadListResponseDTO[]> {
@@ -190,7 +190,7 @@ class roadService {
       imageUrl = `https://${this.BUCKET_NAME}.s3.${process.env.AWS_REGION}.amazonaws.com/${key}`;
     }
   
-    const updatedRoad = await roadRepository.updateRoad(roadId, userId, {
+    const updatedRoad = await roadRepository.updateRoad(roadId, {
       ...data,
       ...(imageUrl && { imageUrl })
     });
@@ -242,7 +242,7 @@ class roadService {
       });
     } else if (sortBy === 'review') {
       // 후기순: 스팟별 리뷰 개수 내림차순
-      spots = spots.sort((a, b) => b.place.reviews.length - a.place.reviews.length);
+      spots = spots.sort((a, b) => b.spot.reviews.length - a.spot.reviews.length);
     } else {
       // 기본: number 오름차순
       spots = spots.sort((a, b) => a.number - b.number);
@@ -259,7 +259,7 @@ class roadService {
         number: spot.number,
         introSpot: spot.introSpot,
         avgReview: averageRateStr(spot),
-        numReview: spot.place.reviews.length.toString(),
+        numReview: spot.spot.reviews.length.toString(),
       })),
     };
   }
@@ -304,7 +304,7 @@ function averageRateStr(spot: any): string {
 }
 
 // 평균 평점 계산
-function averageRate(spot: any): number {
+export function averageRate(spot: any): number {
   const reviews = spot?.place?.reviews ?? [];
   const rates = reviews
     .filter((r: any) => r.rate !== null && r.rate !== undefined)
@@ -314,4 +314,4 @@ function averageRate(spot: any): number {
   return rates.reduce((a: number, b: number) => a + b, 0) / rates.length;
 }
 
-export default new roadService();
+export default new RoadService();

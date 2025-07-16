@@ -21,7 +21,7 @@ export interface RoadResponseDTO {
 }
 
 export interface SpotDTO {
-    spotId: number;
+    spotId: string;
     number: number;
     introSpot: string;
 }
@@ -54,7 +54,7 @@ export interface OneRoadResponseDTO {
 }
 
 export interface SpotReviewDTO {
-    spotId: number;
+    spotId: string;
     number: number;
     introSpot: string;
     avgReview: string;

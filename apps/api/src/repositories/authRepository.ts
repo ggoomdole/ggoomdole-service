@@ -7,7 +7,7 @@ class AuthRepository {
     return prisma.user.findUnique({ where: { kakaoId } });
   }
 
-  async createUser(data: { kakaoId: string; nickName?: string; profileImage?: string }) {
+  async createUser(data: { kakaoId: string; nickName: string; profileImage?: string }) {
     return prisma.user.create({ data });
   }
 

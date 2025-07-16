@@ -3,15 +3,15 @@ CREATE TABLE `SearchKeyword` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
     `userId` INTEGER NOT NULL,
     `word` VARCHAR(191) NOT NULL,
-    `createAt` DATETIME(3) NOT NULL,
+    `createAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `updateAt` DATETIME(3) NOT NULL,
 
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- CreateTable
-CREATE TABLE `Place` (
-    `id` INTEGER NOT NULL AUTO_INCREMENT,
+CREATE TABLE `Spot` (
+    `id` VARCHAR(191) NOT NULL,
     `name` VARCHAR(191) NOT NULL,
     `phone` VARCHAR(191) NULL,
     `address` VARCHAR(191) NULL,
@@ -27,10 +27,10 @@ CREATE TABLE `Place` (
 CREATE TABLE `Review` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
     `userId` INTEGER NOT NULL,
-    `placeId` INTEGER NOT NULL,
+    `spotId` VARCHAR(191) NOT NULL,
     `text` VARCHAR(191) NOT NULL,
     `rate` INTEGER NULL,
-    `createAt` DATETIME(3) NOT NULL,
+    `createAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
 
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
@@ -38,11 +38,11 @@ CREATE TABLE `Review` (
 -- CreateTable
 CREATE TABLE `PilgrimageSpot` (
     `pilgrimageId` INTEGER NOT NULL,
-    `spotId` INTEGER NOT NULL,
+    `spotId` VARCHAR(191) NOT NULL,
     `number` INTEGER NOT NULL,
     `introSpot` VARCHAR(191) NOT NULL,
     `request` BOOLEAN NOT NULL,
-    `createAt` DATETIME(3) NOT NULL,
+    `createAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `updateAt` DATETIME(3) NOT NULL,
 
     PRIMARY KEY (`pilgrimageId`, `spotId`)
@@ -53,7 +53,7 @@ CREATE TABLE `PilgrimageUser` (
     `userId` INTEGER NOT NULL,
     `pilgrimageId` INTEGER NOT NULL,
     `type` BOOLEAN NOT NULL,
-    `createAt` DATETIME(3) NOT NULL,
+    `createAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `updateAt` DATETIME(3) NOT NULL,
 
     PRIMARY KEY (`userId`, `pilgrimageId`)
@@ -65,9 +65,9 @@ CREATE TABLE `Pilgrimage` (
     `title` VARCHAR(191) NOT NULL,
     `imageUrl` VARCHAR(191) NULL,
     `intro` VARCHAR(191) NOT NULL,
-    `search` INTEGER NOT NULL,
+    `search` INTEGER NOT NULL DEFAULT 0,
     `public` BOOLEAN NOT NULL,
-    `createAt` DATETIME(3) NOT NULL,
+    `createAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `updateAt` DATETIME(3) NOT NULL,
     `categoryId` INTEGER NOT NULL,
 
@@ -82,7 +82,7 @@ CREATE TABLE `User` (
     `nickName` VARCHAR(191) NOT NULL,
     `profileImage` VARCHAR(191) NULL,
     `native` ENUM('SHORT_TERM', 'MID_TERM', 'LONG_TERM', 'RESIDENT') NULL,
-    `createAt` DATETIME(3) NOT NULL,
+    `createAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `updateAt` DATETIME(3) NOT NULL,
 
     UNIQUE INDEX `User_kakaoId_key`(`kakaoId`),
@@ -105,13 +105,13 @@ ALTER TABLE `SearchKeyword` ADD CONSTRAINT `SearchKeyword_userId_fkey` FOREIGN K
 ALTER TABLE `Review` ADD CONSTRAINT `Review_userId_fkey` FOREIGN KEY (`userId`) REFERENCES `User`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE `Review` ADD CONSTRAINT `Review_placeId_fkey` FOREIGN KEY (`placeId`) REFERENCES `Place`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE `Review` ADD CONSTRAINT `Review_spotId_fkey` FOREIGN KEY (`spotId`) REFERENCES `Spot`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE `PilgrimageSpot` ADD CONSTRAINT `PilgrimageSpot_pilgrimageId_fkey` FOREIGN KEY (`pilgrimageId`) REFERENCES `Pilgrimage`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE `PilgrimageSpot` ADD CONSTRAINT `PilgrimageSpot_spotId_fkey` FOREIGN KEY (`spotId`) REFERENCES `Place`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE `PilgrimageSpot` ADD CONSTRAINT `PilgrimageSpot_spotId_fkey` FOREIGN KEY (`spotId`) REFERENCES `Spot`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE `PilgrimageUser` ADD CONSTRAINT `PilgrimageUser_userId_fkey` FOREIGN KEY (`userId`) REFERENCES `User`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;

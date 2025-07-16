@@ -3,14 +3,14 @@ const prisma = new PrismaClient();
 
 import { RoadRequestDTO } from '@repo/types';
 
-class roadRepository {
+class RoadRepository {
   async allRoadList(categoryId?: number) {
     return await prisma.pilgrimage.findMany({
       where: categoryId ? { categoryId } : undefined,
       include: {
         spots: {
           include: {
-            place: {
+            spot: {
               include: {
                 reviews: true,
               },
@@ -26,7 +26,7 @@ class roadRepository {
     });
   }
 
-  async createRoad(data: {title: string; intro: string; categoryId: number; spots: { spotId: number; number: number; introSpot: string }[]; imageUrl: string | null; userId: number; }) {
+  async createRoad(data: {title: string; intro: string; categoryId: number; spots: { spotId: string; number: number; introSpot: string }[]; imageUrl: string | null; userId: number; }) {
       return await prisma.$transaction(async (tx) => {
         const newRoad = await tx.pilgrimage.create({
           data: {
@@ -75,7 +75,7 @@ class roadRepository {
     });
   }
 
-  async updateRoad(roadId: number, userId: number, data: Partial<RoadRequestDTO & { imageUrl?: string }>) {
+  async updateRoad(roadId: number, data: Partial<RoadRequestDTO & { imageUrl?: string; }>) {
     return await prisma.$transaction(async (tx) => {
       // 기존 데이터 업데이트
       const updated = await tx.pilgrimage.update({
@@ -161,7 +161,7 @@ class roadRepository {
       include: {
         spots: {
           include: {
-            place: {
+            spot: {
               include: {
                 reviews: true,
               },
@@ -236,4 +236,4 @@ class roadRepository {
   }  
 }
 
-export default new roadRepository();
+export default new RoadRepository();

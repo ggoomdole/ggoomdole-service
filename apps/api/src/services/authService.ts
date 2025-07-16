@@ -27,14 +27,19 @@
       });
       const kakaoId = userResponse.data.id;
       if (!kakaoId) {
-        throw new KakaoError('카카오 사용자 정보를 받지 못했습니다.');
+        throw new KakaoError('카카오 사용자 Id 정보를 받지 못했습니다.');
+      }
+      const nickname = userResponse.data.kakao_account.profile.nickname ?? "";
+      if (!kakaoId) {
+        throw new KakaoError('카카오 사용자 닉네임 정보를 받지 못했습니다.');
       }
 
       // DB에서 사용자 찾고 없으면 생성
       let user = await AuthRepository.findUserByKakaoId(String(kakaoId));
       if (!user) {
         user = await AuthRepository.createUser({
-          kakaoId: String(kakaoId)
+          kakaoId: String(kakaoId),
+          nickName: String(nickname)
         });
       }
 

@@ -1,9 +1,9 @@
 import { NextFunction,Request, Response } from 'express';
 
 import userService from '../services/userService';
-import { BadRequestError, UnauthorizedError } from '../utils/customError';
+import { BadRequestError } from '../utils/customError';
 
-class userController {
+class UserController {
   async checkNickname(req: Request, res: Response, next: NextFunction) {
     try {
         const { nickname } = req.query;
@@ -58,4 +58,4 @@ class userController {
   }
 }
 
-export default new userController();
+export default new UserController();
