@@ -5,6 +5,7 @@ import { errorHandler } from './middlewares/errorHandler';
 import authRoute from './routes/authRoute';
 import roadRoute from './routes/roadRoute';
 import userRoute from './routes/userRoute';
+import searchRoute from './routes/searchRoute';
 
 const app = express();
 
@@ -20,6 +21,7 @@ app
   .use('/login', authRoute)
   .use('/users', userRoute)
   .use('/road', roadRoute)
+  .use('/search', searchRoute)
 
   .use(errorHandler);
 
