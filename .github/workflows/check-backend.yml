@@ -37,7 +37,7 @@ jobs:
         run: pnpm prisma validate
         working-directory: apps/api
         env:
-          DOTENV_CONFIG_PATH: .env.test
+          DOTENV_CONFIG_PATH: apps/api/.env.test
 
       - name: Build backend
         run: pnpm run build:api
