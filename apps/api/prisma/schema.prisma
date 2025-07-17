@@ -36,7 +36,7 @@ model Review {
   userId    Int
   spotId   String
   text      String
-  rate      Int?
+  rate      Int
   createAt     DateTime       @default(now())
 
   user      User     @relation(fields: [userId], references: [id])
