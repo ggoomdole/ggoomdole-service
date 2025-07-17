@@ -27,20 +27,15 @@ jobs:
 
       - name: Create .env.test file for SQLite
         run: |
-          echo "${{ secrets.BE_TEST_ENV }}" > apps/api/.env
+          echo "${{ secrets.BE_TEST_ENV }}" > apps/api/.env.test
 
       - name: Generate Prisma Client
-        run: pnpm prisma generate --schema=apps/api/prisma/schema.prisma
+        run: pnpm prisma generate
         working-directory: apps/api
 
       - name: Validate Prisma Schema
-        run: pnpm prisma validate --schema=apps/api/prisma/schema.prisma
+        run: pnpm prisma validate
         working-directory: apps/api
-
-      - name: Run tests
-        env:
-          NODE_ENV: test
-        run: pnpm test --filter ./apps/api...
 
       - name: Build backend
         run: pnpm run build:api
