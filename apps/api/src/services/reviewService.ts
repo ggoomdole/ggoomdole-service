@@ -1,4 +1,4 @@
-import { ReviewCreateDTO, ReviewCheckDTO, RoadListResponseDTO } from '@repo/types';
+import { ReviewCheckDTO, ReviewCreateDTO, RoadListResponseDTO } from '@repo/types';
 
 import reviewRepository from '../repositories/reviewRepository';
 import { ExistsError, NotFoundError, UnauthorizedError } from '../utils/customError';
