@@ -60,3 +60,15 @@ export interface SpotReviewDTO {
     avgReview: string;
     numReview: string;
 }
+
+export interface ReviewCreateDTO {
+    spotId: string;
+    content: string;
+    rate: number;
+}
+
+export interface ReviewCheckDTO {
+    spotId: string;
+    content: string;
+    rate: number;
+}
