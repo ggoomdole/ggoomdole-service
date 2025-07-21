@@ -92,7 +92,7 @@ export default function CourseDetailListPage({ id, sort }: CourseDetailListPageP
           </div>
         </div>
       </Header>
-      <main className="pb-navigation relative px-5 pt-2.5">
+      <main className="pb-navigation relative gap-2.5 px-5 pt-2.5">
         {dummyLocations.map((location, idx) => (
           <LocationCard key={location.id} rank={idx + 1} {...location} />
         ))}
