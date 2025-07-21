@@ -97,7 +97,7 @@ export default function CourseDetailListPage({ id, sort }: CourseDetailListPageP
           <LocationCard key={location.id} rank={idx + 1} {...location} />
         ))}
       </main>
-      <FloatingActionButton />
+      <FloatingActionButton id={id} />
     </>
   );
 }

@@ -85,7 +85,7 @@ export default function CourseDetailPage({ id }: CourseDetailPageProps) {
             </div>
           </section>
         ) : (
-          <FloatingActionButton />
+          <FloatingActionButton id={id} />
         )}
       </main>
     </>

@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 
 import Folder from "@/assets/folder.svg";
 import Enter from "@/assets/login.svg";
@@ -12,22 +13,33 @@ const ACTION_BUTTONS = [
   {
     icon: Enter,
     text: "순례길 참여하기",
-    value: "participate",
+    value: "participate" as const,
   },
   {
     icon: Send,
     text: "장소 추가 요청하기",
-    value: "add-place",
+    value: "request" as const,
   },
   {
     icon: Folder,
     text: "나의 순례길로 가져오기",
-    value: "my-course",
+    value: "my-course" as const,
   },
 ];
 
-export default function FloatingActionButton() {
+interface FloatingActionButtonProps {
+  id: string;
+}
+
+export default function FloatingActionButton({ id }: FloatingActionButtonProps) {
   const [isOpen, setIsOpen] = useState(false);
+  const router = useRouter();
+
+  const onClick = (value: (typeof ACTION_BUTTONS)[number]["value"]) => {
+    if (value === "request") {
+      router.push(`/courses/${id}/request`);
+    }
+  };
 
   return (
     <div className="fixed bottom-[calc(var(--spacing-navigation)+1.25rem)] mr-5 self-end">
@@ -57,7 +69,10 @@ export default function FloatingActionButton() {
             <p className="typo-regular text-nowrap rounded-sm bg-white px-2.5 py-1 text-gray-700 shadow-xl">
               {button.text}
             </p>
-            <button className="bg-main-900 flex size-10 shrink-0 items-center justify-center rounded-full text-white">
+            <button
+              className="bg-main-900 flex size-10 shrink-0 items-center justify-center rounded-full text-white"
+              onClick={() => onClick(button.value)}
+            >
               <button.icon />
             </button>
           </div>
