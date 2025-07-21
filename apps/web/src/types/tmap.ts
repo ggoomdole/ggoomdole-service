@@ -39,8 +39,20 @@ export interface TMap {
   setZoomLimit: (minZoom: number, maxZoom: number) => void;
   setZoom: (zoomLevel: number) => void;
   setOptions: ({ zoomControl }: MapOptions) => void;
+  getBounds: () => TMapGetBounds;
   destroy: () => void;
   on: (eventType: EventType, listener: (event: TMapEvent) => void) => void;
+}
+
+interface TMapGetBounds {
+  _ne: {
+    _lat: number;
+    _lng: number;
+  };
+  _sw: {
+    _lat: number;
+    _lng: number;
+  };
 }
 
 export type EventType = "Click";
@@ -133,4 +145,17 @@ export interface TMapPoint {
   distanceTo(point: TMapPoint): number;
   equals(point: TMapPoint): boolean;
   toString(): string;
+}
+
+export interface TMapPoi {
+  detailBizName: string;
+  name: string;
+  id: string;
+  newAddressList: {
+    newAddress: {
+      frontLat: string;
+      frontLon: string;
+      fullAddressRoad: string;
+    }[];
+  };
 }

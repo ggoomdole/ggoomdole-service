@@ -1,6 +1,6 @@
 /* eslint-disable @next/next/no-sync-scripts */
 
-const TMAP_API_KEY = process.env.TMAP_API_KEY;
+const TMAP_API_KEY = process.env.NEXT_PUBLIC_TMAP_API_KEY;
 
 export default function ScriptProvider() {
   return (

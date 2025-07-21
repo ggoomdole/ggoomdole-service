@@ -1,7 +1,7 @@
 "use client";
 
 import { Suspense } from "react";
-import { useParams, useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 
 import { cn } from "@/lib/utils";
 import { getParams } from "@/utils/params";
@@ -19,17 +19,14 @@ interface SortDrawerProps {
 }
 
 function SortDrawerWithoutSuspense({ options, className }: SortDrawerProps) {
-  const params = useParams();
-  const { sort, ...restProps } = params;
-  const currentSortOption = sort || "";
+  const searchParams = useSearchParams();
+  const currentSortOption = searchParams.get("sort") || "";
   const selectedSortOption = options.find((option) => option.value === currentSortOption);
 
   const router = useRouter();
 
   const onSortChange = (value: string) => {
-    const params = getParams(restProps, {
-      sort: value,
-    });
+    const params = getParams(searchParams, { sort: value });
     router.push(`?${params}`);
   };
 

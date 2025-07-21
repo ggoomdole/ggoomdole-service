@@ -1,26 +1,29 @@
 "use client";
 
-import Header from "@/components/common/header";
+import FindByMapTab from "@/components/courses/request/find-by-map-tab";
+import RequestTab from "@/components/courses/request/request-tab";
+import { CourseRequestForm, courseRequestFormSchema } from "@/schemas/course";
+import { zodResolver } from "@hookform/resolvers/zod";
+
+import { useForm } from "react-hook-form";
 
 interface CourseRequestPageProps {
   id: string;
+  tab: string;
+  query: string;
 }
 
-export default function CourseRequestPage({ id }: CourseRequestPageProps) {
-  return (
-    <>
-      <Header>
-        <p>순례길 추가 요청</p>
-      </Header>
-      <main>
-        <div className="flex items-center gap-2.5">
-          <div className="aspect-square size-10 shrink-0 rounded-sm bg-gray-300" />
-          <div className="space-y-1 text-start">
-            <h1 className="typo-semibold line-clamp-1">카스의 빵지순례</h1>
-            <p className="typo-regular line-clamp-1">빵을 좋아하는 사람이라면 누구나!</p>
-          </div>
-        </div>
-      </main>
-    </>
-  );
+export default function CourseRequestPage({ id, tab, query }: CourseRequestPageProps) {
+  const form = useForm<CourseRequestForm>({
+    mode: "onChange",
+    resolver: zodResolver(courseRequestFormSchema),
+    defaultValues: { places: [] },
+  });
+
+  switch (tab) {
+    case "find-by-map":
+      return <FindByMapTab query={query} tab={tab} form={form} />;
+    default:
+      return <RequestTab id={id} query={query} form={form} />;
+  }
 }

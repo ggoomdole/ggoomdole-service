@@ -4,16 +4,11 @@ import { useEffect, useRef } from "react";
 
 import { DEFAULT_MAP_CENTER, DEFAULT_MAP_ZOOM } from "@/constants/map";
 import { cn } from "@/lib/utils";
-import type { TMap, TMapMarker, TMapMarkerClickEvent } from "@/types/tmap";
-
-interface MarkerProps {
-  id: number;
-  lat: number;
-  lng: number;
-}
+import type { TMap, TMapMarker, TMapMarkerClickEvent, TMapPoi } from "@/types/tmap";
 
 interface MapProps {
-  markers?: MarkerProps[];
+  mapInstanceRef: React.RefObject<TMap | null>;
+  markers?: TMapPoi[];
   center?: {
     lat: number;
     lng: number;
@@ -36,7 +31,7 @@ const onCreateMarkers = ({
   map,
   onClickMarker,
 }: {
-  markers: MarkerProps[];
+  markers: TMapPoi[];
   map: TMap;
   onClickMarker: (e: TMapMarkerClickEvent) => void;
 }) => {
@@ -44,7 +39,10 @@ const onCreateMarkers = ({
 
   markers.forEach((marker) => {
     const newMarker: TMapMarker = new window.Tmapv3.Marker({
-      position: new window.Tmapv3.LatLng(marker.lat, marker.lng),
+      position: new window.Tmapv3.LatLng(
+        +marker.newAddressList.newAddress[0].frontLat,
+        +marker.newAddressList.newAddress[0].frontLon
+      ),
       map,
       icon: MARKER,
       iconSize: new window.Tmapv3.Size(36, 36),
@@ -76,8 +74,8 @@ const onUpdateMarkerSelection = ({
   map,
   onClickMarker,
 }: {
-  prevMarkers: MarkerProps[];
-  selectedId: number;
+  prevMarkers: TMapPoi[];
+  selectedId: string;
   markers: TMapMarker[];
   map: TMap;
   onClickMarker: (e: TMapMarkerClickEvent) => void;
@@ -88,7 +86,10 @@ const onUpdateMarkerSelection = ({
 
     // 마커를 새로 생성하여 아이콘과 크기 변경
     const newMarker: TMapMarker = new window.Tmapv3.Marker({
-      position: new window.Tmapv3.LatLng(prevMarker.lat, prevMarker.lng),
+      position: new window.Tmapv3.LatLng(
+        +prevMarker.newAddressList.newAddress[0].frontLat,
+        +prevMarker.newAddressList.newAddress[0].frontLon
+      ),
       map,
       icon: isSelected ? MARKER_SELECTED : MARKER,
       iconSize: new window.Tmapv3.Size(isSelected ? 40 : 36, isSelected ? 50 : 36),
@@ -114,6 +115,7 @@ const onUpdateMarkerSelection = ({
 };
 
 export default function Map({
+  mapInstanceRef,
   markers,
   center,
   zoom,
@@ -122,7 +124,6 @@ export default function Map({
   onClickMarker,
 }: MapProps) {
   const mapContainerRef = useRef<HTMLDivElement>(null);
-  const mapInstanceRef = useRef<TMap | null>(null);
   const markersRef = useRef<TMapMarker[]>([]);
 
   useEffect(() => {

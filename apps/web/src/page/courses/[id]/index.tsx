@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -9,29 +9,11 @@ import Header from "@/components/common/header";
 import Map from "@/components/common/map";
 import AverageStarRating from "@/components/common/star/average-star-rating";
 import FloatingActionButton from "@/components/courses/floating-action-button";
-import type { TMapMarkerClickEvent } from "@/types/tmap";
+import type { TMap, TMapMarkerClickEvent } from "@/types/tmap";
 
 interface CourseDetailPageProps {
   id: string;
 }
-
-const dummyLatLngs = [
-  {
-    id: 1,
-    lat: 36.355813,
-    lng: 127.382245,
-  },
-  {
-    id: 2,
-    lat: 36.349548,
-    lng: 127.386699,
-  },
-  {
-    id: 3,
-    lat: 36.346433,
-    lng: 127.380136,
-  },
-];
 
 const dummyCourse = {
   id: 1,
@@ -45,6 +27,7 @@ const dummyCourse = {
 };
 
 export default function CourseDetailPage({ id }: CourseDetailPageProps) {
+  const mapInstanceRef = useRef<TMap | null>(null);
   const [selectedMarker, setSelectedMarker] = useState<number | null>(null);
 
   const onClickMap = () => {
@@ -75,7 +58,12 @@ export default function CourseDetailPage({ id }: CourseDetailPageProps) {
       </Header>
       <main className="relative">
         {/* center 각 좌표들 계산해서 넣기 */}
-        <Map markers={dummyLatLngs} onClickMap={onClickMap} onClickMarker={onClickMarker} />
+        <Map
+          mapInstanceRef={mapInstanceRef}
+          markers={[]}
+          onClickMap={onClickMap}
+          onClickMarker={onClickMarker}
+        />
         {selectedMarker ? (
           <section className="max-w-floating-button absolute bottom-5 left-1/2 flex w-[calc(100%-2.5rem)] -translate-x-1/2 gap-5 rounded-2xl bg-white p-5 shadow-2xl">
             <Image

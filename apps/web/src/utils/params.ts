@@ -1,5 +1,5 @@
 export const getParams = (
-  params: Record<string, unknown>,
+  params: Record<string, unknown> | URLSearchParams,
   defaultParams: Record<string, unknown> = {}
 ) => {
   const searchParams = new URLSearchParams();

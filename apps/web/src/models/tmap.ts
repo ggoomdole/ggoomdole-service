@@ -1,3 +1,5 @@
+import { TMapPoi } from "@/types/tmap";
+
 export interface GetDetailPOIDTO {
   poiDetailInfo: {
     id: string;
@@ -11,4 +13,13 @@ export interface GetDetailPOIDTO {
     name: string;
     tel: string;
   };
+}
+
+export interface IntegratedSearchDTO {
+  count: string;
+  page: string;
+  pois: {
+    poi: TMapPoi[];
+  };
+  totalCount: string;
 }
