@@ -2,8 +2,8 @@ import Image from "next/image";
 import Link from "next/link";
 
 import ArrowRight from "@/assets/arrow-right.svg";
-import { Carousel, CarouselItem } from "@/components/carousel";
 import CourseCard from "@/components/common/card/course-card";
+import { Carousel, CarouselItem } from "@/components/common/carousel";
 import NearbyTouristSpotItem from "@/components/home/nearby-tourist-spot-item";
 import QueryTabNav from "@/components/query-tab-nav";
 import { COURSE_CATEGORIES } from "@/constants/category";
@@ -78,7 +78,7 @@ const dummyNearbyTourists = [
 
 export default function HomePage() {
   return (
-    <main>
+    <main className="pb-navigation">
       <Carousel className="py-5" interval={3000}>
         <CarouselItem className="rounded-2xl p-4 shadow-lg">
           <h1 className="typo-bold">

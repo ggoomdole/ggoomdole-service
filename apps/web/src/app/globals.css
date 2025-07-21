@@ -10,7 +10,7 @@
   --spacing-without-navigation: 100dvh;
   /* 최대 모바일 화면 (600px, 37.5rem) */
   --spacing-mobile: 37.5rem;
-  --spacing-floating-button: calc(var(--spacing-mobile) - 1.25rem);
+  --spacing-floating-button: calc(var(--spacing-mobile) - 2.5rem);
   --spacing-with-floating-button: 7.5rem;
 
   --color-gold-500: #f2dc1d;
@@ -40,6 +40,8 @@
   --color-kakao: #fee500;
 
   --shadow-layout: 0 0 4px rgba(0, 0, 0, 0.25);
+
+  --aspect-thumbnail: 4 / 5;
 }
 
 @layer base {
@@ -95,6 +97,10 @@
   .typo-light {
     font-size: 0.5rem;
     font-weight: 400;
+  }
+
+  .shadow-floating-action-button {
+    filter: drop-shadow(0px 1px 3px rgba(0, 0, 0, 0.3)) drop-shadow(0px 4px 8px rgba(0, 0, 0, 0.13));
   }
 }
 

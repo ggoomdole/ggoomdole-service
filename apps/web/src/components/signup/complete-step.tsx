@@ -12,7 +12,7 @@ export default function CompleteStep() {
       </main>
       <Link
         href="/home"
-        className="from-main-700 to-main-900 typo-semibold max-w-floating-button fixed bottom-10 w-[calc(100%-1.25rem)] self-center rounded-xl bg-gradient-to-r py-5 text-center text-white transition-colors disabled:from-gray-100 disabled:to-gray-100 disabled:text-gray-300"
+        className="from-main-700 to-main-900 typo-semibold max-w-floating-button fixed bottom-10 w-[calc(100%-2.5rem)] self-center rounded-xl bg-gradient-to-r py-5 text-center text-white transition-colors disabled:from-gray-100 disabled:to-gray-100 disabled:text-gray-300"
       >
         다음
       </Link>

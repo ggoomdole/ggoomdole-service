@@ -2,7 +2,7 @@ import { SignUpForm } from "@/schemas/signup";
 
 import { UseFormReturn } from "react-hook-form";
 
-import Button from "../button";
+import FloatingButton from "../common/button/floating-button";
 
 interface NameStepProps {
   form: UseFormReturn<SignUpForm>;
@@ -46,13 +46,9 @@ export default function NicknameStep({ form, onNext }: NameStepProps) {
           />
         </div>
       </main>
-      <Button
-        onClick={onClickNext}
-        disabled={!isNicknameValid}
-        className="max-w-floating-button fixed bottom-10 w-[calc(100%-1.25rem)] self-center"
-      >
+      <FloatingButton onClick={onClickNext} disabled={!isNicknameValid}>
         다음
-      </Button>
+      </FloatingButton>
     </>
   );
 }

@@ -42,6 +42,7 @@ export default function SearchHeader(props: SearchHeaderProps) {
           <SearchIcon />
         </button>
       }
+      sticky
     >
       <form onSubmit={onSubmit} className="typo-medium flex items-center bg-gray-100 px-2.5 py-1">
         <input

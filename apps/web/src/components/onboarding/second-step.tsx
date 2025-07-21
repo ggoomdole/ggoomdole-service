@@ -3,7 +3,7 @@
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 
-import Button from "@/components/button";
+import Button from "@/components/common/button";
 
 const step2 = "/static/onboarding/step2.png";
 

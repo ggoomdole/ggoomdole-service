@@ -1,18 +1,14 @@
 "use client";
 
-import { useRouter } from "next/navigation";
-
-import Check from "@/assets/check.svg";
 import CourseCard from "@/components/common/card/course-card";
-import { Drawer, DrawerContent, DrawerTrigger } from "@/components/drawer";
+import SortDrawer from "@/components/common/drawer/sort-drawer";
 import QueryTabNav from "@/components/query-tab-nav";
 import { COURSE_CATEGORIES } from "@/constants/category";
-import { cn } from "@/lib/utils";
-import { getParams } from "@/utils/params";
 
 interface SearchResultPageProps {
-  sortOption: string;
-  [key: string]: string;
+  sort: string;
+  query: string;
+  category: string;
 }
 
 const dummyCourses = [
@@ -67,45 +63,14 @@ const SORT_OPTIONS = [
   },
 ];
 
-export default function SearchResultPage(props: SearchResultPageProps) {
-  const { sortOption, ...restProps } = props;
-  const currentSortOption = sortOption || "";
-  const selectedSortOption = SORT_OPTIONS.find((option) => option.value === currentSortOption);
-
-  const router = useRouter();
-
-  const onSortChange = (value: string) => {
-    const params = getParams(restProps, {
-      sortOption: value,
-    });
-    router.push(`?${params}`);
-  };
+export default function SearchResultPage({ sort, category, query }: SearchResultPageProps) {
+  // sort, category, query 이용해서 무한스크롤 구현하기
 
   return (
-    <main>
+    <main className="pb-navigation">
       <QueryTabNav navKey="category" navs={COURSE_CATEGORIES} />
-      <Drawer>
-        <DrawerTrigger className="typo-regular mr-5 w-max self-end">
-          {selectedSortOption?.name}
-        </DrawerTrigger>
-        <DrawerContent>
-          <div className="typo-semibold flex flex-col">
-            {SORT_OPTIONS.map((option) => (
-              <button
-                key={option.value}
-                className={cn(
-                  "flex items-center justify-between py-2.5 text-gray-300",
-                  option.value === selectedSortOption?.value && "text-gray-900"
-                )}
-                onClick={() => onSortChange(option.value)}
-              >
-                <p>{option.name}</p>
-                {option.value === selectedSortOption?.value && <Check className="size-5" />}
-              </button>
-            ))}
-          </div>
-        </DrawerContent>
-      </Drawer>
+      <SortDrawer options={SORT_OPTIONS} className="typo-regular mr-5 w-max self-end" />
+
       <section className="px-5">
         {dummyCourses.map((course) => (
           <CourseCard key={`course-item-${course.category}-${course.id}`} {...course} />

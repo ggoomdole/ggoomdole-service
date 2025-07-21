@@ -5,8 +5,8 @@ import { SignUpForm } from "@/schemas/signup";
 import { UseFormReturn } from "react-hook-form";
 
 import AgreementItem from "./agreement-item";
-import Button from "../../button";
 import Checkbox from "../../checkbox";
+import FloatingButton from "../../common/button/floating-button";
 
 interface AgreementStepProps {
   form: UseFormReturn<SignUpForm>;
@@ -82,13 +82,9 @@ export default function AgreementStep({ form, onNext }: AgreementStepProps) {
           </div>
         </section>
       </main>
-      <Button
-        onClick={onClickNext}
-        disabled={!isAllAgreementChecked}
-        className="max-w-floating-button fixed bottom-10 w-[calc(100%-1.25rem)] self-center"
-      >
+      <FloatingButton onClick={onClickNext} disabled={!isAllAgreementChecked}>
         다음
-      </Button>
+      </FloatingButton>
     </>
   );
 }

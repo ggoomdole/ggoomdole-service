@@ -1,7 +1,11 @@
+"use client";
+
 import { createContext, ReactNode, useContext, useEffect, useState } from "react";
 
 import { useOutsideClick } from "@/hooks/use-outside-click";
 import { cn } from "@/lib/utils";
+
+import { createPortal } from "react-dom";
 
 interface DrawerContextType {
   isOpen: boolean;
@@ -23,7 +27,7 @@ interface DrawerProps {
   children: ReactNode;
 }
 
-const Drawer = ({ children }: DrawerProps) => {
+function Drawer({ children }: DrawerProps) {
   const [isOpen, setIsOpen] = useState(false);
 
   useEffect(() => {
@@ -43,28 +47,28 @@ const Drawer = ({ children }: DrawerProps) => {
   return (
     <DrawerContext.Provider value={{ isOpen, open, close }}>{children}</DrawerContext.Provider>
   );
-};
+}
 
 interface TriggerProps {
   children: ReactNode;
   className?: string;
 }
 
-const DrawerTrigger = ({ children, className }: TriggerProps) => {
+function DrawerTrigger({ children, className }: TriggerProps) {
   const { open } = useDrawer();
   return (
     <button className={className} onClick={open} type="button">
       {children}
     </button>
   );
-};
+}
 
 interface ContentProps {
   children: ReactNode;
   className?: string;
 }
 
-const DrawerContent = ({ children, className }: ContentProps) => {
+function DrawerContent({ children, className }: ContentProps) {
   const { isOpen, close } = useDrawer();
   const [drawerRef] = useOutsideClick<HTMLDivElement>(() => {
     if (isOpen) {
@@ -92,7 +96,7 @@ const DrawerContent = ({ children, className }: ContentProps) => {
 
   if (!rendered) return null;
 
-  return (
+  return createPortal(
     <>
       <div
         className={cn(
@@ -113,8 +117,9 @@ const DrawerContent = ({ children, className }: ContentProps) => {
       >
         {children}
       </div>
-    </>
+    </>,
+    document.body
   );
-};
+}
 
 export { Drawer, DrawerTrigger, DrawerContent };

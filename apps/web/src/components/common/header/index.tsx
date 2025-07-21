@@ -12,11 +12,13 @@ const logo = "/static/logo.png";
 interface HeaderProps extends React.HTMLAttributes<HTMLDivElement> {
   logoHeader?: boolean;
   rightElement?: React.ReactNode;
+  sticky?: boolean;
   onClickBack?: () => void;
 }
 
 export default function Header(props: HeaderProps) {
-  const { logoHeader, rightElement, onClickBack, children, className, ...restProps } = props;
+  const { logoHeader, rightElement, onClickBack, children, className, sticky, ...restProps } =
+    props;
 
   const router = useRouter();
 
@@ -31,6 +33,7 @@ export default function Header(props: HeaderProps) {
     <header
       className={cn(
         "h-header shadow-layout z-50 flex items-center justify-between gap-2.5 bg-white px-5",
+        sticky && "sticky top-0",
         className
       )}
       {...restProps}
