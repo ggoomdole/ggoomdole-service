@@ -9,7 +9,6 @@ class RoadController {
   async loadAllRoad(req: Request, res: Response, next: NextFunction) {
     try {  
       const categoryId = req.query.categoryId ? parseInt(req.query.categoryId as string) : undefined;
-      if (!categoryId) throw new NotFoundError('카테고리가 존재하지 않습니다.');
 
       const sortBy = (req.query.sortBy as string) || 'popular';
       if (!sortBy) throw new NotFoundError('정렬 기준이 존재하지 않습니다.');
