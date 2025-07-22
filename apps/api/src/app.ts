@@ -6,6 +6,8 @@ import authRoute from './routes/authRoute';
 import roadRoute from './routes/roadRoute';
 import searchRoute from './routes/searchRoute';
 import userRoute from './routes/userRoute';
+import reviewRoute from './routes/reviewRoute';
+import spotRoute from './routes/spotRoute';
 
 const app = express();
 
@@ -22,6 +24,8 @@ app
   .use('/users', userRoute)
   .use('/road', roadRoute)
   .use('/search', searchRoute)
+  .use('/review', reviewRoute)
+  .use('/spot', spotRoute)
 
   .use(errorHandler);
 
