@@ -91,6 +91,7 @@ class RoadService {
       intro: data.intro,
       categoryId: data.categoryId,
       spots: data.spots,
+      public: true,
       imageUrl,
       userId
     });
@@ -100,7 +101,7 @@ class RoadService {
       title: newRoad.title,
       intro: newRoad.intro,
       imageUrl: newRoad.imageUrl ?? null,
-      public: true,
+      public: newRoad.public,
       createAt: newRoad.createAt,
       updateAt: newRoad.updateAt,
       categoryId: newRoad.categoryId,
@@ -141,6 +142,7 @@ class RoadService {
       intro: data.intro,
       categoryId: data.categoryId,
       spots: data.spots,
+      public: false,
       imageUrl,
       userId
     });
@@ -150,7 +152,7 @@ class RoadService {
       title: newRoad.title,
       intro: newRoad.intro,
       imageUrl: newRoad.imageUrl ?? null,
-      public: false,
+      public: newRoad.public,
       createAt: newRoad.createAt,
       updateAt: newRoad.updateAt,
       categoryId: newRoad.categoryId,
@@ -216,11 +218,9 @@ class RoadService {
     };
   }
 
-  async checkDuplicateName(title: string): Promise<{ isName: boolean;}> { 
+  async checkDuplicateName(title: string): Promise<boolean> { 
     const exists = await roadRepository.existsPilgrimageName(title);
-    if (exists) { throw new ExistsError('이미 존재하는 이름입니다.'); }
-
-    return { isName: false };
+    return !exists;
   }
 
   async getOneRoadWithSpots(roadId: number, sortBy: string): Promise<OneRoadResponseDTO> {

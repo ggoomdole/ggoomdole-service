@@ -31,6 +31,7 @@ class RoadRepository {
     intro: string;
     categoryId: number;
     spots: SpotDTO[];
+    public: boolean;
     imageUrl: string | null;
     userId: number;
   }) {
@@ -42,7 +43,7 @@ class RoadRepository {
           intro: data.intro,
           imageUrl: data.imageUrl,
           search: 0,
-          public: true,
+          public: data.public,
           createAt: new Date(),
           updateAt: new Date(),
           category: {
