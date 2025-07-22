@@ -6,10 +6,10 @@ import authenticate from '../middlewares/authenticate';
 const router = Router();
 
 router.post("/", authenticate, reviewController.createReview);
-router.delete("/:reveiwId", authenticate, reviewController.deleteReview);
 
-router.get("/:spotId", reviewController.showAllReview);
-router.get("/:reveiwId", reviewController.showOneReview);
+router.get("/spot/:spotId", reviewController.showAllReview);
+router.get("/:reviewId", reviewController.showOneReview);
 
+router.delete("/:reviewId", authenticate, reviewController.deleteReview);
 
 export default router;

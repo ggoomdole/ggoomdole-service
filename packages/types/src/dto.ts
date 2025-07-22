@@ -89,6 +89,15 @@ export interface addSpotDTO {
     spotId: string;
     addNumber: number;
     addReason: string;
+    spotInfo: {
+        name: string;
+        phone?: string;
+        address?: string;
+        latitude?: number;
+        longitude?: number;
+        hours?: string;
+        avgRate?: number;
+    };
 }
 
 export interface DataSpotDTO {

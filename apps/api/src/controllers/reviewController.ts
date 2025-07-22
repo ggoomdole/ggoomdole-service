@@ -25,9 +25,10 @@ class ReveiwController {
       const reviewId = parseInt(req.params.reviewId, 10);
       if (isNaN(reviewId)) { throw new BadRequestError('리뷰ID는 필수이며 숫자여야 합니다.'); }
 
-      await reviewService.deleteReview(reviewId, userId)
+      await reviewService.deleteReview(userId, reviewId)
       res.status(200).json({ message: `리뷰 삭제 완료 : ${reviewId}`})
     } catch (error) {
+      next(error)
     }
   }
 
@@ -39,6 +40,7 @@ class ReveiwController {
       const reveiw = await reviewService.showOneReview(reviewId)
       res.status(200).json(reveiw)
     } catch (error) {
+      next(error)
     }
   }
 
@@ -50,6 +52,7 @@ class ReveiwController {
       const reviews = await reviewService.showAllReview(spotId)
       res.status(200).json(reviews)
     } catch (error) {
+      next(error)
     }
   }
 }

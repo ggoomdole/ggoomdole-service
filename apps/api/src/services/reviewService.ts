@@ -21,7 +21,7 @@ class ReviewService {
     const road = await reviewRepository.findReviewById(reviewId);
     if (!road) throw new NotFoundError('해당 리뷰가 존재하지 않습니다.');
 
-    const deleteReview = await reviewRepository.deleteReview(reviewId);
+    await reviewRepository.deleteReview(reviewId);
   }  
 
   async showOneReview(reviewId: number): Promise<ReviewCheckDTO> {

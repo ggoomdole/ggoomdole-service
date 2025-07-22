@@ -25,7 +25,7 @@ class SpotController {
         if (!isAddRoadDTO(dto)) { throw new BadRequestError('요청 형식이 잘못되었습니다.'); }
 
         const reqAddSpot = await spotService.reqAddSpot(dto);
-        res.status(200).json({ message: `요청 전송 완료 : ${reqAddSpot}` });
+        res.status(200).json({ message: `요청 전송 완료`, data: reqAddSpot });
     } catch (error) {
       next(error);
     }
@@ -35,6 +35,7 @@ class SpotController {
     try {
       const userId = req.user.userId;
       const roadId = Number(req.params.roadId);
+      if (!roadId) throw new BadRequestError('순례길 ID는 필수입니다.');
 
       const result = await spotService.getRequestedSpots(userId, roadId);
       res.status(200).json(result);

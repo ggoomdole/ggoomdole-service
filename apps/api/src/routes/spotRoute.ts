@@ -8,7 +8,7 @@ const router = Router();
 router.get("/dataSpot", authenticate, spotController.getNearbySpots);
 
 router.post("/add/req", authenticate, spotController.reqSpot);
-router.get("/add/check", authenticate, spotController.reqCheck);
-router.patch("/add", authenticate, spotController.reqProcessing);
+router.get("/add/check/:roadId", authenticate, spotController.reqCheck);
+router.patch("/add/accept/:roadId", authenticate, spotController.reqProcessing);
 
 export default router;
