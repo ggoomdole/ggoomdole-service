@@ -24,6 +24,13 @@ export interface SpotDTO {
     spotId: string;
     number: number;
     introSpot: string;
+    name?: string;
+    address?: string;
+    latitude?: number;
+    longitude?: number;
+    phone?: string;
+    hours?: string;
+    avgRate?: number;
 }
 
 export interface ParticipantDTO {
