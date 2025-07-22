@@ -231,7 +231,12 @@ class RoadRepository {
   
     if (maker) {
       // 내가 만든 순례길만 조회
-      whereClause.makerId = userId;
+      whereClause.participants = {
+        some: {
+          userId,
+          type: true,  // 제작자 표시로 가정
+        },
+      };
     } else {
       // 내가 참여했고, 내가 만든 순례길은 제외
       whereClause.AND = [
@@ -242,7 +247,12 @@ class RoadRepository {
         },
         {
           NOT: {
-            makerId: userId,
+            participants: {
+              some: {
+                userId,
+                type: true,  // 내가 만든 순례길 제외
+              },
+            },
           },
         },
       ];
@@ -258,7 +268,7 @@ class RoadRepository {
         },
       },
     });
-  }  
+  }   
 
   async findMyPrivateRoads(userId: number, categoryId?: number) {
     const whereClause: any = {
