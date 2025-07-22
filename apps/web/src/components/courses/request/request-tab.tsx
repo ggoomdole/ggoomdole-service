@@ -45,9 +45,7 @@ export default function RequestTab({ id, query, form }: RequestTabProps) {
 
   return (
     <>
-      <Header>
-        <p>순례길 추가 요청</p>
-      </Header>
+      <Header>순례길 추가 요청</Header>
       <main>
         <div className="flex items-center gap-2.5 px-5 py-3">
           <div className="aspect-square size-10 shrink-0 rounded-sm bg-gray-300" />

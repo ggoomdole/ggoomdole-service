@@ -4,7 +4,7 @@ export const requestCourseFormSchema = z.object({
   places: z
     .array(
       z.object({
-        placeName: z.string().min(1).max(10),
+        placeName: z.string().min(1),
         reason: z.string().min(1),
       })
     )
@@ -21,7 +21,7 @@ export const createCourseFormSchema = z.object({
   places: z
     .array(
       z.object({
-        placeName: z.string().min(1).max(10),
+        placeName: z.string().min(1),
         reason: z.string().min(1),
       })
     )
