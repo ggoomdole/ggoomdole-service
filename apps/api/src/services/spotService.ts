@@ -1,5 +1,6 @@
 import { PutObjectCommand } from '@aws-sdk/client-s3';
-import { SpotReqDTO, DataSpotDTO } from '@repo/types';
+import { DataSpotDTO,SpotReqDTO } from '@repo/types';
+
 import axios from "axios";
 
 import roadRepository from '../repositories/roadRepository';
