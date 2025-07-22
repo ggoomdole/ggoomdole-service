@@ -7,17 +7,18 @@ import authenticate from '../middlewares/authenticate';
 const router = Router();
 const upload = multer({ storage: multer.memoryStorage() });
 
-router.get("/", roadController.loadAllRoad);
-router.get("/recommend", roadController.loadPapularRoad);
-
-router.post("/", authenticate, upload.single('road-image'), roadController.createRoad);
-router.post("/custom", authenticate, upload.single('road-image'), roadController.createMyRoad);
-router.patch("/:roadId", authenticate, upload.single('update-road-image'), roadController.updateRoad);
-
-router.get("/:roadId", roadController.loadDetail);
 router.get("/name", roadController.checkName);
 
-router.get("/participation", authenticate, roadController.loadParticipation);
+router.get("/", roadController.loadAllRoad);
+router.post("/", authenticate, upload.single('road-image'), roadController.createRoad);
+
 router.get("/custom", authenticate, roadController.loadCustom);
+router.post("/custom", authenticate, upload.single('road-image'), roadController.createMyRoad);
+
+router.get("/recommend", roadController.loadPapularRoad);
+router.get("/participation", authenticate, roadController.loadParticipation);
+
+router.get("/:roadId", roadController.loadDetail);
+router.patch("/:roadId", authenticate, upload.single('update-road-image'), roadController.updateRoad);
 
 export default router;
