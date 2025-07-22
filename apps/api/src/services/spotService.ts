@@ -1,0 +1,93 @@
+import { PutObjectCommand } from '@aws-sdk/client-s3';
+import { DataSpotDTO,SpotReqDTO } from '@repo/types';
+
+import axios from "axios";
+
+import roadRepository from '../repositories/roadRepository';
+import spotRepository from '../repositories/spotRepository';
+import { NotFoundError, UnauthorizedError } from '../utils/customError';
+
+class RoadService {
+  async fetchNearbySpots(lat: number, lng: number): Promise<DataSpotDTO[]> {
+    const url = "http://apis.data.go.kr/B551011/GoKrOpenService/rest/KorService/locationBasedList";
+
+    const params = {
+      serviceKey: process.env.SERVICE_KEY,
+      mapX: lng,
+      mapY: lat,
+      radius: 3000,
+      MobileOS: "ETC",
+      MobileApp: "ggoomdole-net",
+      _type: "json",
+      numOfRows: 10,
+      pageNo: 1,
+    };
+
+    const { data } = await axios.get(url, { params });
+
+    const items = data?.response?.body?.items?.item ?? [];
+
+    const results: DataSpotDTO[] = items.map((item: any) => ({
+      title: item.title,
+      image: item.firstimage || null,
+      address: item.addr1 || "주소 정보 없음",
+      rating: item.rating
+    }));
+
+    return results;
+  }
+
+  async reqAddSpot(data: SpotReqDTO): Promise<SpotReqDTO[]> {
+    const checkPilgrimager = await roadRepository.findRoadById(data.roadId);
+    if (!checkPilgrimager) throw new NotFoundError('해당 순례길이 존재하지 않습니다.');
+  
+    const newSpots = data.spots.map((spot) => ({
+        pilgrimageId: data.roadId,
+        spotId: spot.spotId,
+        number: spot.addNumber,
+        introSpot: spot.addReason,
+        request: true
+    }));
+
+    const createdSpots = await spotRepository.reqSpot(newSpots);
+    return [{
+        roadId: data.roadId,
+        spots: createdSpots.map((spot) => ({
+          spotId: spot.spotId,
+          addNumber: spot.number,
+          addReason: spot.introSpot
+        }))
+    }];
+  }
+
+  async getRequestedSpots(userId: number, roadId: number) {
+    const isAdmin = await roadRepository.checkPilgrimageOwner(userId, roadId);
+    if (!isAdmin) { throw new UnauthorizedError('관리자 권한이 없습니다.'); }
+
+    const road = await roadRepository.findRoadById(roadId);
+    if (!road) throw new NotFoundError('해당 순례길이 존재하지 않습니다.');
+
+    return await spotRepository.findRequestedSpots();
+  }
+
+  async processSpotRequests(userId: number, roadId: number,
+    approve: string[],
+    reject: string[]
+  ) {
+    const isAdmin = await roadRepository.checkPilgrimageOwner(userId, roadId);
+    if (!isAdmin) { throw new UnauthorizedError('관리자 권한이 없습니다.'); }
+
+    const road = await roadRepository.findRoadById(roadId);
+    if (!road) throw new NotFoundError('해당 순례길이 존재하지 않습니다.');
+
+    if (approve.length > 0) {
+      await spotRepository.updateRequestStatus(roadId, approve, true);
+    }
+
+    if (reject.length > 0) {
+      await spotRepository.updateRequestStatus(roadId, reject, false);
+    }
+  }
+}
+
+export default new RoadService();

@@ -61,7 +61,7 @@ model PilgrimageSpot {
 model PilgrimageUser {
   userId       Int
   pilgrimageId Int
-  type         Boolean
+  type         Boolean        @default(false)
   createAt     DateTime       @default(now())
   updateAt     DateTime       @updatedAt
 

@@ -72,3 +72,21 @@ export interface ReviewCheckDTO {
     content: string;
     rate: number;
 }
+
+export interface SpotReqDTO {
+    roadId: number; 
+    spots: addSpotDTO[];
+}
+
+export interface addSpotDTO {
+    spotId: string;
+    addNumber: number;
+    addReason: string;
+}
+
+export interface DataSpotDTO {
+    title: string;
+    image: string | null;
+    address: string;
+    rating: number;
+}  
