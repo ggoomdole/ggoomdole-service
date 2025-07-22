@@ -12,16 +12,18 @@ class UserService {
     return !user;
   }
 
-  async createNickname(userId: number, nickname: string): Promise<void> {
+  async createNickname(userId: number, nickname: string): Promise<string> {
     const exists = await UserRepository.findUserByNickname(nickname);
     if (exists) throw new ExistsError('이미 존재하는 닉네임입니다.');
     await UserRepository.saveNickname(userId, nickname);
+    return nickname;
   }
 
-  async changeNickname(userId: number, nickname: string): Promise<void> {
+  async changeNickname(userId: number, nickname: string): Promise<string> {
     const exists = await UserRepository.findUserByNickname(nickname);
     if (exists) throw new ExistsError('이미 존재하는 닉네임입니다.');
     await UserRepository.updateNickname(userId, nickname);
+    return nickname;
   }
 
   async uploadProfileImage(userId: number, file: Express.Multer.File): Promise<string> {
