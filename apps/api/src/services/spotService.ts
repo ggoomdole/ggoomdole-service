@@ -1,11 +1,41 @@
 import { PutObjectCommand } from '@aws-sdk/client-s3';
-import { SpotReqDTO } from '@repo/types';
+import { SpotReqDTO, DataSpotDTO } from '@repo/types';
+import axios from "axios";
 
 import roadRepository from '../repositories/roadRepository';
 import spotRepository from '../repositories/spotRepository';
 import { NotFoundError, UnauthorizedError } from '../utils/customError';
 
 class RoadService {
+  async fetchNearbySpots(lat: number, lng: number): Promise<DataSpotDTO[]> {
+    const url = "http://apis.data.go.kr/B551011/GoKrOpenService/rest/KorService/locationBasedList";
+
+    const params = {
+      serviceKey: process.env.SERVICE_KEY,
+      mapX: lng,
+      mapY: lat,
+      radius: 3000,
+      MobileOS: "ETC",
+      MobileApp: "ggoomdole-net",
+      _type: "json",
+      numOfRows: 10,
+      pageNo: 1,
+    };
+
+    const { data } = await axios.get(url, { params });
+
+    const items = data?.response?.body?.items?.item ?? [];
+
+    const results: DataSpotDTO[] = items.map((item: any) => ({
+      title: item.title,
+      image: item.firstimage || null,
+      address: item.addr1 || "주소 정보 없음",
+      rating: item.rating
+    }));
+
+    return results;
+  }
+
   async reqAddSpot(data: SpotReqDTO): Promise<SpotReqDTO[]> {
     const checkPilgrimager = await roadRepository.findRoadById(data.roadId);
     if (!checkPilgrimager) throw new NotFoundError('해당 순례길이 존재하지 않습니다.');

@@ -83,3 +83,10 @@ export interface addSpotDTO {
     addNumber: number;
     addReason: string;
 }
+
+export interface DataSpotDTO {
+    title: string;
+    image: string | null;
+    address: string;
+    rating: number;
+}  

@@ -1,14 +1,26 @@
+import { SpotReqDTO } from '@repo/types';
+
 import { NextFunction,Request, Response } from 'express';
 
 import spotService from '../services/spotService';
 import { BadRequestError } from '../utils/customError';
-import { SpotReqDTO } from '@repo/types';
 
 class SpotController {
+  async getNearbySpots(req: Request, res: Response, next: NextFunction) {
+    try {
+      const { lat, lng } = req.query;
+    
+      if (!lat || !lng) throw new BadRequestError('위도와 경도는 필수입니다.');
+
+      const spots = await spotService.fetchNearbySpots(Number(lat), Number(lng));
+      res.status(200).json(spots);
+    } catch (error) {
+        next(error);
+    }
+  }
+
   async reqSpot(req: Request, res: Response, next: NextFunction) {
     try {
-        const userId = req.user.userId;
-        if(!userId) throw new BadRequestError('로그인 해야 사용할 수 있는 기능입니다.');
         const dto = req.body as SpotReqDTO;
         if (!isAddRoadDTO(dto)) { throw new BadRequestError('요청 형식이 잘못되었습니다.'); }
 
@@ -22,9 +34,10 @@ class SpotController {
   async reqCheck(req: Request, res: Response, next: NextFunction) {
     try {
       const userId = req.user.userId;
-      const { roadId } = req.body.roadId;
+      const roadId = Number(req.params.roadId);
+
       const result = await spotService.getRequestedSpots(userId, roadId);
-      res.status(200).json({ result });
+      res.status(200).json(result);
     } catch (error) {
       next(error);
     }
@@ -33,7 +46,8 @@ class SpotController {
   async reqProcessing(req: Request, res: Response, next: NextFunction) {
     try {
       const userId = req.user.userId;
-      const { roadId, approve = [], reject = [] } = req.body;
+      const roadId = Number(req.params.roadId);
+      const { approve = [], reject = [] } = req.body;
 
       await spotService.processSpotRequests(userId, roadId, approve, reject);
       res.status(200).json({ message: '요청 처리 완료' });
