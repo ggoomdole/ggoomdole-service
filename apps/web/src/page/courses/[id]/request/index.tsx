@@ -1,11 +1,11 @@
 "use client";
 
-import FindByMapTab from "@/components/courses/request/find-by-map-tab";
+import FindByMapTab from "@/components/common/map/find-by-map-tab";
 import RequestTab from "@/components/courses/request/request-tab";
-import { CourseRequestForm, courseRequestFormSchema } from "@/schemas/course";
+import { RequestCourseForm, requestCourseFormSchema } from "@/schemas/course";
 import { zodResolver } from "@hookform/resolvers/zod";
 
-import { useForm } from "react-hook-form";
+import { useFieldArray, useForm } from "react-hook-form";
 
 interface CourseRequestPageProps {
   id: string;
@@ -14,15 +14,29 @@ interface CourseRequestPageProps {
 }
 
 export default function CourseRequestPage({ id, tab, query }: CourseRequestPageProps) {
-  const form = useForm<CourseRequestForm>({
+  const form = useForm<RequestCourseForm>({
     mode: "onChange",
-    resolver: zodResolver(courseRequestFormSchema),
+    resolver: zodResolver(requestCourseFormSchema),
     defaultValues: { places: [] },
   });
 
+  const { append } = useFieldArray({
+    control: form.control,
+    name: "places",
+  });
+
+  const currentPlaces = form.getValues("places");
+
   switch (tab) {
     case "find-by-map":
-      return <FindByMapTab query={query} tab={tab} form={form} />;
+      return (
+        <FindByMapTab
+          query={query}
+          tab={tab}
+          currentPlaces={currentPlaces}
+          onSelectPlace={append}
+        />
+      );
     default:
       return <RequestTab id={id} query={query} form={form} />;
   }

@@ -5,22 +5,21 @@ import { useRouter } from "next/navigation";
 import SearchHeader from "@/components/common/header/search-header";
 import Map from "@/components/common/map";
 import { DEFAULT_MAP_CENTER } from "@/constants/map";
-import { CourseRequestForm } from "@/schemas/course";
+import { CoursePlaceProps } from "@/types/course";
 import { TMap, TMapMarkerClickEvent, TMapPoi } from "@/types/tmap";
 import { getParams } from "@/utils/params";
 import { infoToast } from "@/utils/toast";
 
-import { useFieldArray, UseFormReturn } from "react-hook-form";
+interface LocationProps {
+  title: string;
+  address: string;
+}
 
 interface FindByMapTabProps {
   query: string;
   tab: string;
-  form: UseFormReturn<CourseRequestForm>;
-}
-
-interface LocationProps {
-  title: string;
-  address: string;
+  currentPlaces: CoursePlaceProps[];
+  onSelectPlace: (place: CoursePlaceProps) => void;
 }
 
 const { lat, lng } = DEFAULT_MAP_CENTER;
@@ -28,7 +27,12 @@ const { lat, lng } = DEFAULT_MAP_CENTER;
 const TMAP_API_KEY = process.env.NEXT_PUBLIC_TMAP_API_KEY;
 const DEFAULT_THUMBNAIL = "/static/default-thumbnail.png";
 
-export default function FindByMapTab({ query, tab, form }: FindByMapTabProps) {
+export default function FindByMapTab({
+  query,
+  tab,
+  currentPlaces,
+  onSelectPlace,
+}: FindByMapTabProps) {
   // 07/21 장소 검색 및 상세 조회에서 썸네일이 없기 때문에 우선 기본 썸네일 + 별점 X 버전으로 진행
   const [selectedMarker, setSelectedMarker] = useState<LocationProps | null>(null);
   const [searchResult, setSearchResult] = useState<TMapPoi[]>([]);
@@ -36,11 +40,6 @@ export default function FindByMapTab({ query, tab, form }: FindByMapTabProps) {
   const mapInstanceRef = useRef<TMap | null>(null);
 
   const router = useRouter();
-
-  const { append } = useFieldArray({
-    control: form.control,
-    name: "places",
-  });
 
   const onClickMap = () => {
     setSelectedMarker(null);
@@ -57,14 +56,13 @@ export default function FindByMapTab({ query, tab, form }: FindByMapTabProps) {
   const onAddNewPlace = () => {
     if (!selectedMarker) return;
 
-    const currentPlaces = form.getValues("places");
     const isDuplicate = currentPlaces.some((place) => place.placeName === selectedMarker.title);
 
     if (isDuplicate) {
       return infoToast("이미 추가된 장소에요.");
     }
 
-    append({
+    onSelectPlace({
       placeName: selectedMarker.title,
       reason: "",
     });

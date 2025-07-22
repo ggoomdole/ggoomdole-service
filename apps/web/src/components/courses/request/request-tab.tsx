@@ -3,7 +3,7 @@ import Link from "next/link";
 import Close from "@/assets/close.svg";
 import FloatingButton from "@/components/common/button/floating-button";
 import Header from "@/components/common/header";
-import { CourseRequestForm } from "@/schemas/course";
+import { RequestCourseForm } from "@/schemas/course";
 import { getParams } from "@/utils/params";
 
 import { useFieldArray, UseFormReturn } from "react-hook-form";
@@ -11,7 +11,7 @@ import { useFieldArray, UseFormReturn } from "react-hook-form";
 interface RequestTabProps {
   id: string;
   query: string;
-  form: UseFormReturn<CourseRequestForm>;
+  form: UseFormReturn<RequestCourseForm>;
 }
 
 export default function RequestTab({ id, query, form }: RequestTabProps) {
