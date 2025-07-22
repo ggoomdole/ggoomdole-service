@@ -3,11 +3,11 @@ import express from "express";
 
 import { errorHandler } from './middlewares/errorHandler';
 import authRoute from './routes/authRoute';
+import reviewRoute from './routes/reviewRoute';
 import roadRoute from './routes/roadRoute';
 import searchRoute from './routes/searchRoute';
-import userRoute from './routes/userRoute';
-import reviewRoute from './routes/reviewRoute';
 import spotRoute from './routes/spotRoute';
+import userRoute from './routes/userRoute';
 
 const app = express();
 

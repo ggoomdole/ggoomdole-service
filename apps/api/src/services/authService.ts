@@ -1,4 +1,5 @@
   import axios from 'axios';
+  import jwt from 'jsonwebtoken';
 
   import AuthRepository from '../repositories/authRepository';
   import { KakaoError } from '../utils/customError';
@@ -43,13 +44,28 @@
         });
       }
 
+      // JWT 생성
+      const payload = { userId: user.id.toString() };
+      const secret = process.env.JWT_SECRET!;
+      const jwtToken = jwt.sign(payload, secret, { expiresIn: '7d' }); // 예: 7일 유효기간
+
       return {
         userId: user.id,
-        accessToken
+        accessToken,
+        jwtToken
       };
     }
 
     async kakaoUnlinkService(accessToken: string) {
+      // unlink 하기 전에 사용자 정보 조회
+      const userResponse = await axios.get('https://kapi.kakao.com/v2/user/me', {
+        headers: { Authorization: `Bearer ${accessToken}` },
+      });
+      const kakaoId = userResponse.data.id;
+      if (!kakaoId) {
+        throw new KakaoError('카카오 사용자 정보를 받지 못했습니다.');
+      }
+
       // 카카오 API에 unlink 요청(회원 탈퇴)
       const userInfo = await axios.post(
         'https://kapi.kakao.com/v1/user/unlink',
@@ -57,18 +73,10 @@
         {
           headers: {
             Authorization: `Bearer ${accessToken}`,
-            'Content-Type': 'application/x-www-form-urlencoded',
           },
         }
       );
       if (!userInfo) { throw new KakaoError('카카오 unlink 실패');}
-
-      // unlink API 호출 후 유저 정보 얻기
-      const userResponse = await axios.get('https://kapi.kakao.com/v2/user/me', {
-        headers: { Authorization: `Bearer ${accessToken}` },
-      });
-      const kakaoId = userResponse.data.id;
-      if (!kakaoId) { throw new KakaoError('카카오 사용자 정보를 받지 못했습니다.');}
 
       // DB에서 사용자 삭제
       const deletedUser = await AuthRepository.deleteUserByKakaoId(String(kakaoId));
