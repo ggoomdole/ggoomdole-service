@@ -11,7 +11,9 @@ export const getParams = (
   });
 
   Object.entries(defaultParams).forEach(([key, value]) => {
-    searchParams.append(key, String(value));
+    if (value) {
+      searchParams.append(key, String(value));
+    }
   });
 
   return searchParams.toString();

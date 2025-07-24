@@ -13,7 +13,7 @@ export const requestCourseFormSchema = z.object({
 
 export type RequestCourseForm = z.infer<typeof requestCourseFormSchema>;
 
-export const createCourseFormSchema = z.object({
+export const uploadCourseFormSchema = z.object({
   name: z.string().min(1),
   thumbnail: z.instanceof(File).optional(),
   category: z.string().min(1),
@@ -26,6 +26,7 @@ export const createCourseFormSchema = z.object({
       })
     )
     .min(1),
+  removeCourseIds: z.array(z.string()).optional(),
 });
 
-export type CreateCourseForm = z.infer<typeof createCourseFormSchema>;
+export type UploadCourseForm = z.infer<typeof uploadCourseFormSchema>;

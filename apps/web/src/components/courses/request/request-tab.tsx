@@ -85,7 +85,7 @@ export default function RequestTab({ id, query, form }: RequestTabProps) {
         ))}
         <Link
           href={`?${parmas}`}
-          className="typo-regular w-full py-2.5 text-center text-gray-500 underline"
+          className="typo-regular mx-auto w-max py-2.5 text-center text-gray-500 underline"
         >
           순례길 요청 추가하기
         </Link>

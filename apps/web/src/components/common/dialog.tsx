@@ -63,6 +63,20 @@ function DialogTrigger({
   );
 }
 
+function DialogClose({
+  children,
+  className,
+  ...restProps
+}: React.ButtonHTMLAttributes<HTMLButtonElement>) {
+  const { close } = useDialog();
+
+  return (
+    <button className={className} onClick={close} {...restProps}>
+      {children}
+    </button>
+  );
+}
+
 function DialogContent(props: React.HTMLAttributes<HTMLDivElement>) {
   const { children, className, ...restProps } = props;
 
@@ -95,4 +109,4 @@ function DialogContent(props: React.HTMLAttributes<HTMLDivElement>) {
   );
 }
 
-export { Dialog, DialogTrigger, DialogContent };
+export { Dialog, DialogTrigger, DialogContent, DialogClose };
