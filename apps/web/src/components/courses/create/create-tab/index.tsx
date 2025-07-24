@@ -1,18 +1,20 @@
 import { useRef, useState } from "react";
 import Image from "next/image";
-import Link from "next/link";
 
-import Close from "@/assets/close.svg";
+import Lock from "@/assets/lock.svg";
 import Plus from "@/assets/plus.svg";
 import Button from "@/components/common/button";
 import Header from "@/components/common/header";
 import { COURSE_CATEGORIES } from "@/constants/category";
 import { cn } from "@/lib/utils";
 import { CreateCourseForm } from "@/schemas/course";
-import { getParams } from "@/utils/params";
+import { CoursePlaceProps } from "@/types/course";
 import { infoToast } from "@/utils/toast";
 
 import { useFieldArray, UseFormReturn } from "react-hook-form";
+
+import ChangeOrderMode from "./change-order-mode";
+import DefaultMode from "./default-mode";
 
 interface CreateTabProps {
   form: UseFormReturn<CreateCourseForm>;
@@ -22,10 +24,10 @@ const CATEGORIES = COURSE_CATEGORIES.slice(1);
 const MAX_FILE_SIZE = 5 * 1024 * 1024;
 
 export default function CreateTab({ form }: CreateTabProps) {
+  const [isEditMode, setIsEditMode] = useState(false);
+
   const category = form.watch("category");
   const thumbnail = form.watch("thumbnail");
-
-  const parmas = getParams({ tab: "find-by-map" });
 
   const [previewImage, setPreviewImage] = useState<string | null>(() => {
     if (!thumbnail) return null;
@@ -42,13 +44,17 @@ export default function CreateTab({ form }: CreateTabProps) {
   const { formState } = form;
   const { isValid, errors } = formState;
 
-  const submitDisabled = !isValid || fields.length === 0;
+  const submitDisabled = !isValid || fields.length === 0 || isEditMode;
 
   const onChangeReason = (index: number, reason: string) => {
     update(index, {
       ...fields[index],
       reason,
     });
+  };
+
+  const onReorder = (newOrder: CoursePlaceProps[]) => {
+    form.setValue("places", newOrder);
   };
 
   const onChangeCategory = (categoryName: string) => {
@@ -77,12 +83,18 @@ export default function CreateTab({ form }: CreateTabProps) {
     fileInputRef.current?.click();
   };
 
+  const onToggleEditMode = () => {
+    if (!isEditMode) return setIsEditMode(true);
+    setIsEditMode(false);
+    // 드래그 앤 드롭 결과 반영
+  };
+
   return (
     <>
       <Header>순례길 생성하기</Header>
       <main className="pb-navigation">
-        <section className="bg-main-100 space-y-2.5 p-5">
-          <div className="flex gap-5">
+        <section className="bg-main-100 relative p-5">
+          <div className="mb-2.5 flex gap-5">
             <div
               className="group relative size-28 shrink-0 cursor-pointer overflow-hidden rounded-2xl bg-gray-100"
               onClick={onImageClick}
@@ -156,47 +168,35 @@ export default function CreateTab({ form }: CreateTabProps) {
             className="typo-regular w-full resize-none rounded-xl bg-white p-2.5"
             {...form.register("intro")}
           />
+          {isEditMode && (
+            <div className="typo-semibold absolute inset-0 flex flex-col items-center justify-center gap-2.5 bg-black/40 text-center text-white">
+              <Lock className="size-12" />
+              <p>순례길 코스 편집을 완료해주세요</p>
+            </div>
+          )}
         </section>
         <section className="flex flex-col p-5">
           <div className="flex items-center justify-between">
             <h2 className="typo-semibold">순례길 코스</h2>
-            <button className="typo-regular underline">편집</button>
+            <button className="typo-regular underline" onClick={onToggleEditMode}>
+              {isEditMode ? "완료" : "편집"}
+            </button>
           </div>
-          {fields.map((place, index) => (
-            <div
-              key={`${place.placeName}-${index}`}
-              className="flex items-center gap-2.5 px-5 py-2.5"
-            >
-              <p className="bg-main-900 typo-regular flex aspect-square size-6 shrink-0 items-center justify-center rounded-full text-white">
-                {index + 1}
-              </p>
-              <div className="shadow-layout flex w-full justify-between gap-2.5 rounded-xl p-2.5">
-                <div className="w-full">
-                  <p className="typo-medium line-clamp-1">{place.placeName}</p>
-                  <input
-                    className="typo-regular w-full"
-                    value={place.reason}
-                    onChange={(e) => onChangeReason(index, e.target.value)}
-                    placeholder="추가 요청 사유를 작성해주세요"
-                  />
-                  {errors.places?.[index]?.reason && (
-                    <p className="typo-regular mt-1 text-red-500">
-                      {errors.places[index]?.reason?.message}
-                    </p>
-                  )}
-                </div>
-                <button onClick={() => remove(index)} aria-label={`${place.placeName} 삭제`}>
-                  <Close />
-                </button>
-              </div>
-            </div>
-          ))}
-          <Link
-            href={`?${parmas}`}
-            className="typo-regular mb-2.5 w-full py-2.5 text-center text-gray-500 underline"
-          >
-            순례길 추가하기
-          </Link>
+          {isEditMode ? (
+            <ChangeOrderMode
+              fields={fields}
+              onChangeReason={onChangeReason}
+              remove={remove}
+              onReorder={onReorder}
+            />
+          ) : (
+            <DefaultMode
+              fields={fields}
+              onChangeReason={onChangeReason}
+              errors={errors}
+              remove={remove}
+            />
+          )}
           <Button disabled={submitDisabled}>생성하기</Button>
         </section>
       </main>
