@@ -95,9 +95,10 @@ export default function ChangeOrderMode({
           </div>
         ))
       ) : (
-        <p className="typo-regular mb-2.5 w-full py-2.5 text-center text-gray-500">
-          순례길 코스를 추가해주세요
-        </p>
+        <div className="my-3 flex flex-col items-center gap-2.5">
+          <p className="text-6xl">🫥</p>
+          <p className="typo-medium text-center text-gray-700">장소를 추가해주세요</p>
+        </div>
       )}
     </>
   );

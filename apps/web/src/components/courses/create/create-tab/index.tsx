@@ -83,12 +83,6 @@ export default function CreateTab({ form }: CreateTabProps) {
     fileInputRef.current?.click();
   };
 
-  const onToggleEditMode = () => {
-    if (!isEditMode) return setIsEditMode(true);
-    setIsEditMode(false);
-    // 드래그 앤 드롭 결과 반영
-  };
-
   return (
     <>
       <Header>순례길 생성하기</Header>
@@ -175,10 +169,10 @@ export default function CreateTab({ form }: CreateTabProps) {
             </div>
           )}
         </section>
-        <section className="flex flex-col p-5">
+        <section className="flex flex-1 flex-col p-5">
           <div className="flex items-center justify-between">
             <h2 className="typo-semibold">순례길 코스</h2>
-            <button className="typo-regular underline" onClick={onToggleEditMode}>
+            <button className="typo-regular underline" onClick={() => setIsEditMode(!isEditMode)}>
               {isEditMode ? "완료" : "편집"}
             </button>
           </div>

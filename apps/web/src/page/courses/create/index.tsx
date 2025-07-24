@@ -12,6 +12,7 @@ interface CreateCoursePageProps {
   query: string;
 }
 
+// 회원일 때만 접근 가능하도록 로직 작성하기
 export default function CreateCoursePage({ tab, query }: CreateCoursePageProps) {
   const form = useForm<CreateCourseForm>({
     resolver: zodResolver(createCourseFormSchema),
