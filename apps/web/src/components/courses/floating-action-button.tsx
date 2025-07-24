@@ -12,6 +12,7 @@ import { cn } from "@/lib/utils";
 const ACTION_BUTTONS = [
   {
     icon: Enter,
+    // 이미 참여중인 순례길이면 "순례길 나가기" 텍스트 보여주기
     text: "순례길 참여하기",
     value: "participate" as const,
   },

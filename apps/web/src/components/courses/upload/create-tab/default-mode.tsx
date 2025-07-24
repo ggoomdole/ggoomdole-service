@@ -1,21 +1,28 @@
 import Link from "next/link";
 
 import Close from "@/assets/close.svg";
-import { CreateCourseForm } from "@/schemas/course";
+import { UploadCourseForm } from "@/schemas/course";
 import { CoursePlaceProps } from "@/types/course";
 import { getParams } from "@/utils/params";
 
 import { FieldErrors } from "react-hook-form";
 
 interface DefaultModeProps {
+  id?: string;
   fields: CoursePlaceProps[];
-  errors: FieldErrors<CreateCourseForm>;
+  errors: FieldErrors<UploadCourseForm>;
   onChangeReason: (index: number, reason: string) => void;
   remove: (index: number) => void;
 }
 
-export default function DefaultMode({ fields, errors, onChangeReason, remove }: DefaultModeProps) {
-  const parmas = getParams({ tab: "find-by-map" });
+export default function DefaultMode({
+  id,
+  fields,
+  errors,
+  onChangeReason,
+  remove,
+}: DefaultModeProps) {
+  const parmas = getParams({ tab: "find-by-map", id });
 
   return (
     <>
@@ -32,7 +39,7 @@ export default function DefaultMode({ fields, errors, onChangeReason, remove }: 
                   className="typo-regular w-full"
                   value={place.reason}
                   onChange={(e) => onChangeReason(index, e.target.value)}
-                  placeholder="추가 요청 사유를 작성해주세요"
+                  placeholder="장소에 대해 설명해주세요"
                 />
                 {errors.places?.[index]?.reason && (
                   <p className="typo-regular mt-1 text-red-500">
@@ -54,7 +61,7 @@ export default function DefaultMode({ fields, errors, onChangeReason, remove }: 
       )}
       <Link
         href={`?${parmas}`}
-        className="typo-regular mb-2.5 w-full py-2.5 text-center text-gray-500 underline"
+        className="typo-regular mx-auto mb-2.5 w-max py-2.5 text-center text-gray-500 underline"
       >
         순례길 추가하기
       </Link>

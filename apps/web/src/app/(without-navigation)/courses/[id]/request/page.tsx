@@ -12,7 +12,7 @@ interface CourseRequestProps {
 
 export default async function CourseRequest({ params, searchParams }: CourseRequestProps) {
   const { id } = await params;
-  const { tab, query } = await searchParams;
+  const resolvedSearchParams = await searchParams;
 
-  return <CourseRequestPage id={id} tab={tab} query={query} />;
+  return <CourseRequestPage id={id} {...resolvedSearchParams} />;
 }

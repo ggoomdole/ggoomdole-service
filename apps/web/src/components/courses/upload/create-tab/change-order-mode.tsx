@@ -85,7 +85,7 @@ export default function ChangeOrderMode({
                   className="typo-regular w-full"
                   value={place.reason}
                   onChange={(e) => onChangeReason(index, e.target.value)}
-                  placeholder="추가 요청 사유를 작성해주세요"
+                  placeholder="장소에 대해 설명해주세요"
                 />
               </div>
               <button onClick={() => remove(index)} aria-label={`${place.placeName} 삭제`}>

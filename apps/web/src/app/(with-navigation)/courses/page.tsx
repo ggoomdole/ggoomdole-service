@@ -12,7 +12,7 @@ interface CoursesPageProps {
 }
 
 export default async function Courses({ searchParams }: CoursesPageProps) {
-  const params = await searchParams;
+  const resolvedSearchParams = await searchParams;
 
   return (
     <>
@@ -25,7 +25,7 @@ export default async function Courses({ searchParams }: CoursesPageProps) {
         }
         sticky
       />
-      <CoursesPage {...params} />
+      <CoursesPage {...resolvedSearchParams} />
     </>
   );
 }

@@ -16,6 +16,7 @@ interface CourseCardProps {
   imageUrl: string;
   people: number;
   level: "gold" | "silver" | "bronze" | "normal";
+  edit?: string;
 }
 
 const getLevelIcon = (level: "gold" | "silver" | "bronze" | "normal") => {
@@ -39,10 +40,13 @@ export default function CourseCard({
   imageUrl,
   people,
   level,
+  edit,
 }: CourseCardProps) {
+  const link = edit ? `/courses/upload?id=${id}` : `/courses/${id}`;
+
   return (
     <Link
-      href={`/courses/${id}`}
+      href={link}
       className="flex items-center justify-between gap-2.5 border-b border-b-gray-100 py-2.5"
     >
       <div className="flex flex-col gap-1 overflow-hidden">
