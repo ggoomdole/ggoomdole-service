@@ -49,11 +49,15 @@ function Dialog({ children }: DialogProps) {
   );
 }
 
-function DialogTrigger({ children, className }: React.HTMLAttributes<HTMLButtonElement>) {
+function DialogTrigger({
+  children,
+  className,
+  ...restProps
+}: React.ButtonHTMLAttributes<HTMLButtonElement>) {
   const { open } = useDialog();
 
   return (
-    <button className={className} onClick={open} type="button">
+    <button className={className} onClick={open} {...restProps}>
       {children}
     </button>
   );

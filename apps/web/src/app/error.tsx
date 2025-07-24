@@ -1,15 +1,16 @@
-import React from "react";
+"use client";
+
 import Image from "next/image";
 import Link from "next/link";
 
-const notFoundImage = "/static/onboarding/step3.png";
+const errorImage = "/static/error.png";
 
-export default function NotFound() {
+export default function Error() {
   return (
     <main className="flex h-screen flex-col items-center justify-center">
-      <Image src={notFoundImage} alt="not-found" width={300} height={300} />
-      <h1 className="typo-bold text-main-900">잘못된 경로</h1>
-      <p className="typo-semibold">페이지를 찾을 수 없어요.</p>
+      <Image src={errorImage} alt="error" width={300} height={300} />
+      <h1 className="typo-bold text-main-900">서버 오류</h1>
+      <p className="typo-semibold">예상치 못한 오류가 발생했어요.</p>
       <Link
         replace
         href="/home"

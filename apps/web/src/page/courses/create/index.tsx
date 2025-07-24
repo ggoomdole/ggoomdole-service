@@ -1,23 +1,28 @@
 "use client";
 
 import FindByMapTab from "@/components/common/map/find-by-map-tab";
-import RequestTab from "@/components/courses/request/request-tab";
-import { RequestCourseForm, requestCourseFormSchema } from "@/schemas/course";
+import CreateTab from "@/components/courses/create/create-tab";
+import { CreateCourseForm, createCourseFormSchema } from "@/schemas/course";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 import { useFieldArray, useForm } from "react-hook-form";
 
-interface CourseRequestPageProps {
-  id: string;
+interface CreateCoursePageProps {
   tab: string;
   query: string;
 }
 
-export default function CourseRequestPage({ id, tab, query }: CourseRequestPageProps) {
-  const form = useForm<RequestCourseForm>({
-    mode: "onChange",
-    resolver: zodResolver(requestCourseFormSchema),
-    defaultValues: { places: [] },
+// 회원일 때만 접근 가능하도록 로직 작성하기
+export default function CreateCoursePage({ tab, query }: CreateCoursePageProps) {
+  const form = useForm<CreateCourseForm>({
+    resolver: zodResolver(createCourseFormSchema),
+    defaultValues: {
+      name: "",
+      thumbnail: undefined,
+      category: "",
+      intro: "",
+      places: [],
+    },
   });
 
   const { append } = useFieldArray({
@@ -38,6 +43,6 @@ export default function CourseRequestPage({ id, tab, query }: CourseRequestPageP
         />
       );
     default:
-      return <RequestTab id={id} query={query} form={form} />;
+      return <CreateTab form={form} />;
   }
 }
