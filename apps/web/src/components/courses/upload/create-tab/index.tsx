@@ -46,7 +46,7 @@ export default function CreateTab({ id, form, isEditCourse }: CreateTabProps) {
   });
 
   const { formState } = form;
-  const { isValid, errors } = formState;
+  const { isValid } = formState;
 
   const submitDisabled = !isValid || fields.length === 0 || isEditOrderMode;
 
@@ -171,7 +171,7 @@ export default function CreateTab({ id, form, isEditCourse }: CreateTabProps) {
             {...form.register("intro")}
           />
           {isEditOrderMode && (
-            <div className="typo-semibold absolute inset-0 flex flex-col items-center justify-center gap-2.5 bg-black/40 text-center text-white">
+            <div className="typo-semibold backdrop-blur-xs absolute inset-0 flex flex-col items-center justify-center gap-2.5 bg-black/40 text-center text-white">
               <Lock className="size-12" />
               <p>순례길 코스 편집을 완료해주세요</p>
             </div>
@@ -195,13 +195,7 @@ export default function CreateTab({ id, form, isEditCourse }: CreateTabProps) {
               onReorder={onReorder}
             />
           ) : (
-            <DefaultMode
-              id={id}
-              fields={fields}
-              onChangeReason={onChangeReason}
-              errors={errors}
-              remove={remove}
-            />
+            <DefaultMode id={id} fields={fields} onChangeReason={onChangeReason} remove={remove} />
           )}
           {isEditCourse && <NewCourses form={form} />}
           {isEditCourse ? (

@@ -1,6 +1,7 @@
 import { useState } from "react";
 
 import Checkbox from "@/components/checkbox";
+import LocationInputCard from "@/components/common/card/location-input-card";
 import { UploadCourseForm } from "@/schemas/course";
 
 import { useFieldArray, UseFormReturn } from "react-hook-form";
@@ -34,21 +35,11 @@ export default function NewCourses({ form }: NewCoursesProps) {
 
   const isAllChecked = selectedCourseIds.length === newCourses.length;
 
-  const { fields, update } = useFieldArray({
+  const { fields } = useFieldArray({
     control: form.control,
     name: "places",
     keyName: "fieldId",
   });
-
-  const { formState } = form;
-  const { errors } = formState;
-
-  const onChangeReason = (index: number, reason: string) => {
-    update(index, {
-      ...fields[index],
-      reason,
-    });
-  };
 
   const onToggleAllCheckbox = () => {
     if (isAllChecked) {
@@ -98,27 +89,13 @@ export default function NewCourses({ form }: NewCoursesProps) {
       </div>
       <div className="flex flex-col gap-2.5">
         {newCourses.length > 0 ? (
-          newCourses.map((place, index) => (
+          newCourses.map((place) => (
             <div key={place.placeName} className="flex items-center gap-2.5 px-5 py-2.5">
               <Checkbox
                 checked={selectedCourseIds.includes(place.placeName)}
                 onChange={() => onToggleCheckbox(place.placeName)}
               />
-              <div className="shadow-layout flex w-full flex-col justify-between gap-2.5 rounded-xl p-2.5">
-                <p className="typo-medium line-clamp-1">{place.placeName}</p>
-                <input
-                  className="typo-regular w-full"
-                  value={place.reason}
-                  onChange={(e) => onChangeReason(index, e.target.value)}
-                  placeholder="장소에 대해 설명해주세요"
-                  readOnly
-                />
-                {errors.places?.[index]?.reason && (
-                  <p className="typo-regular mt-1 text-red-500">
-                    {errors.places[index]?.reason?.message}
-                  </p>
-                )}
-              </div>
+              <LocationInputCard placeName={place.placeName} value={place.reason} readOnly />
             </div>
           ))
         ) : (

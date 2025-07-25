@@ -1,28 +1,18 @@
 import Link from "next/link";
 
-import Close from "@/assets/close.svg";
-import { UploadCourseForm } from "@/schemas/course";
+import LocationInputCard from "@/components/common/card/location-input-card";
 import { CoursePlaceProps } from "@/types/course";
 import { getParams } from "@/utils/params";
-
-import { FieldErrors } from "react-hook-form";
 
 interface DefaultModeProps {
   id?: string;
   fields: CoursePlaceProps[];
-  errors: FieldErrors<UploadCourseForm>;
   onChangeReason: (index: number, reason: string) => void;
   remove: (index: number) => void;
 }
 
-export default function DefaultMode({
-  id,
-  fields,
-  errors,
-  onChangeReason,
-  remove,
-}: DefaultModeProps) {
-  const parmas = getParams({ tab: "find-by-map", id });
+export default function DefaultMode({ id, fields, onChangeReason, remove }: DefaultModeProps) {
+  const params = getParams({ tab: "find-by-map", id });
 
   return (
     <>
@@ -32,25 +22,13 @@ export default function DefaultMode({
             <p className="bg-main-900 typo-regular flex aspect-square size-6 shrink-0 items-center justify-center rounded-full text-white">
               {index + 1}
             </p>
-            <div className="shadow-layout flex w-full justify-between gap-2.5 rounded-xl p-2.5">
-              <div className="w-full">
-                <p className="typo-medium line-clamp-1">{place.placeName}</p>
-                <input
-                  className="typo-regular w-full"
-                  value={place.reason}
-                  onChange={(e) => onChangeReason(index, e.target.value)}
-                  placeholder="장소에 대해 설명해주세요"
-                />
-                {errors.places?.[index]?.reason && (
-                  <p className="typo-regular mt-1 text-red-500">
-                    {errors.places[index]?.reason?.message}
-                  </p>
-                )}
-              </div>
-              <button onClick={() => remove(index)} aria-label={`${place.placeName} 삭제`}>
-                <Close />
-              </button>
-            </div>
+            <LocationInputCard
+              placeName={place.placeName}
+              value={place.reason}
+              onChange={(e) => onChangeReason(index, e.target.value)}
+              placeholder="장소에 대해 설명해주세요"
+              onRemove={() => remove(index)}
+            />
           </div>
         ))
       ) : (
@@ -60,7 +38,7 @@ export default function DefaultMode({
         </div>
       )}
       <Link
-        href={`?${parmas}`}
+        href={`?${params}`}
         className="typo-regular mx-auto mb-2.5 w-max py-2.5 text-center text-gray-500 underline"
       >
         순례길 추가하기

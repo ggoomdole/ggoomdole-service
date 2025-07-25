@@ -31,14 +31,16 @@ function Dialog({ children }: DialogProps) {
   const [isOpen, setIsOpen] = useState(false);
 
   useEffect(() => {
-    if (isOpen) {
-      document.body.style.overflow = "hidden";
-    } else {
-      document.body.style.overflow = "unset";
+    if (typeof document !== "undefined") {
+      if (isOpen) {
+        document.body.style.overflow = "hidden";
+      } else {
+        document.body.style.overflow = "unset";
+      }
+      return () => {
+        document.body.style.overflow = "unset";
+      };
     }
-    return () => {
-      document.body.style.overflow = "unset";
-    };
   }, [isOpen]);
 
   const open = () => setIsOpen(true);
@@ -87,6 +89,10 @@ function DialogContent(props: React.HTMLAttributes<HTMLDivElement>) {
       close();
     }
   });
+
+  if (typeof document === "undefined") {
+    return null;
+  }
 
   return createPortal(
     isOpen && (
