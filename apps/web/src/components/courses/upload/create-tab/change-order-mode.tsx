@@ -1,7 +1,7 @@
 import { useState } from "react";
 
-import Close from "@/assets/close.svg";
 import Menu from "@/assets/menu.svg";
+import LocationInputCard from "@/components/common/card/location-input-card";
 import { cn } from "@/lib/utils";
 import { CoursePlaceProps } from "@/types/course";
 
@@ -78,20 +78,13 @@ export default function ChangeOrderMode({
             )}
           >
             <Menu />
-            <div className="shadow-layout flex w-full justify-between gap-2.5 rounded-xl p-2.5">
-              <div className="w-full">
-                <p className="typo-medium line-clamp-1">{place.placeName}</p>
-                <input
-                  className="typo-regular w-full"
-                  value={place.reason}
-                  onChange={(e) => onChangeReason(index, e.target.value)}
-                  placeholder="추가 요청 사유를 작성해주세요"
-                />
-              </div>
-              <button onClick={() => remove(index)} aria-label={`${place.placeName} 삭제`}>
-                <Close />
-              </button>
-            </div>
+            <LocationInputCard
+              placeName={place.placeName}
+              value={place.reason}
+              onChange={(e) => onChangeReason(index, e.target.value)}
+              placeholder="장소에 대해 설명해주세요"
+              onRemove={() => remove(index)}
+            />
           </div>
         ))
       ) : (

@@ -31,14 +31,16 @@ function Dialog({ children }: DialogProps) {
   const [isOpen, setIsOpen] = useState(false);
 
   useEffect(() => {
-    if (isOpen) {
-      document.body.style.overflow = "hidden";
-    } else {
-      document.body.style.overflow = "unset";
+    if (typeof document !== "undefined") {
+      if (isOpen) {
+        document.body.style.overflow = "hidden";
+      } else {
+        document.body.style.overflow = "unset";
+      }
+      return () => {
+        document.body.style.overflow = "unset";
+      };
     }
-    return () => {
-      document.body.style.overflow = "unset";
-    };
   }, [isOpen]);
 
   const open = () => setIsOpen(true);
@@ -63,6 +65,20 @@ function DialogTrigger({
   );
 }
 
+function DialogClose({
+  children,
+  className,
+  ...restProps
+}: React.ButtonHTMLAttributes<HTMLButtonElement>) {
+  const { close } = useDialog();
+
+  return (
+    <button className={className} onClick={close} {...restProps}>
+      {children}
+    </button>
+  );
+}
+
 function DialogContent(props: React.HTMLAttributes<HTMLDivElement>) {
   const { children, className, ...restProps } = props;
 
@@ -73,6 +89,10 @@ function DialogContent(props: React.HTMLAttributes<HTMLDivElement>) {
       close();
     }
   });
+
+  if (typeof document === "undefined") {
+    return null;
+  }
 
   return createPortal(
     isOpen && (
@@ -95,4 +115,4 @@ function DialogContent(props: React.HTMLAttributes<HTMLDivElement>) {
   );
 }
 
-export { Dialog, DialogTrigger, DialogContent };
+export { Dialog, DialogTrigger, DialogContent, DialogClose };
