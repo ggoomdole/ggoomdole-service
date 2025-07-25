@@ -93,7 +93,7 @@ export default function CreateTab({ id, form, isEditCourse }: CreateTabProps) {
 
   return (
     <>
-      <Header>순례길 생성하기</Header>
+      <Header>순례길 {isEditCourse ? "수정" : "생성"}하기</Header>
       <main className="pb-navigation">
         <section className="bg-main-100 relative p-5">
           <div className="mb-2.5 flex gap-5">

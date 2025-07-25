@@ -129,7 +129,6 @@ export default function Map({
 
   useEffect(() => {
     if (mapContainerRef.current && !isMapInitializedRef.current) {
-      console.log("mapContainerRef.current", mapContainerRef.current, window.Tmapv3);
       mapInstanceRef.current = new window.Tmapv3.Map(mapContainerRef.current, {
         center: new window.Tmapv3.LatLng(
           center?.lat ?? DEFAULT_MAP_CENTER.lat,
