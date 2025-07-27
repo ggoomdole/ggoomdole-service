@@ -5,6 +5,7 @@ interface UploadCourseProps {
     tab: string;
     query: string;
     id: string;
+    view: "private";
   }>;
 }
 

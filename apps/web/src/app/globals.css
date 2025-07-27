@@ -13,6 +13,8 @@
   --spacing-floating-button: calc(var(--spacing-mobile) - 2.5rem);
   --spacing-with-floating-button: 7.5rem;
 
+  --radius-5xl: 2.5rem;
+
   --color-gold-500: #f2dc1d;
   --color-silver-500: #cccccc;
   --color-bronze-500: #935600;
