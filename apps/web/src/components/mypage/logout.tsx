@@ -1,3 +1,5 @@
+"use client";
+
 import Button from "../common/button";
 import { DialogClose, DialogContent } from "../common/dialog";
 

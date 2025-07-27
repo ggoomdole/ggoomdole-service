@@ -38,13 +38,11 @@ export default function MenuButton({ name, value, type }: MenuButtonProps) {
   };
 
   return (
-    <li>
-      <Dialog>
-        <DialogTrigger className="border-b border-b-gray-100 px-1 py-5 text-start">
-          {name}
-        </DialogTrigger>
-        {renderDialogContent()}
-      </Dialog>
-    </li>
+    <Dialog>
+      <li className="border-b border-b-gray-100 px-1 py-5 text-start">
+        <DialogTrigger>{name}</DialogTrigger>
+      </li>
+      {renderDialogContent()}
+    </Dialog>
   );
 }
