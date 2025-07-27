@@ -22,12 +22,20 @@ interface CreateTabProps {
   id?: string;
   form: UseFormReturn<UploadCourseForm>;
   isEditCourse: boolean;
+  isPrivate: boolean;
 }
 
 const CATEGORIES = COURSE_CATEGORIES.slice(1);
 const MAX_FILE_SIZE = 5 * 1024 * 1024;
 
-export default function CreateTab({ id, form, isEditCourse }: CreateTabProps) {
+const getHeaderText = (isEditCourse: boolean, isPrivate: boolean) => {
+  if (isPrivate) {
+    return "나만의 순례길";
+  }
+  return isEditCourse ? "순례길 수정하기" : "순례길 생성하기";
+};
+
+export default function CreateTab({ id, form, isEditCourse, isPrivate }: CreateTabProps) {
   const [isEditOrderMode, setIsEditOrderMode] = useState(false);
 
   const category = form.watch("category");
@@ -91,9 +99,19 @@ export default function CreateTab({ id, form, isEditCourse }: CreateTabProps) {
     // API 요청 후 /participations로 이동 및 invalidate
   };
 
+  const onSubmit = async () => {
+    if (isPrivate) {
+      // 비공개 순례길 수정 API
+    } else if (isEditCourse) {
+      // 순례길 수정 API
+    } else {
+      // 순례길 생성 API
+    }
+  };
+
   return (
     <>
-      <Header>순례길 {isEditCourse ? "수정" : "생성"}하기</Header>
+      <Header>{getHeaderText(isEditCourse, isPrivate)}</Header>
       <main className="pb-navigation">
         <section className="bg-main-100 relative p-5">
           <div className="mb-2.5 flex gap-5">
@@ -197,7 +215,7 @@ export default function CreateTab({ id, form, isEditCourse }: CreateTabProps) {
           ) : (
             <DefaultMode id={id} fields={fields} onChangeReason={onChangeReason} remove={remove} />
           )}
-          {isEditCourse && <NewCourses form={form} />}
+          {isEditCourse && !isPrivate && <NewCourses form={form} />}
           {isEditCourse ? (
             <div className="flex gap-5 py-5">
               <Dialog>
@@ -217,12 +235,14 @@ export default function CreateTab({ id, form, isEditCourse }: CreateTabProps) {
                   </div>
                 </DialogContent>
               </Dialog>
-              <Button disabled={submitDisabled} className="flex-1">
+              <Button disabled={submitDisabled} className="flex-1" onClick={onSubmit}>
                 수정하기
               </Button>
             </div>
           ) : (
-            <Button disabled={submitDisabled}>생성하기</Button>
+            <Button disabled={submitDisabled} onClick={onSubmit}>
+              생성하기
+            </Button>
           )}
         </section>
       </main>

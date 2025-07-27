@@ -11,11 +11,13 @@ interface UploadCoursePageProps {
   tab: string;
   query: string;
   id: string;
+  view: "private";
 }
 
 // 회원일 때만 접근 가능하도록 로직 작성하기
-export default function UploadCoursePage({ tab, query, id }: UploadCoursePageProps) {
+export default function UploadCoursePage({ tab, query, id, view }: UploadCoursePageProps) {
   const isEditCourse = !!id;
+  const isPrivate = view === "private";
 
   const form = useForm<UploadCourseForm>({
     resolver: zodResolver(uploadCourseFormSchema),
@@ -48,6 +50,6 @@ export default function UploadCoursePage({ tab, query, id }: UploadCoursePagePro
         />
       );
     default:
-      return <CreateTab id={id} form={form} isEditCourse={isEditCourse} />;
+      return <CreateTab id={id} form={form} isEditCourse={isEditCourse} isPrivate={isPrivate} />;
   }
 }
