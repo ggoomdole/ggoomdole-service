@@ -79,7 +79,11 @@ export default function ParticipationsPage({ tab, sort }: ParticipationsPageProp
       <SortDrawer options={SORT_OPTIONS} className="typo-regular mr-5 w-max self-end" />
       <section className="px-5">
         {dummyCourses.map((course) => (
-          <CourseCard key={`course-item-${course.category}-${course.id}`} {...course} edit={tab} />
+          <CourseCard
+            key={`course-item-${course.category}-${course.id}`}
+            {...course}
+            href={`/courses/upload?id=${course.id}`}
+          />
         ))}
       </section>
     </main>

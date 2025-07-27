@@ -71,7 +71,11 @@ export default function CoursesPage({ category, sort }: CoursesPageProps) {
       <SortDrawer options={SORT_OPTIONS} className="typo-regular mr-5 w-max self-end" />
       <section className="px-5">
         {dummyCourses.map((course) => (
-          <CourseCard key={`course-item-${course.category}-${course.id}`} {...course} />
+          <CourseCard
+            key={`course-item-${course.category}-${course.id}`}
+            href={`/courses/${course.id}`}
+            {...course}
+          />
         ))}
       </section>
     </main>

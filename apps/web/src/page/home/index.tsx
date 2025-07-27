@@ -112,7 +112,11 @@ export default function HomePage() {
       <QueryTabNav navKey="category" navs={COURSE_CATEGORIES} />
       <section className="px-5">
         {dummyCourses.map((course) => (
-          <CourseCard key={`course-item-${course.category}-${course.id}`} {...course} />
+          <CourseCard
+            key={`course-item-${course.category}-${course.id}`}
+            href={`/courses/${course.id}`}
+            {...course}
+          />
         ))}
       </section>
       <section className="space-y-5 p-5">

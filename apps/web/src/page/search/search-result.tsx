@@ -73,7 +73,11 @@ export default function SearchResultPage({ sort, category, query }: SearchResult
 
       <section className="px-5">
         {dummyCourses.map((course) => (
-          <CourseCard key={`course-item-${course.category}-${course.id}`} {...course} />
+          <CourseCard
+            key={`course-item-${course.category}-${course.id}`}
+            href={`/courses/${course.id}`}
+            {...course}
+          />
         ))}
       </section>
     </main>

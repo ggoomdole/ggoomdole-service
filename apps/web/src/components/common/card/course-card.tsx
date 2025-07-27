@@ -9,14 +9,13 @@ import { CategoryType } from "@/types/category";
 import CategoryChip from "../chip/category-chip";
 
 interface CourseCardProps {
-  id: number;
   category: CategoryType;
   title: string;
   intro: string;
   imageUrl: string;
   people: number;
   level: "gold" | "silver" | "bronze" | "normal";
-  edit?: string;
+  href: string;
 }
 
 const getLevelIcon = (level: "gold" | "silver" | "bronze" | "normal") => {
@@ -33,20 +32,17 @@ const getLevelIcon = (level: "gold" | "silver" | "bronze" | "normal") => {
 };
 
 export default function CourseCard({
-  id,
   category,
   title,
   intro,
   imageUrl,
   people,
   level,
-  edit,
+  href,
 }: CourseCardProps) {
-  const link = edit ? `/courses/upload?id=${id}` : `/courses/${id}`;
-
   return (
     <Link
-      href={link}
+      href={href}
       className="flex items-center justify-between gap-2.5 border-b border-b-gray-100 py-2.5"
     >
       <div className="flex flex-col gap-1 overflow-hidden">
