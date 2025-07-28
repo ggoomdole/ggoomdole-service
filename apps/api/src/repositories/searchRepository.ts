@@ -8,8 +8,7 @@ class SearchRepository {
         public: true,
         OR: nouns.map((noun) => ({
           title: {
-            contains: noun,
-            mode: 'insensitive',
+            contains: noun
           },
         })),
       },

@@ -7,8 +7,8 @@ const router = Router();
 
 router.get("/road", authenticate, searchController.searchRoad);
 
-router.delete("/", authenticate, searchController.deleteSearchWord);
-router.delete("/all", authenticate, searchController.deleteSearchAllWord);
+router.delete("/delete", authenticate, searchController.deleteSearchWord);
+router.delete("/delete/all", authenticate, searchController.deleteSearchAllWord);
 router.get("/recent", authenticate, searchController.getRecentSearchWords);
 
 

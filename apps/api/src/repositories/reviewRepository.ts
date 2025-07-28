@@ -17,24 +17,25 @@ class reviewController {
 
   async deleteReview(reviewId: number) {
     return await prisma.review.delete({
-        where: { id: reviewId}
+        where: { id: reviewId }
     })
   }
 
   async findReviewById(reviewId: number) {
     return await prisma.review.findFirst({
-      where: { id: reviewId },
-      include: {
-        spot: true,
-      }
+      where: { id: reviewId }
     });
   }
 
-  async isMyReviewCheck(reviewId: number, userId: number) {
-    return await prisma.review.findFirst({
-        where: { id: reviewId },
-    })
-  }
+  async isMyReviewCheck(userId: number, reviewId: number) {
+    const review = await prisma.review.findFirst({
+      where: {
+        id: reviewId,
+        userId: userId,
+      },
+    });
+    return !!review;
+  }  
 
   async findAllReviewById(spotId: string) {
     return await prisma.review.findMany({

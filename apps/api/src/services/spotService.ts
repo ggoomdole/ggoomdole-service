@@ -41,25 +41,36 @@ class RoadService {
     const checkPilgrimager = await roadRepository.findRoadById(data.roadId);
     if (!checkPilgrimager) throw new NotFoundError('해당 순례길이 존재하지 않습니다.');
   
-    const newSpots = data.spots.map((spot) => ({
+    const createdSpots = await spotRepository.reqSpot(
+      data.spots.map((spot) => ({
         pilgrimageId: data.roadId,
         spotId: spot.spotId,
+        spotInfo: spot.spotInfo,
         number: spot.addNumber,
         introSpot: spot.addReason,
-        request: true
-    }));
-
-    const createdSpots = await spotRepository.reqSpot(newSpots);
+        request: true,
+      }))
+    );
+  
     return [{
-        roadId: data.roadId,
-        spots: createdSpots.map((spot) => ({
-          spotId: spot.spotId,
-          addNumber: spot.number,
-          addReason: spot.introSpot
-        }))
+      roadId: data.roadId,
+      spots: createdSpots.map((spot) => ({
+        spotId: spot.spotId,
+        addNumber: spot.number,
+        addReason: spot.introSpot,
+        spotInfo: {
+          name: spot.spot.name,
+          phone: spot.spot.phone ?? undefined,
+          address: spot.spot.address ?? undefined,
+          latitude: spot.spot.latitude ?? undefined,
+          longitude: spot.spot.longitude ?? undefined,
+          hours: spot.spot.hours ?? undefined,
+          avgRate: spot.spot.avgRate ?? undefined,
+        }
+      }))
     }];
   }
-
+  
   async getRequestedSpots(userId: number, roadId: number) {
     const isAdmin = await roadRepository.checkPilgrimageOwner(userId, roadId);
     if (!isAdmin) { throw new UnauthorizedError('관리자 권한이 없습니다.'); }
