@@ -37,7 +37,9 @@ jobs:
 
             pnpm install
 
+            DATABASE_URL=${DATABASE_URL} npx prisma migrate deploy
+
             pkill node || true
 
-            pnpm dev
+            nohup pnpm start > app.log 2>&1 &
           EOF
