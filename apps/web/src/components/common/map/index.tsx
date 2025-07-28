@@ -125,11 +125,12 @@ export default function Map({
 }: MapProps) {
   const mapContainerRef = useRef<HTMLDivElement>(null);
   const markersRef = useRef<TMapMarker[]>([]);
+  const isMapInitializedRef = useRef(false);
 
   useEffect(() => {
-    if (mapContainerRef.current) {
+    if (mapContainerRef.current && !isMapInitializedRef.current) {
       mapInstanceRef.current = new window.Tmapv3.Map(mapContainerRef.current, {
-        center: new window.Tmapv3.LatLng( // 지도 초기 좌표
+        center: new window.Tmapv3.LatLng(
           center?.lat ?? DEFAULT_MAP_CENTER.lat,
           center?.lng ?? DEFAULT_MAP_CENTER.lng
         ),
@@ -149,6 +150,20 @@ export default function Map({
         onClickMap?.();
       });
 
+      isMapInitializedRef.current = true;
+    }
+
+    return () => {
+      markersRef.current.forEach((marker) => marker.setMap(null));
+      mapInstanceRef.current?.destroy();
+      isMapInitializedRef.current = false;
+    };
+  }, []);
+
+  useEffect(() => {
+    if (mapInstanceRef.current && isMapInitializedRef.current) {
+      onClearMarkers(markersRef.current);
+
       if (markers) {
         markersRef.current = onCreateMarkers({
           markers,
@@ -157,11 +172,6 @@ export default function Map({
         });
       }
     }
-
-    return () => {
-      markersRef.current.forEach((marker) => marker.setMap(null));
-      mapInstanceRef.current?.destroy();
-    };
   }, [markers]);
 
   return <div ref={mapContainerRef} className={cn("flex-1", className)} />;
