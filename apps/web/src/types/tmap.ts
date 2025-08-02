@@ -178,6 +178,15 @@ export interface TMapPoi {
   };
 }
 
+export type TMapTransitMode =
+  | "WALK"
+  | "SUBWAY"
+  | "BUS"
+  | "EXPRESS BUS"
+  | "TRAIN"
+  | "AIRPLANE"
+  | "FERRY";
+
 export interface TMapTransitResponse {
   metaData: {
     requestParameters: {
@@ -215,7 +224,7 @@ export interface TMapTransitResponse {
             lon: number;
             name: string;
           };
-          mode: "WALK" | "SUBWAY" | "BUS";
+          mode: TMapTransitMode;
           sectionTime: number;
           start: {
             lat: number;
@@ -253,6 +262,12 @@ export interface TMapTransitResponse {
           service?: number;
           type?: number;
         }[];
+        pathType: number;
+        totalDistance: number;
+        totalTime: number;
+        totalWalkDistance: number;
+        totalWalkTime: number;
+        transferCount: number;
       }[];
     };
   };

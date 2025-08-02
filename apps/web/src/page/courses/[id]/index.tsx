@@ -6,15 +6,19 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 
 import Close from "@/assets/close.svg";
+import Direction from "@/assets/direction.svg";
 import List from "@/assets/list.svg";
 import Switch from "@/assets/switch.svg";
+import DraggableDrawer from "@/components/common/drawer/draggable-drawer";
 import Header from "@/components/common/header";
 import TransitRouteMap from "@/components/common/map/transit-route-map";
 import FloatingActionButton from "@/components/courses/floating-action-button";
+import RouteItem from "@/components/courses/route-item";
 import type { TMap, TMapMarkerClickEvent, TMapPoi, TMapTransitResponse } from "@/types/tmap";
 import { getParams } from "@/utils/params";
+import { formatDistance, formatTime } from "@/utils/time";
 import { searchTransitRoute } from "@/utils/tmap";
-import { infoToast } from "@/utils/toast";
+import { errorToast, infoToast } from "@/utils/toast";
 
 interface LocationProps {
   title: string;
@@ -30,6 +34,7 @@ interface CourseDetailPageProps {
 }
 
 const DEFAULT_THUMBNAIL = "/static/default-thumbnail.png";
+const LOADING_IMAGE = "/static/loading.png";
 
 const dummyCourses = [
   {
@@ -69,11 +74,29 @@ const checkSameMarker = ({ start, end }: { start: string; end: string }): boolea
   return isSameLocation;
 };
 
+const SummarySection = ({
+  isShowDetailPath,
+  children,
+}: {
+  isShowDetailPath: boolean;
+  children: React.ReactNode;
+}) => {
+  if (isShowDetailPath) {
+    return <DraggableDrawer minHeight={250}>{children}</DraggableDrawer>;
+  }
+  return (
+    <section className="absolute bottom-5 left-1/2 w-[calc(100%-2.5rem)] -translate-x-1/2 rounded-2xl bg-white p-5 shadow-2xl">
+      {children}
+    </section>
+  );
+};
+
 export default function CourseDetailPage({ id, start, end }: CourseDetailPageProps) {
   const mapInstanceRef = useRef<TMap | null>(null);
   const [selectedMarker, setSelectedMarker] = useState<LocationProps | null>(null);
   const [transitData, setTransitData] = useState<TMapTransitResponse | null>(null);
-  console.log(transitData);
+  const [isShowDetailPath, setIsShowDetailPath] = useState(false);
+  const [isLoadingGetTransitData, setIsLoadingGetTransitData] = useState(false);
 
   const isSearchMode = Boolean(start || end);
   const isShowPathMode = Boolean(start && end);
@@ -156,7 +179,7 @@ export default function CourseDetailPage({ id, start, end }: CourseDetailPagePro
 
     const getTransitInfo = async () => {
       try {
-        // 경로 가져올 때 로딩 상태 추가하기
+        setIsLoadingGetTransitData(true);
         const data = await searchTransitRoute({
           startX: startLng,
           startY: startLat,
@@ -165,7 +188,10 @@ export default function CourseDetailPage({ id, start, end }: CourseDetailPagePro
         });
         setTransitData(data);
       } catch (error) {
+        errorToast("대중교통 경로 검색에 실패했어요.");
         console.error("대중교통 경로 검색 실패:", error);
+      } finally {
+        setIsLoadingGetTransitData(false);
       }
     };
     getTransitInfo();
@@ -206,7 +232,7 @@ export default function CourseDetailPage({ id, start, end }: CourseDetailPagePro
         />
 
         {isSearchMode && (
-          <section className="top-header bg-main-300 max-w-mobile fixed w-full space-y-2.5 p-5">
+          <section className="bg-main-300 absolute w-full space-y-2.5 p-5">
             <div className="flex items-center justify-between gap-2.5">
               <p className="typo-semibold line-clamp-1">카스의 빵지순례</p>
               <button onClick={() => onClearDestination()}>
@@ -244,8 +270,57 @@ export default function CourseDetailPage({ id, start, end }: CourseDetailPagePro
             </div>
           </section>
         )}
+        {transitData && isShowPathMode && !isLoadingGetTransitData && (
+          <SummarySection isShowDetailPath={isShowDetailPath}>
+            <div className="flex items-center justify-between">
+              <div className="flex flex-col gap-1">
+                <p className="typo-regular text-gray-500">총 소요 시간 및 거리</p>
+                <div className="flex items-end gap-2.5 text-gray-700">
+                  <p className="typo-semibold">
+                    {formatTime(transitData.metaData.plan.itineraries[0].totalTime)}
+                  </p>
+                  <p className="typo-regular">
+                    {formatDistance(transitData.metaData.plan.itineraries[0].totalDistance)}
+                  </p>
+                </div>
+              </div>
+              <button
+                className="flex flex-col items-center gap-1"
+                onClick={() => setIsShowDetailPath(!isShowDetailPath)}
+              >
+                <div className="bg-main-100 text-main-900 border-main-900 flex size-9 items-center justify-center rounded-full border">
+                  <Direction />
+                </div>
+                <p className="typo-regular text-gray-700">
+                  {isShowDetailPath ? "요약" : "상세"}보기
+                </p>
+              </button>
+            </div>
+            {isShowDetailPath && (
+              <div className="mt-5">
+                {transitData &&
+                  transitData.metaData.plan.itineraries[0].legs.map((leg, index) => (
+                    <RouteItem
+                      key={`${leg.start.name}-${leg.end.name}`}
+                      leg={leg}
+                      isFirst={index === 0}
+                      isLast={index === transitData.metaData.plan.itineraries[0].legs.length - 1}
+                      startName={startName}
+                      endName={endName}
+                    />
+                  ))}
+              </div>
+            )}
+          </SummarySection>
+        )}
+        {isLoadingGetTransitData && (
+          <div className="absolute inset-0 flex flex-col items-center justify-center bg-black/60">
+            <Image src={LOADING_IMAGE} alt="loading" width={250} height={250} />
+            <p className="typo-semibold text-main-900 animate-pulse">대중교통 경로 검색 중...</p>
+          </div>
+        )}
         {selectedMarker ? (
-          <section className="max-w-floating-button absolute bottom-5 left-1/2 flex w-[calc(100%-2.5rem)] -translate-x-1/2 gap-5 rounded-2xl bg-white p-5 shadow-2xl">
+          <section className="absolute bottom-5 left-1/2 flex w-[calc(100%-2.5rem)] -translate-x-1/2 gap-5 rounded-2xl bg-white p-5 shadow-2xl">
             <Image
               src={DEFAULT_THUMBNAIL}
               alt={`${selectedMarker.title}-thumbnail`}
