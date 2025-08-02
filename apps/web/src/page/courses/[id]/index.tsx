@@ -288,7 +288,7 @@ export default function CourseDetailPage({ id, start, end }: CourseDetailPagePro
                 className="flex flex-col items-center gap-1"
                 onClick={() => setIsShowDetailPath(!isShowDetailPath)}
               >
-                <div className="bg-main-100 text-main-900 border-main-900 flex size-9 items-center justify-center rounded-full border">
+                <div className="bg-main-100 text-main-900 border-main-700 flex size-9 items-center justify-center rounded-full border">
                   <Direction />
                 </div>
                 <p className="typo-regular text-gray-700">
