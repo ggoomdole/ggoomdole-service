@@ -1,6 +1,7 @@
 import Link from "next/link";
 
 import Search from "@/assets/search.svg";
+import FloatingNavButton from "@/components/common/button/floating-nav-button";
 import Header from "@/components/common/header";
 import CoursesPage from "@/page/courses";
 
@@ -26,6 +27,7 @@ export default async function Courses({ searchParams }: CoursesPageProps) {
         sticky
       />
       <CoursesPage {...resolvedSearchParams} />
+      <FloatingNavButton />
     </>
   );
 }

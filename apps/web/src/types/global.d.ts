@@ -38,6 +38,9 @@ declare global {
 
       // 마커 클래스
       Marker: new (options?: TMapMarkerOptions) => TMapMarker;
+
+      // 폴리라인 클래스
+      Polyline: new (options?: TMapPolylineOptions) => TMapPolyline;
     };
   }
 }

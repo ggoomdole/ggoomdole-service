@@ -42,6 +42,10 @@ export interface TMap {
   getBounds: () => TMapGetBounds;
   destroy: () => void;
   on: (eventType: EventType, listener: (event: TMapEvent) => void) => void;
+  fitBounds: (
+    bounds: TMapLatLngBounds,
+    options: number | { left: number; top: number; right: number; bottom: number }
+  ) => void;
 }
 
 interface TMapGetBounds {
@@ -86,6 +90,15 @@ export interface TMapMarkerClickEvent {
   };
 }
 
+export interface TMapPolylineOptions {
+  path: TMapLatLng[];
+  map: TMap;
+  strokeColor?: string;
+  strokeOpacity?: number;
+  strokeWeight?: number;
+  direction?: boolean;
+}
+
 export interface TMapLatLng {
   lat: () => number;
   lng: () => number;
@@ -102,6 +115,11 @@ export interface TMapMarker {
   setPosition: (latLng: TMapLatLng) => void;
   setVisible: (visible: boolean) => void;
   on: (eventType: EventType, listener: (event: TMapMarkerClickEvent) => void) => void;
+}
+
+export interface TMapPolyline {
+  setMap: (map: TMap | null) => void;
+  getPath: () => TMapLatLng[];
 }
 
 export interface TMapSize {
@@ -157,5 +175,100 @@ export interface TMapPoi {
       frontLon: string;
       fullAddressRoad: string;
     }[];
+  };
+}
+
+export type TMapTransitMode =
+  | "WALK"
+  | "SUBWAY"
+  | "BUS"
+  | "EXPRESS BUS"
+  | "TRAIN"
+  | "AIRPLANE"
+  | "FERRY";
+
+export interface TMapTransitResponse {
+  metaData: {
+    requestParameters: {
+      busCount: number;
+      expressbusCount: number;
+      subwayCount: number;
+      airplaneCount: number;
+      locale: string;
+      endY: string;
+      endX: string;
+      wideareaRouteCount: number;
+      subwayBusCount: number;
+      startY: string;
+      startX: string;
+      ferryCount: number;
+      trainCount: number;
+      reqDttm: string;
+    };
+    plan: {
+      itineraries: {
+        fare: {
+          regular: {
+            totalFare: number;
+            currency: {
+              currency: string;
+              currencyCode: string;
+              symbol: string;
+            };
+          };
+        };
+        legs: {
+          distance: number;
+          end: {
+            lat: number;
+            lon: number;
+            name: string;
+          };
+          mode: TMapTransitMode;
+          sectionTime: number;
+          start: {
+            lat: number;
+            lon: number;
+            name: string;
+          };
+          steps: {
+            description: string;
+            distance: number;
+            linestring: string;
+            streetName: string;
+          }[];
+          passShape?: {
+            linestring: string;
+          };
+          passStopList?: {
+            stationList: {
+              index: number;
+              lat: string;
+              lon: string;
+              stationID: string;
+              stationName: string;
+            }[];
+          };
+          Lane?: {
+            route: string;
+            routeColor: string;
+            routeId: string;
+            service: number;
+            type: number;
+          }[];
+          route?: string;
+          routeColor?: string;
+          routeId?: string;
+          service?: number;
+          type?: number;
+        }[];
+        pathType: number;
+        totalDistance: number;
+        totalTime: number;
+        totalWalkDistance: number;
+        totalWalkTime: number;
+        transferCount: number;
+      }[];
+    };
   };
 }
