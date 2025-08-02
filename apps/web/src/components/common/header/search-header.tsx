@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 
 import SearchIcon from "@/assets/search.svg";
 import Header from "@/components/common/header";
-import { recentSearchUtils } from "@/utils/localStorage";
+import { recentSearchUtils } from "@/utils/local-storage";
 import { getParams } from "@/utils/params";
 
 interface SearchHeaderProps {

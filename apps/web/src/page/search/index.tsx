@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 
 import Close from "@/assets/close.svg";
 import CourseCard from "@/components/common/card/course-card";
-import { recentSearchUtils } from "@/utils/localStorage";
+import { recentSearchUtils } from "@/utils/local-storage";
 
 const dummyCourses = [
   {
