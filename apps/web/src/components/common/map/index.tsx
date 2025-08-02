@@ -6,7 +6,7 @@ import { DEFAULT_MAP_CENTER, DEFAULT_MAP_ZOOM } from "@/constants/map";
 import { cn } from "@/lib/utils";
 import type { TMap, TMapMarker, TMapMarkerClickEvent, TMapPoi } from "@/types/tmap";
 
-interface MapProps {
+export interface MapProps {
   mapInstanceRef: React.RefObject<TMap | null>;
   markers?: TMapPoi[];
   center?: {
@@ -92,7 +92,7 @@ const onUpdateMarkerSelection = ({
       ),
       map,
       icon: isSelected ? MARKER_SELECTED : MARKER,
-      iconSize: new window.Tmapv3.Size(isSelected ? 40 : 36, isSelected ? 50 : 36),
+      iconSize: new window.Tmapv3.Size(isSelected ? 40 : 36, isSelected ? 52 : 36),
       title: prevMarker.id.toString(),
       visible: true,
     });
@@ -127,6 +127,18 @@ export default function Map({
   const markersRef = useRef<TMapMarker[]>([]);
   const isMapInitializedRef = useRef(false);
 
+  const onInitializeMap = () => {
+    onClearMarkers(markersRef.current);
+
+    if (markers) {
+      markersRef.current = onCreateMarkers({
+        markers: markers ?? [],
+        map: mapInstanceRef.current!,
+        onClickMarker: onClickMarker ?? (() => {}),
+      });
+    }
+  };
+
   useEffect(() => {
     if (mapContainerRef.current && !isMapInitializedRef.current) {
       mapInstanceRef.current = new window.Tmapv3.Map(mapContainerRef.current, {
@@ -141,12 +153,8 @@ export default function Map({
       });
 
       mapInstanceRef.current.on("Click", () => {
-        onClearMarkers(markersRef.current);
-        markersRef.current = onCreateMarkers({
-          markers: markers ?? [],
-          map: mapInstanceRef.current!,
-          onClickMarker: onClickMarker ?? (() => {}),
-        });
+        onInitializeMap();
+
         onClickMap?.();
       });
 
@@ -162,15 +170,7 @@ export default function Map({
 
   useEffect(() => {
     if (mapInstanceRef.current && isMapInitializedRef.current) {
-      onClearMarkers(markersRef.current);
-
-      if (markers) {
-        markersRef.current = onCreateMarkers({
-          markers,
-          map: mapInstanceRef.current,
-          onClickMarker: onClickMarker ?? (() => {}),
-        });
-      }
+      onInitializeMap();
     }
   }, [markers]);
 
