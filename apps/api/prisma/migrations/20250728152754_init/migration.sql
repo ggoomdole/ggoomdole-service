@@ -30,6 +30,7 @@ CREATE TABLE `Review` (
     `spotId` VARCHAR(191) NOT NULL,
     `text` VARCHAR(191) NOT NULL,
     `rate` INTEGER NOT NULL,
+    `imageUrl` VARCHAR(191) NULL,
     `createAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
 
     PRIMARY KEY (`id`)
