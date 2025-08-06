@@ -1,5 +1,6 @@
 import { NextFunction, Request, Response } from 'express';
 
+import { successHandler } from '../middlewares/responseHandler';
 import searchService from '../services/searchService';
 import { NotFoundError } from '../utils/customError';
 
@@ -15,7 +16,7 @@ class SearchController {
         if (!sortBy) throw new NotFoundError('정렬 기준이 존재하지 않습니다.');
 
         const result = await searchService.searchRoad(userId, word, sortBy);
-        res.status(200).json(result);
+        return successHandler(res, '순례길 검색 성공', result);
     } catch (error) {
         next(error);
     }
@@ -29,7 +30,7 @@ class SearchController {
         if (!word || typeof word !== 'string') { throw new NotFoundError('검색어는 필수입니다.'); }
 
         await searchService.deleteSearchWord(userId, word);
-        res.status(200).json({ message: `삭제 완료 : ${word}` });
+        return successHandler(res, '검색어 삭제 완료', word);
     } catch (error) {
         next(error);
     }
@@ -39,7 +40,7 @@ class SearchController {
     try{
         const userId = req.user.userId;
         await searchService.deleteAllSearchWords(userId);
-        res.status(200).json({ message: `전체 삭제 완료` });
+        return successHandler(res, '전체 검색어 삭제 완료');
     } catch (error) {
         next(error);
     }
@@ -49,7 +50,7 @@ class SearchController {
     try{
         const userId = req.user.userId;
         const recentList = await searchService.getRecentSearchWords(userId);
-        res.status(200).json(recentList);
+        return successHandler(res, '최근 검색어 조회 완료', recentList);
     } catch (error) {
         next(error);
     }

@@ -1,5 +1,6 @@
 import { NextFunction,Request, Response } from 'express';
 
+import { successHandler } from '../middlewares/responseHandler';
 import AuthService from '../services/authService';
 import { BadRequestError } from '../utils/customError';
 
@@ -11,7 +12,7 @@ class AuthController {
       if (typeof code !== 'string') { throw new BadRequestError('인가코드는 문자열이어야 합니다.'); }
 
       const result = await AuthService.kakaoLoginService(code);
-      res.status(200).json({ message: '로그인 성공', result: result});
+      return successHandler(res, '로그인 성공', result);
     } catch (error) {
       next(error);
     }
@@ -23,7 +24,7 @@ class AuthController {
       if (!accessToken) { throw new BadRequestError('액세스 토큰이 없습니다.'); }
 
       await AuthService.kakaoUnlinkService(accessToken);
-      res.status(200).json({ message: '회원 탈퇴 성공' });
+      return successHandler(res, '회원 탈퇴 성공', null);
     } catch (error) {
       next(error);
     }

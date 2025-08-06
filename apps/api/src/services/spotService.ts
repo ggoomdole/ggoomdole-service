@@ -46,7 +46,6 @@ class RoadService {
         pilgrimageId: data.roadId,
         spotId: spot.spotId,
         spotInfo: spot.spotInfo,
-        number: spot.addNumber,
         introSpot: spot.addReason,
         request: true,
       }))
