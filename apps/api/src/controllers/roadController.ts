@@ -2,9 +2,9 @@ import { RoadRequestDTO } from '@repo/types';
 
 import { NextFunction,Request, Response } from 'express';
 
+import { successHandler } from '../middlewares/responseHandler';
 import roadService from '../services/roadService';
 import { BadRequestError, NotFoundError } from '../utils/customError';
-import { successHandler } from '../middlewares/responseHandler';
 
 class RoadController {
   async loadAllRoad(req: Request, res: Response, next: NextFunction) {

@@ -1,8 +1,8 @@
 import { NextFunction,Request, Response } from 'express';
 
+import { successHandler } from '../middlewares/responseHandler';
 import AuthService from '../services/authService';
 import { BadRequestError } from '../utils/customError';
-import { successHandler } from '../middlewares/responseHandler';
 
 class AuthController {
   async kakaoLogin(req: Request, res: Response, next: NextFunction) {

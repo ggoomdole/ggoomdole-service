@@ -2,9 +2,9 @@ import { ReviewCreateDTO } from '@repo/types';
 
 import { NextFunction,Request, Response } from 'express';
 
+import { successHandler } from '../middlewares/responseHandler';
 import reviewService from '../services/reviewService';
 import { BadRequestError } from '../utils/customError';
-import { successHandler } from '../middlewares/responseHandler';
 
 class ReveiwController {
   async createReview(req: Request, res: Response, next: NextFunction) {

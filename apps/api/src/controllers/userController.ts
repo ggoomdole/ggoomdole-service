@@ -1,8 +1,8 @@
 import { NextFunction,Request, Response } from 'express';
 
+import { successHandler } from '../middlewares/responseHandler';
 import userService from '../services/userService';
 import { BadRequestError } from '../utils/customError';
-import { successHandler } from '../middlewares/responseHandler';
 
 class UserController {
   async checkNickname(req: Request, res: Response, next: NextFunction) {

@@ -2,9 +2,9 @@ import { SpotReqDTO } from '@repo/types';
 
 import { NextFunction,Request, Response } from 'express';
 
+import { successHandler } from '../middlewares/responseHandler';
 import spotService from '../services/spotService';
 import { BadRequestError } from '../utils/customError';
-import { successHandler } from '../middlewares/responseHandler';
 
 class SpotController {
   async getNearbySpots(req: Request, res: Response, next: NextFunction) {

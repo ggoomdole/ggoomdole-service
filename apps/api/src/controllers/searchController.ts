@@ -1,8 +1,8 @@
 import { NextFunction, Request, Response } from 'express';
 
+import { successHandler } from '../middlewares/responseHandler';
 import searchService from '../services/searchService';
 import { NotFoundError } from '../utils/customError';
-import { successHandler } from '../middlewares/responseHandler';
 
 class SearchController {
   async searchRoad(req: Request, res: Response, next: NextFunction) {
