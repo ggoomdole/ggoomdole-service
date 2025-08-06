@@ -72,12 +72,14 @@ export interface ReviewCreateDTO {
     spotId: string;
     content: string;
     rate: number;
+    imageUrl?: string;
 }
 
 export interface ReviewCheckDTO {
     spotId: string;
     content: string;
     rate: number;
+    imageUrl?: string;
 }
 
 export interface SpotReqDTO {
