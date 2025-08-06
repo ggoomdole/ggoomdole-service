@@ -14,14 +14,25 @@ class SpotRepository {
       hours?: string;
       avgRate?: number;
     };
-    number: number;
     introSpot: string;
     request: boolean;
   }[]) {
     const createdSpots = [];
 
+    // 현재 최대 number 조회
+    const currentMaxNumber = await prisma.pilgrimageSpot.aggregate({
+      where: {
+        pilgrimageId: data[0].pilgrimageId,
+      },
+      _max: {
+        number: true,
+      },
+    });
+
+    let nextNumber = (currentMaxNumber._max.number ?? 0) + 1;
+
+    // spotId가 spot 테이블에 존재하는지 확인
     for (const spot of data) {
-      // spotId가 spot 테이블에 존재하는지 확인
       let existingSpot = await prisma.spot.findUnique({
         where: { id: spot.spotId },
       });
@@ -58,7 +69,7 @@ class SpotRepository {
           data: {
             pilgrimageId: spot.pilgrimageId,
             spotId: spot.spotId,
-            number: spot.number,
+            number: nextNumber++,
             introSpot: spot.introSpot,
             request: spot.request,
           },
