@@ -10,7 +10,7 @@ class RoadService {
 
   async loadAllRoad(categoryId?: number, sortBy: string = 'popular'): Promise<RoadListResponseDTO[]> {
     const rawPilgrimages = await roadRepository.allRoadList(categoryId);
-    if (!rawPilgrimages || rawPilgrimages.length === 0) throw new NotFoundError('순례길이 존재하지 않습니다.');
+    if (!rawPilgrimages || rawPilgrimages.length === 0) return [];
   
     // 후처리 정렬
     const sortedPilgrimages = [...rawPilgrimages];
@@ -45,8 +45,8 @@ class RoadService {
   async getPopularRoads(categoryId?: number): Promise<RoadListResponseDTO[]> {
     const pilgrimages = await roadRepository.allRoadList(categoryId);
   
-    if (!pilgrimages || pilgrimages.length === 0) { throw new NotFoundError('순례길이 존재하지 않습니다.'); }
-  
+    if (!pilgrimages || pilgrimages.length === 0) return [];
+
     // 조회수 기준 내림차순 정렬
     pilgrimages.sort((a, b) => b.search - a.search);
   
@@ -266,7 +266,7 @@ class RoadService {
 
   async getParticipatedRoads(userId: number, maker: boolean, categoryId?: number): Promise<RoadListResponseDTO[]> {
     const roads = await roadRepository.findRoadsByParticipation(userId, maker, categoryId);
-    if (!roads || roads.length === 0) throw new NotFoundError('참여한 순례길이 없습니다.');
+    if (!roads || roads.length === 0) return [];
   
     return roads.map((p): RoadListResponseDTO => ({
       roadId: p.id,
@@ -282,8 +282,7 @@ class RoadService {
   async loadCustomRoad(userId: number, categoryId?: number): Promise<RoadListResponseDTO[]> {
     const rawPilgrimages = await roadRepository.findMyPrivateRoads(userId, categoryId);
   
-    if (!rawPilgrimages || rawPilgrimages.length === 0)
-      throw new NotFoundError('커스텀 순례길이 존재하지 않습니다.');
+    if (!rawPilgrimages || rawPilgrimages.length === 0) return [];
   
     return rawPilgrimages.map((p): RoadListResponseDTO => ({
       roadId: p.id,
