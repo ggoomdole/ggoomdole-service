@@ -39,6 +39,7 @@ jobs:
             # 임시 삭제
 
             npx prisma migrate deploy
+            npx prisma generate
 
             pkill node || true
 
