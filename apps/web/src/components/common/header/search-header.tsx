@@ -10,7 +10,7 @@ import { getParams } from "@/utils/params";
 
 interface SearchHeaderProps {
   query: string;
-  [key: string]: string;
+  [key: string]: string | undefined;
 }
 
 export default function SearchHeader(props: SearchHeaderProps) {

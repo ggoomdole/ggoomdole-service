@@ -1,41 +1,10 @@
 import CourseCard from "@/components/common/card/course-card";
-import SortDrawer from "@/components/common/drawer/sort-drawer";
 import QueryTabNav from "@/components/query-tab-nav";
+import { COURSE_CATEGORIES } from "@/constants/category";
 
-interface ParticipationsPageProps {
-  tab: string;
-  sort: string;
+interface MyCoursesPageProps {
+  category: string;
 }
-
-const NAVS = [
-  {
-    name: "참여",
-    path: "",
-  },
-  {
-    name: "제작",
-    path: "created",
-  },
-];
-
-const SORT_OPTIONS = [
-  {
-    name: "전체",
-    value: "",
-  },
-  {
-    name: "음식",
-    value: "food",
-  },
-  {
-    name: "관광",
-    value: "tour",
-  },
-  {
-    name: "힐링",
-    value: "healing",
-  },
-];
 
 const dummyCourses = [
   {
@@ -70,19 +39,18 @@ const dummyCourses = [
   },
 ];
 
-export default function ParticipationsPage({ tab, sort }: ParticipationsPageProps) {
-  // sort 이용해서 무한 스크롤 구현하기
+export default function MyCoursesPage({ category }: MyCoursesPageProps) {
+  // category 이용해서 무한스크롤
 
   return (
     <main>
-      <QueryTabNav navKey="tab" navs={NAVS} />
-      <SortDrawer options={SORT_OPTIONS} className="typo-regular mr-5 w-max self-end" />
+      <QueryTabNav navKey="category" navs={COURSE_CATEGORIES} />
       <section className="px-5">
         {dummyCourses.map((course) => (
           <CourseCard
             key={`course-item-${course.category}-${course.id}`}
+            href={`/courses/upload?id=${course.id}&view=private`}
             {...course}
-            href={`/courses/upload?id=${course.id}`}
           />
         ))}
       </section>

@@ -109,7 +109,11 @@ export default function SearchPage() {
       <section className="space-y-2.5">
         <h2 className="typo-semibold">추천 순례길</h2>
         {dummyCourses.map((course) => (
-          <CourseCard key={`course-item-${course.category}-${course.id}`} {...course} />
+          <CourseCard
+            key={`course-item-${course.category}-${course.id}`}
+            href={`/courses/${course.id}`}
+            {...course}
+          />
         ))}
       </section>
     </main>
