@@ -1,11 +1,13 @@
 import { Router } from 'express';
+import multer from 'multer';
 
 import reviewController from '../controllers/reviewController';
 import authenticate from '../middlewares/authenticate';
 
 const router = Router();
+const upload = multer({ storage: multer.memoryStorage() });
 
-router.post("/", authenticate, reviewController.createReview);
+router.post("/", authenticate, upload.single('review-image'), reviewController.createReview);
 
 router.get("/spot/:spotId", reviewController.showAllReview);
 router.get("/:reviewId", reviewController.showOneReview);

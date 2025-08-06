@@ -10,7 +10,8 @@ class reviewController {
         userId,
         spotId: data.spotId,
         text: data.content,
-        rate: data.rate
+        rate: data.rate,
+        imageUrl: data.imageUrl
       }
     });
   }
