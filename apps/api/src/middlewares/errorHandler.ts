@@ -15,6 +15,7 @@ export function errorHandler(
     console.error(err.stack);
 
     res.status(statusCode).json({
-        message,
+        success: true,
+        message
     });
 }

@@ -3,7 +3,8 @@ import { ReviewCreateDTO } from '@repo/types';
 import { NextFunction,Request, Response } from 'express';
 
 import reviewService from '../services/reviewService';
-import { BadRequestError, NotFoundError } from '../utils/customError';
+import { BadRequestError } from '../utils/customError';
+import { successHandler } from '../middlewares/responseHandler';
 
 class ReveiwController {
   async createReview(req: Request, res: Response, next: NextFunction) {
@@ -13,7 +14,7 @@ class ReveiwController {
       if (!isAddRoadDTO(dto)) { throw new BadRequestError('요청 형식이 잘못되었습니다.'); }
         
       const newReview = await reviewService.createReview(userId, dto);
-      res.status(200).json({ message: "리뷰 생성 완료", userId: userId, newReview });
+      return successHandler(res, '리뷰 생성 완료', { newReivew: newReview, userId: userId });
     } catch (error) {
       next(error);
     }
@@ -26,7 +27,7 @@ class ReveiwController {
       if (isNaN(reviewId)) { throw new BadRequestError('리뷰ID는 필수이며 숫자여야 합니다.'); }
 
       await reviewService.deleteReview(userId, reviewId)
-      res.status(200).json({ message: `리뷰 삭제 완료 : ${reviewId}`})
+      return successHandler(res, '리뷰 삭제 완료', reviewId);
     } catch (error) {
       next(error)
     }
@@ -38,7 +39,7 @@ class ReveiwController {
       if (isNaN(reviewId)) { throw new BadRequestError('리뷰ID는 필수이며 숫자여야 합니다.'); }
     
       const reveiw = await reviewService.showOneReview(reviewId)
-      res.status(200).json(reveiw)
+      return successHandler(res, "개별 리뷰 조회 성공", reveiw);
     } catch (error) {
       next(error)
     }
@@ -50,7 +51,7 @@ class ReveiwController {
       if (!spotId || typeof spotId !== 'string' || spotId.trim() === '') { throw new BadRequestError('장소ID는 필수이며 빈 문자열일 수 없습니다.'); }
       
       const reviews = await reviewService.showAllReview(spotId)
-      res.status(200).json(reviews)
+      return successHandler(res, "모든 리뷰 조회 성공", reviews);
     } catch (error) {
       next(error)
     }

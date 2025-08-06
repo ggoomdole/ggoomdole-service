@@ -4,6 +4,7 @@ import { NextFunction,Request, Response } from 'express';
 
 import spotService from '../services/spotService';
 import { BadRequestError } from '../utils/customError';
+import { successHandler } from '../middlewares/responseHandler';
 
 class SpotController {
   async getNearbySpots(req: Request, res: Response, next: NextFunction) {
@@ -13,7 +14,7 @@ class SpotController {
       if (!lat || !lng) throw new BadRequestError('위도와 경도는 필수입니다.');
 
       const spots = await spotService.fetchNearbySpots(Number(lat), Number(lng));
-      res.status(200).json(spots);
+      return successHandler(res, '주변 관광지 조회 완료', spots);
     } catch (error) {
         next(error);
     }
@@ -25,7 +26,7 @@ class SpotController {
         if (!isAddRoadDTO(dto)) { throw new BadRequestError('요청 형식이 잘못되었습니다.'); }
 
         const reqAddSpot = await spotService.reqAddSpot(dto);
-        res.status(200).json({ message: `요청 전송 완료`, data: reqAddSpot });
+        return successHandler(res, '장소 추가 요청 전송 완료', reqAddSpot);
     } catch (error) {
       next(error);
     }
@@ -38,7 +39,7 @@ class SpotController {
       if (!roadId) throw new BadRequestError('순례길 ID는 필수입니다.');
 
       const result = await spotService.getRequestedSpots(userId, roadId);
-      res.status(200).json(result);
+      return successHandler(res, '장소 추가 요청 조회 완료', result);
     } catch (error) {
       next(error);
     }
@@ -51,7 +52,7 @@ class SpotController {
       const { approve = [], reject = [] } = req.body;
 
       await spotService.processSpotRequests(userId, roadId, approve, reject);
-      res.status(200).json({ message: '요청 처리 완료' });
+      return successHandler(res, '장소 추가 요청 처리 완료');
     } catch (error) {
       next(error);
     }
