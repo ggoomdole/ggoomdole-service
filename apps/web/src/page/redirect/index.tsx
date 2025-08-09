@@ -3,14 +3,14 @@
 import { Usable, use, useEffect } from "react";
 import { redirect, RedirectType } from "next/navigation";
 
-import type { BaseResponse } from "@/models";
+import type { BaseResponseDTO } from "@/models";
 import type { KakaoLoginResponseDTO } from "@/models/auth";
 import { setCookie } from "@/utils/cookie";
 
 import { Loader2 } from "lucide-react";
 
 interface RedirectPageProps {
-  promisedResponse: Usable<BaseResponse<KakaoLoginResponseDTO>>;
+  promisedResponse: Usable<BaseResponseDTO<KakaoLoginResponseDTO>>;
 }
 
 export default function RedirectPage({ promisedResponse }: RedirectPageProps) {

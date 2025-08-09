@@ -4,27 +4,23 @@ import Link from "next/link";
 import BronzeMedal from "@/assets/bronze-medal.svg";
 import GoldMedal from "@/assets/gold-medal.svg";
 import SilverMedal from "@/assets/silver-medal.svg";
+import { RoadRecommendResponseDTO } from "@/models/road";
 import { CategoryType } from "@/types/category";
+import type { NativeType } from "@/types/user";
 
 import CategoryChip from "../chip/category-chip";
 
-interface CourseCardProps {
-  category: CategoryType;
-  title: string;
-  intro: string;
-  imageUrl: string;
-  people: number;
-  level: "gold" | "silver" | "bronze" | "normal";
+interface CourseCardProps extends RoadRecommendResponseDTO {
   href: string;
 }
 
-const getLevelIcon = (level: "gold" | "silver" | "bronze" | "normal") => {
+const getLevelIcon = (level: NativeType) => {
   switch (level) {
-    case "gold":
+    case "RESIDENT":
       return <GoldMedal />;
-    case "silver":
+    case "LONG_TERM":
       return <SilverMedal />;
-    case "bronze":
+    case "MID_TERM":
       return <BronzeMedal />;
     default:
       return null;
@@ -32,12 +28,12 @@ const getLevelIcon = (level: "gold" | "silver" | "bronze" | "normal") => {
 };
 
 export default function CourseCard({
-  category,
+  categoryId,
   title,
   intro,
   imageUrl,
-  people,
-  level,
+  participants,
+  native,
   href,
 }: CourseCardProps) {
   return (
@@ -47,11 +43,11 @@ export default function CourseCard({
     >
       <div className="flex flex-col gap-1 overflow-hidden">
         <div className="flex items-center gap-1">
-          {getLevelIcon(level)}
-          <CategoryChip category={category} />
+          {getLevelIcon(native)}
+          <CategoryChip category={categoryId as CategoryType} />
         </div>
         <p className="typo-semibold truncate">{title}</p>
-        <p className="typo-regular text-gray-500">현재 {people}명이 참여했습니다!</p>
+        <p className="typo-regular text-gray-500">현재 {participants}명이 참여했습니다!</p>
         <p className="typo-medium truncate">{intro}</p>
       </div>
       <Image

@@ -1,1 +1,1 @@
-export type CategoryType = "food" | "tour" | "healing";
+export type CategoryType = 1 | 2 | 3;
