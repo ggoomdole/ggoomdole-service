@@ -28,7 +28,7 @@ export const serverApi = {
   },
 
   async post<T>(endpoint: string, data?: unknown, options?: RequestInit): Promise<T> {
-    const url = `${API_BASE_URL}${endpoint}`;
+    const url = `${API_BASE_URL}/${endpoint}`;
     const token = await getCookie("accessToken");
     const response = await fetch(url, {
       method: "POST",
@@ -49,7 +49,7 @@ export const serverApi = {
   },
 
   async put<T>(endpoint: string, data?: unknown, options?: RequestInit): Promise<T> {
-    const url = `${API_BASE_URL}${endpoint}`;
+    const url = `${API_BASE_URL}/${endpoint}`;
     const token = await getCookie("accessToken");
     const response = await fetch(url, {
       method: "PUT",
@@ -70,7 +70,7 @@ export const serverApi = {
   },
 
   async delete<T>(endpoint: string, options?: RequestInit): Promise<T> {
-    const url = `${API_BASE_URL}${endpoint}`;
+    const url = `${API_BASE_URL}/${endpoint}`;
     const token = await getCookie("accessToken");
     const response = await fetch(url, {
       method: "DELETE",
