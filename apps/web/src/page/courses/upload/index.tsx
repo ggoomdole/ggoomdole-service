@@ -9,40 +9,40 @@ import { useFieldArray, useForm } from "react-hook-form";
 
 interface UploadCoursePageProps {
   tab: string;
-  query: string;
+  word: string;
   id: string;
   view: "private";
 }
 
 // 회원일 때만 접근 가능하도록 로직 작성하기
-export default function UploadCoursePage({ tab, query, id, view }: UploadCoursePageProps) {
+export default function UploadCoursePage({ tab, word, id, view }: UploadCoursePageProps) {
   const isEditCourse = !!id;
   const isPrivate = view === "private";
 
   const form = useForm<UploadCourseForm>({
     resolver: zodResolver(uploadCourseFormSchema),
     defaultValues: {
-      name: "",
+      title: "",
       thumbnail: undefined,
       category: "",
       intro: "",
-      places: [],
+      spots: [],
       removeCourseIds: [],
     },
   });
 
   const { append } = useFieldArray({
     control: form.control,
-    name: "places",
+    name: "spots",
   });
 
-  const currentPlaces = form.getValues("places");
+  const currentPlaces = form.getValues("spots");
 
   switch (tab) {
     case "find-by-map":
       return (
         <FindByMapTab
-          query={query}
+          query={word}
           tab={tab}
           currentPlaces={currentPlaces}
           id={id}

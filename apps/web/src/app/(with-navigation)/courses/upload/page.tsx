@@ -3,7 +3,7 @@ import UploadCoursePage from "@/page/courses/upload";
 interface UploadCourseProps {
   searchParams: Promise<{
     tab: string;
-    query: string;
+    word: string;
     id: string;
     view: "private";
   }>;

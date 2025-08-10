@@ -10,10 +10,10 @@ import { useFieldArray, useForm } from "react-hook-form";
 interface CourseRequestPageProps {
   id: string;
   tab: string;
-  query: string;
+  word: string;
 }
 
-export default function CourseRequestPage({ id, tab, query }: CourseRequestPageProps) {
+export default function CourseRequestPage({ id, tab, word }: CourseRequestPageProps) {
   const form = useForm<RequestCourseForm>({
     mode: "onChange",
     resolver: zodResolver(requestCourseFormSchema),
@@ -30,14 +30,9 @@ export default function CourseRequestPage({ id, tab, query }: CourseRequestPageP
   switch (tab) {
     case "find-by-map":
       return (
-        <FindByMapTab
-          query={query}
-          tab={tab}
-          currentPlaces={currentPlaces}
-          onSelectPlace={append}
-        />
+        <FindByMapTab query={word} tab={tab} currentPlaces={currentPlaces} onSelectPlace={append} />
       );
     default:
-      return <RequestTab id={id} query={query} form={form} />;
+      return <RequestTab id={id} query={word} form={form} />;
   }
 }

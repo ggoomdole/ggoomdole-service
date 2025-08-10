@@ -14,14 +14,17 @@ const dummyNewCourses = [
   {
     placeName: "서울 타워",
     reason: "서울 타워",
+    placeId: "1",
   },
   {
     placeName: "서울 타워1",
     reason: "서울 타워1",
+    placeId: "2",
   },
   {
     placeName: "서울 타워2",
     reason: "서울 타워2",
+    placeId: "3",
   },
 ];
 
@@ -37,7 +40,7 @@ export default function NewCourses({ form }: NewCoursesProps) {
 
   const { fields } = useFieldArray({
     control: form.control,
-    name: "places",
+    name: "spots",
     keyName: "fieldId",
   });
 
@@ -62,7 +65,7 @@ export default function NewCourses({ form }: NewCoursesProps) {
     const addedCourses = newCourses.filter((course) =>
       selectedCourseIds.includes(course.placeName)
     );
-    form.setValue("places", [...fields, ...addedCourses]);
+    form.setValue("spots", [...fields, ...addedCourses]);
     onRemoveCourses();
   };
 
