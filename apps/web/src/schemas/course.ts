@@ -6,6 +6,7 @@ export const requestCourseFormSchema = z.object({
       z.object({
         placeName: z.string().min(1),
         reason: z.string().min(1),
+        placeId: z.string().min(1),
       })
     )
     .min(1),
