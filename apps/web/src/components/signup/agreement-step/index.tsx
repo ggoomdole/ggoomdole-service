@@ -60,7 +60,7 @@ export default function AgreementStep({ form, onNext }: AgreementStepProps) {
     <>
       <main className="pb-with-floating-button flex flex-col p-5">
         <section className="flex flex-col gap-10">
-          <h1 className="typo-bold">환영합니다!</h1>
+          <h1 className="typo-bold">환영해요!</h1>
           <div className="space-y-5">
             <div className="flex items-center gap-2.5">
               <Checkbox

@@ -26,7 +26,7 @@ export default function RedirectPage({ promisedResponse }: RedirectPageProps) {
   return (
     <main className="flex flex-col items-center justify-center gap-4">
       <Loader2 className="text-main-900 size-10 animate-spin" />
-      <p className="text-main-900 typo-medium">로그인 중입니다...</p>
+      <p className="text-main-900 typo-medium">로그인 중...</p>
     </main>
   );
 }

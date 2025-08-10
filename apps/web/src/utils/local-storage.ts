@@ -7,7 +7,7 @@ export const recentSearchUtils = {
       const stored = localStorage.getItem(RECENT_SEARCH_KEY);
       return stored ? JSON.parse(stored) : [];
     } catch (error) {
-      console.error("최근 검색어 데이터를 가져오는데 실패했습니다.", error);
+      console.error("최근 검색어 데이터를 가져오는데 실패했어요.", error);
       return [];
     }
   },

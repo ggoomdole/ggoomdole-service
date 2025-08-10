@@ -30,7 +30,7 @@ export default function ProfileStep({ form, onNext }: ProfileStepProps) {
       const maxSize = 10 * 1024 * 1024; // 10MB
 
       if (file.size > maxSize) {
-        alert("파일 크기는 10MB 이하여야 합니다.");
+        alert("파일 크기는 10MB 이하여야 해요.");
         e.target.value = ""; // 파일 선택 초기화
         return;
       }

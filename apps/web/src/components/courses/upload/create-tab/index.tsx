@@ -78,7 +78,7 @@ export default function CreateTab({ id, form, isEditCourse, isPrivate }: CreateT
     const file = event.target.files?.[0];
     if (file) {
       if (file.size > MAX_FILE_SIZE) {
-        return infoToast("파일 크기는 5MB 이하여야 합니다.");
+        return infoToast("파일 크기는 5MB 이하여야 해요.");
       }
 
       const reader = new FileReader();

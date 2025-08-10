@@ -9,13 +9,13 @@ import { recentSearchUtils } from "@/utils/local-storage";
 import { getParams } from "@/utils/params";
 
 interface SearchHeaderProps {
-  query: string;
+  word: string;
   [key: string]: string | undefined;
 }
 
 export default function SearchHeader(props: SearchHeaderProps) {
-  const { query, ...restProps } = props;
-  const [searchQuery, setSearchQuery] = useState(query || "");
+  const { word, ...restProps } = props;
+  const [searchQuery, setSearchQuery] = useState(word || "");
 
   const router = useRouter();
 
@@ -27,13 +27,13 @@ export default function SearchHeader(props: SearchHeaderProps) {
     e.preventDefault();
     if (!searchQuery.trim()) return;
     recentSearchUtils.addRecentSearch(searchQuery);
-    const params = getParams(restProps, { query: searchQuery });
+    const params = getParams(restProps, { word: searchQuery });
     router.push(`?${params}`);
   };
 
   useEffect(() => {
-    setSearchQuery(query || "");
-  }, [query]);
+    setSearchQuery(word || "");
+  }, [word]);
 
   return (
     <Header

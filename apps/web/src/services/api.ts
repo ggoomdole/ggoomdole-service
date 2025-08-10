@@ -103,7 +103,6 @@ const clientKy = ky.create({
       async (request) => {
         // 클라이언트측에서 필요한 헤더 추가 (예: 인증 토큰)
         const token = await getCookie("accessToken");
-        console.log(request, token);
         if (token) {
           request.headers.set("Authorization", `Bearer ${token}`);
         }

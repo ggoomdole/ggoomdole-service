@@ -9,12 +9,12 @@ import NearbyTouristSpotList from "@/components/home/nearby-tourist-spot-list";
 import QueryTabNav from "@/components/query-tab-nav";
 import { COURSE_CATEGORIES } from "@/constants/category";
 import { BaseResponseDTO } from "@/models";
-import { RoadRecommendResponseDTO } from "@/models/road";
+import { RoadResponseDTO } from "@/models/road";
 
 const carouselExample = "/static/carousel-example.png";
 
 interface HomePageProps {
-  promisedResponse: Usable<BaseResponseDTO<RoadRecommendResponseDTO[]>>;
+  promisedResponse: Usable<BaseResponseDTO<RoadResponseDTO[]>>;
 }
 
 export default function HomePage({ promisedResponse }: HomePageProps) {
@@ -63,7 +63,7 @@ export default function HomePage({ promisedResponse }: HomePageProps) {
             />
           ))
         ) : (
-          <p className="typo-medium py-10 text-center">추천 순례길이 없습니다.</p>
+          <p className="typo-medium py-10 text-center">추천 순례길이 없어요.</p>
         )}
       </section>
       <section className="space-y-5 p-5">

@@ -6,11 +6,11 @@ import { useRouter } from "next/navigation";
 import Close from "@/assets/close.svg";
 import CourseCard from "@/components/common/card/course-card";
 import { BaseResponseDTO } from "@/models";
-import { RoadRecommendResponseDTO } from "@/models/road";
+import { RoadResponseDTO } from "@/models/road";
 import { recentSearchUtils } from "@/utils/local-storage";
 
 interface SearchPageProps {
-  promisedResponse: Usable<BaseResponseDTO<RoadRecommendResponseDTO[]>>;
+  promisedResponse: Usable<BaseResponseDTO<RoadResponseDTO[]>>;
 }
 
 export default function SearchPage({ promisedResponse }: SearchPageProps) {
@@ -46,7 +46,7 @@ export default function SearchPage({ promisedResponse }: SearchPageProps) {
   // 최근 검색어 클릭 시 검색 실행
   const onSearchKeywordClick = (keyword: string) => {
     onAddSearchKeyword(keyword);
-    router.push(`/search?query=${encodeURIComponent(keyword)}`);
+    router.push(`/search?word=${encodeURIComponent(keyword)}`);
   };
 
   return (
@@ -77,7 +77,7 @@ export default function SearchPage({ promisedResponse }: SearchPageProps) {
               </div>
             ))
           ) : (
-            <p className="typo-regular text-gray-400">최근 검색어가 없습니다.</p>
+            <p className="typo-regular text-gray-400">최근 검색어가 없어요.</p>
           )}
         </div>
       </section>
@@ -92,7 +92,7 @@ export default function SearchPage({ promisedResponse }: SearchPageProps) {
             />
           ))
         ) : (
-          <p className="typo-medium py-10 text-center">추천 순례길이 없습니다.</p>
+          <p className="typo-medium py-10 text-center">추천 순례길이 없어요.</p>
         )}
       </section>
     </main>

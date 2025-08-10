@@ -111,8 +111,8 @@ export default function HomeTab() {
   const onCopy = (e: React.MouseEvent, text: string) => {
     e.stopPropagation();
 
-    const defaultSuccess = () => successToast("복사되었습니다.");
-    const defaultFailure = () => errorToast("복사에 실패했습니다.");
+    const defaultSuccess = () => successToast("복사에 성공했어요.");
+    const defaultFailure = () => errorToast("복사에 실패했어요.");
 
     navigator.clipboard.writeText(text).then(defaultSuccess).catch(defaultFailure);
   };

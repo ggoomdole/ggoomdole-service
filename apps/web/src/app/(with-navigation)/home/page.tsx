@@ -4,7 +4,7 @@ import Search from "@/assets/search.svg";
 import FloatingNavButton from "@/components/common/button/floating-nav-button";
 import Header from "@/components/common/header";
 import { BaseResponseDTO } from "@/models";
-import { RoadRecommendResponseDTO } from "@/models/road";
+import { RoadResponseDTO } from "@/models/road";
 import HomePage from "@/page/home";
 import { serverApi } from "@/services/api";
 
@@ -16,7 +16,7 @@ interface HomeProps {
 
 export default async function Home({ searchParams }: HomeProps) {
   const { categoryId } = await searchParams;
-  const promisedResponse = serverApi.get<BaseResponseDTO<RoadRecommendResponseDTO[]>>(
+  const promisedResponse = serverApi.get<BaseResponseDTO<RoadResponseDTO[]>>(
     `road/recommend${categoryId ? `?categoryId=${categoryId}` : ""}`
   );
 

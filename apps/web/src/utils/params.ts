@@ -12,7 +12,11 @@ export const getParams = (
 
   Object.entries(defaultParams).forEach(([key, value]) => {
     if (value) {
-      searchParams.append(key, String(value));
+      if (searchParams.has(key)) {
+        searchParams.set(key, String(value));
+      } else {
+        searchParams.append(key, String(value));
+      }
     }
   });
 

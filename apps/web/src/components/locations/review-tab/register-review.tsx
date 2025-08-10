@@ -51,7 +51,7 @@ export default function RegisterReview({ locationId }: RegisterReviewProps) {
 
     // 최대 5개 이미지 제한
     if (currentCount + newCount > 5) {
-      return infoToast("이미지는 최대 5개까지 업로드 가능합니다.");
+      return infoToast("이미지는 최대 5개까지 업로드 가능해요.");
     }
 
     const newFileList = new DataTransfer();
@@ -73,7 +73,7 @@ export default function RegisterReview({ locationId }: RegisterReviewProps) {
     console.log("폼 제출 데이터:", data);
     // TODO: locationId 이용해서 리뷰 등록하기
 
-    successToast("리뷰가 등록되었습니다.");
+    successToast("리뷰가 등록되었어요.");
   };
 
   const onError = (errors: FieldErrors<ReviewLocationForm>) => {

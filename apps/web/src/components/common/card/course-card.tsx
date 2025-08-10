@@ -4,13 +4,13 @@ import Link from "next/link";
 import BronzeMedal from "@/assets/bronze-medal.svg";
 import GoldMedal from "@/assets/gold-medal.svg";
 import SilverMedal from "@/assets/silver-medal.svg";
-import { RoadRecommendResponseDTO } from "@/models/road";
+import { RoadResponseDTO } from "@/models/road";
 import { CategoryType } from "@/types/category";
 import type { NativeType } from "@/types/user";
 
 import CategoryChip from "../chip/category-chip";
 
-interface CourseCardProps extends RoadRecommendResponseDTO {
+interface CourseCardProps extends RoadResponseDTO {
   href: string;
 }
 
@@ -47,7 +47,7 @@ export default function CourseCard({
           <CategoryChip category={categoryId as CategoryType} />
         </div>
         <p className="typo-semibold truncate">{title}</p>
-        <p className="typo-regular text-gray-500">현재 {participants}명이 참여했습니다!</p>
+        <p className="typo-regular text-gray-500">현재 {participants}명이 참여했어요!</p>
         <p className="typo-medium truncate">{intro}</p>
       </div>
       <Image
