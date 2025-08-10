@@ -18,7 +18,7 @@ const DrawerContext = createContext<DrawerContextType | undefined>(undefined);
 const useDrawer = () => {
   const context = useContext(DrawerContext);
   if (!context) {
-    throw new Error("Drawer 컴포넌트 내부에서만 사용할 수 있습니다.");
+    throw new Error("Drawer 컴포넌트 내부에서만 사용할 수 있어요.");
   }
   return context;
 };

@@ -1,16 +1,18 @@
 import { useEffect, useState } from "react";
 
+import { DEFAULT_MAP_CENTER } from "@/constants/map";
+
 interface GeolocationState {
-  latitude: number | null;
-  longitude: number | null;
+  latitude: number;
+  longitude: number;
   error: string | null;
   loading: boolean;
 }
 
 export function useGeolocation() {
   const [state, setState] = useState<GeolocationState>({
-    latitude: null,
-    longitude: null,
+    latitude: DEFAULT_MAP_CENTER.lat,
+    longitude: DEFAULT_MAP_CENTER.lng,
     error: null,
     loading: true,
   });
@@ -36,8 +38,8 @@ export function useGeolocation() {
       },
       (error) => {
         setState({
-          latitude: null,
-          longitude: null,
+          latitude: DEFAULT_MAP_CENTER.lat,
+          longitude: DEFAULT_MAP_CENTER.lng,
           error: error.message,
           loading: false,
         });

@@ -7,7 +7,7 @@ export default function CompleteStep() {
         <h1 className="typo-bold">
           회원가입이
           <br />
-          완료되었습니다
+          완료되었어요
         </h1>
       </main>
       <Link

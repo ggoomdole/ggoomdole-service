@@ -7,9 +7,9 @@ interface CategoryChipProps {
 }
 
 const theme = {
-  food: "bg-red-100 text-red-500",
-  tour: "bg-blue-100 text-blue-900",
-  healing: "bg-green-100 text-green-500",
+  1: "bg-red-100 text-red-500",
+  2: "bg-blue-100 text-blue-900",
+  3: "bg-green-100 text-green-500",
 };
 
 export default function CategoryChip({ category }: CategoryChipProps) {

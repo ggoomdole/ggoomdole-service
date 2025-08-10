@@ -20,13 +20,17 @@ interface SortDrawerProps {
 
 function SortDrawerWithoutSuspense({ options, className }: SortDrawerProps) {
   const searchParams = useSearchParams();
-  const currentSortOption = searchParams.get("sort") || "";
+  const currentSortOption = searchParams.get("sort") || options[0].value;
   const selectedSortOption = options.find((option) => option.value === currentSortOption);
 
   const router = useRouter();
 
   const onSortChange = (value: string) => {
-    const params = getParams(searchParams, { sort: value });
+    const defaultParams: Record<string, string> = {};
+    for (const [key, value] of searchParams.entries()) {
+      defaultParams[key] = value;
+    }
+    const params = getParams(defaultParams, { sort: value });
     router.push(`?${params}`);
   };
 

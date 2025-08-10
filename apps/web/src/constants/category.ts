@@ -1,7 +1,7 @@
 export const CATEGORY = {
-  food: "음식",
-  tour: "관광",
-  healing: "힐링",
+  1: "음식",
+  2: "관광",
+  3: "힐링",
 } as const;
 
 export const COURSE_CATEGORIES = [
@@ -11,14 +11,14 @@ export const COURSE_CATEGORIES = [
   },
   {
     name: "음식",
-    path: "food",
+    path: "1",
   },
   {
     name: "관광",
-    path: "tour",
+    path: "2",
   },
   {
     name: "힐링",
-    path: "healing",
+    path: "3",
   },
 ];

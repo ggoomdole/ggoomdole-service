@@ -18,7 +18,7 @@ const DialogContext = createContext<DialogContextType | undefined>(undefined);
 const useDialog = () => {
   const context = useContext(DialogContext);
   if (!context) {
-    throw new Error("Dialog 컴포넌트 내부에서만 사용할 수 있습니다.");
+    throw new Error("Dialog 컴포넌트 내부에서만 사용할 수 있어요.");
   }
   return context;
 };
