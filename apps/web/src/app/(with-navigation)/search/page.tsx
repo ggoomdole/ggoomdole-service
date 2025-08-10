@@ -1,4 +1,5 @@
 import SearchHeader from "@/components/common/header/search-header";
+import { SEARCH } from "@/constants/search";
 import { BaseResponseDTO } from "@/models";
 import { RoadResponseDTO } from "@/models/road";
 import SearchPage from "@/page/search";
@@ -15,15 +16,21 @@ interface SearchProps {
 
 export default async function Search({ searchParams }: SearchProps) {
   const resolvedSearchParams = await searchParams;
-  const promisedResponse = serverApi.get<BaseResponseDTO<RoadResponseDTO[]>>("road/recommend");
+  const roadRecommendResponse = serverApi.get<BaseResponseDTO<RoadResponseDTO[]>>("road/recommend");
+  const recentSearchResponse = serverApi.get<BaseResponseDTO<string[]>>("search/recent", {
+    next: { tags: [SEARCH.RECENT] },
+  });
 
   return (
     <>
-      <SearchHeader {...resolvedSearchParams} />
+      <SearchHeader {...resolvedSearchParams} page="road" />
       {resolvedSearchParams.word ? (
         <SearchResultPage {...resolvedSearchParams} />
       ) : (
-        <SearchPage promisedResponse={promisedResponse} />
+        <SearchPage
+          roadRecommendResponse={roadRecommendResponse}
+          recentSearchResponse={recentSearchResponse}
+        />
       )}
     </>
   );

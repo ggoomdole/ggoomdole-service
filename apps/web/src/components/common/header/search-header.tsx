@@ -5,8 +5,10 @@ import { useRouter } from "next/navigation";
 
 import SearchIcon from "@/assets/search.svg";
 import Header from "@/components/common/header";
+import { SEARCH } from "@/constants/search";
 import { recentSearchUtils } from "@/utils/local-storage";
 import { getParams } from "@/utils/params";
+import { revalidateTags } from "@/utils/revalidate";
 
 interface SearchHeaderProps {
   word: string;
@@ -14,7 +16,7 @@ interface SearchHeaderProps {
 }
 
 export default function SearchHeader(props: SearchHeaderProps) {
-  const { word, ...restProps } = props;
+  const { word, page, ...restProps } = props;
   const [searchQuery, setSearchQuery] = useState(word || "");
 
   const router = useRouter();
@@ -28,6 +30,7 @@ export default function SearchHeader(props: SearchHeaderProps) {
     if (!searchQuery.trim()) return;
     recentSearchUtils.addRecentSearch(searchQuery);
     const params = getParams(restProps, { word: searchQuery });
+    if (page === "road") revalidateTags([SEARCH.ROAD]);
     router.push(`?${params}`);
   };
 

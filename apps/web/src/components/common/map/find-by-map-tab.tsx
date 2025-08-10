@@ -99,7 +99,7 @@ export default function FindByMapTab({
 
   return (
     <>
-      <SearchHeader id={id} query={query} tab={tab} />
+      <SearchHeader id={id} word={query} tab={tab} />
       <main className="relative">
         <Map
           mapInstanceRef={mapInstanceRef}
