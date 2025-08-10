@@ -14,15 +14,16 @@ export const requestCourseFormSchema = z.object({
 export type RequestCourseForm = z.infer<typeof requestCourseFormSchema>;
 
 export const uploadCourseFormSchema = z.object({
-  name: z.string().min(1),
-  thumbnail: z.instanceof(File).optional(),
+  title: z.string().min(1),
+  thumbnail: z.instanceof(File),
   category: z.string().min(1),
   intro: z.string().min(1),
-  places: z
+  spots: z
     .array(
       z.object({
         placeName: z.string().min(1),
         reason: z.string().min(1),
+        placeId: z.string().min(1),
       })
     )
     .min(1),

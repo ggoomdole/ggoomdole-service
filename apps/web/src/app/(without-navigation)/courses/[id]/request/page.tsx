@@ -6,7 +6,7 @@ interface CourseRequestProps {
   }>;
   searchParams: Promise<{
     tab: string;
-    query: string;
+    word: string;
   }>;
 }
 

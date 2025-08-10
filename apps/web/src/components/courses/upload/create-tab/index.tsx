@@ -7,10 +7,11 @@ import Button from "@/components/common/button";
 import { Dialog, DialogClose, DialogContent, DialogTrigger } from "@/components/common/dialog";
 import Header from "@/components/common/header";
 import { COURSE_CATEGORIES } from "@/constants/category";
+import { useCheckRoadNameDuplicate, useUploadRoad } from "@/lib/tanstack/mutation/road";
 import { cn } from "@/lib/utils";
 import { UploadCourseForm } from "@/schemas/course";
 import { CoursePlaceProps } from "@/types/course";
-import { infoToast } from "@/utils/toast";
+import { infoToast, successToast } from "@/utils/toast";
 
 import { useFieldArray, UseFormReturn } from "react-hook-form";
 
@@ -37,6 +38,12 @@ const getHeaderText = (isEditCourse: boolean, isPrivate: boolean) => {
 
 export default function CreateTab({ id, form, isEditCourse, isPrivate }: CreateTabProps) {
   const [isEditOrderMode, setIsEditOrderMode] = useState(false);
+  const [isNameDuplicateChecked, setIsNameDuplicateChecked] = useState(false);
+  const [isNameAvailable, setIsNameAvailable] = useState(false);
+
+  const { mutateAsync: uploadRoad, isPending: isUploadingRoad } = useUploadRoad();
+  const { mutateAsync: checkRoadNameDuplicate, isPending: isCheckingDuplicate } =
+    useCheckRoadNameDuplicate();
 
   const category = form.watch("category");
   const thumbnail = form.watch("thumbnail");
@@ -49,14 +56,21 @@ export default function CreateTab({ id, form, isEditCourse, isPrivate }: CreateT
 
   const { fields, update, remove } = useFieldArray({
     control: form.control,
-    name: "places",
+    name: "spots",
     keyName: "fieldId",
   });
 
   const { formState } = form;
   const { isValid } = formState;
 
-  const submitDisabled = !isValid || fields.length === 0 || isEditOrderMode;
+  const submitDisabled =
+    !isValid ||
+    fields.length === 0 ||
+    isEditOrderMode ||
+    isUploadingRoad ||
+    isCheckingDuplicate ||
+    !isNameDuplicateChecked ||
+    !isNameAvailable;
 
   const onChangeReason = (index: number, reason: string) => {
     update(index, {
@@ -65,13 +79,31 @@ export default function CreateTab({ id, form, isEditCourse, isPrivate }: CreateT
     });
   };
 
+  const onCheckRoadNameDuplicate = async () => {
+    const isDuplicate = await checkRoadNameDuplicate(form.getValues("title"));
+    setIsNameDuplicateChecked(true);
+    if (!isDuplicate.data) {
+      setIsNameAvailable(false);
+      infoToast("이미 존재하는 순례길 이름이에요.");
+    } else {
+      setIsNameAvailable(true);
+      successToast("사용 가능한 순례길 이름이에요.");
+    }
+  };
+
   const onReorder = (newOrder: CoursePlaceProps[]) => {
-    form.setValue("places", newOrder);
+    form.setValue("spots", newOrder);
   };
 
   const onChangeCategory = (categoryName: string) => {
     if (category === categoryName) return;
     form.setValue("category", categoryName);
+  };
+
+  const onTitleChange = () => {
+    // 제목이 변경되면 중복확인 상태를 초기화
+    setIsNameDuplicateChecked(false);
+    setIsNameAvailable(false);
   };
 
   const onFileSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -99,15 +131,32 @@ export default function CreateTab({ id, form, isEditCourse, isPrivate }: CreateT
     // API 요청 후 /participations로 이동 및 invalidate
   };
 
-  const onSubmit = async () => {
+  const onSubmit = form.handleSubmit(async (data) => {
     if (isPrivate) {
       // 비공개 순례길 수정 API
     } else if (isEditCourse) {
       // 순례길 수정 API
     } else {
-      // 순례길 생성 API
+      const formData = new FormData();
+      formData.append("road-image", data.thumbnail);
+      const categoryId = CATEGORIES.find((category) => category.name === data.category)
+        ?.path as string;
+      const spots = data.spots.map((spot, index) => ({
+        number: index + 1,
+        spotId: spot.placeId,
+        spotName: spot.placeName,
+        introSpot: spot.reason,
+      }));
+      const body = {
+        title: data.title,
+        categoryId: +categoryId,
+        intro: data.intro,
+        spots,
+      };
+
+      await uploadRoad({ formData, body });
     }
-  };
+  });
 
   return (
     <>
@@ -158,9 +207,15 @@ export default function CreateTab({ id, form, isEditCourse, isPrivate }: CreateT
                 <input
                   placeholder="순례길 이름을 정해주세요"
                   className="typo-medium w-full"
-                  {...form.register("name")}
+                  {...form.register("title", {
+                    onChange: onTitleChange,
+                  })}
                 />
-                <button className="bg-main-900 typo-regular text-nowrap rounded-full px-2 py-1 text-white transition-colors disabled:bg-gray-100 disabled:text-gray-300">
+                <button
+                  onClick={onCheckRoadNameDuplicate}
+                  disabled={isCheckingDuplicate}
+                  className="bg-main-900 typo-regular text-nowrap rounded-full px-2 py-1 text-white transition-colors disabled:bg-gray-100 disabled:text-gray-300"
+                >
                   중복확인
                 </button>
               </div>
@@ -241,7 +296,7 @@ export default function CreateTab({ id, form, isEditCourse, isPrivate }: CreateT
             </div>
           ) : (
             <Button disabled={submitDisabled} onClick={onSubmit}>
-              생성하기
+              {isUploadingRoad ? "생성중..." : "생성하기"}
             </Button>
           )}
         </section>

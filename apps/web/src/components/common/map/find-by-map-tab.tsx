@@ -13,6 +13,7 @@ import { infoToast } from "@/utils/toast";
 interface LocationProps {
   title: string;
   address: string;
+  id: string;
 }
 
 interface FindByMapTabProps {
@@ -52,6 +53,7 @@ export default function FindByMapTab({
     setSelectedMarker({
       title: selectedPoi?.name || "",
       address: selectedPoi?.newAddressList.newAddress[0].fullAddressRoad || "",
+      id: selectedPoi?.id || "",
     });
   };
 
@@ -66,6 +68,7 @@ export default function FindByMapTab({
 
     onSelectPlace({
       placeName: selectedMarker.title,
+      placeId: selectedMarker.id,
       reason: "",
     });
     setSelectedMarker(null);
