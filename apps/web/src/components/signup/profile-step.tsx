@@ -1,8 +1,11 @@
 import { useState } from "react";
 import Image from "next/image";
 
+import { useUploadProfileImage } from "@/lib/tanstack/mutation/user";
 import { SignUpForm } from "@/schemas/signup";
+import { errorToast } from "@/utils/toast";
 
+import { Camera } from "lucide-react";
 import { UseFormReturn } from "react-hook-form";
 
 import FloatingButton from "../common/button/floating-button";
@@ -23,6 +26,10 @@ export default function ProfileStep({ form, onNext }: ProfileStepProps) {
     return null;
   });
 
+  const { mutateAsync, isPending } = useUploadProfileImage();
+
+  const nextDisabled = !previewImage || isPending;
+
   const onFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
@@ -40,8 +47,18 @@ export default function ProfileStep({ form, onNext }: ProfileStepProps) {
     }
   };
 
-  const onClickNext = () => {
-    onNext();
+  const onClickNext = async () => {
+    if (isPending) return;
+    const formData = new FormData();
+    formData.append("profile-image", form.getValues("profileImage"));
+    await mutateAsync(formData, {
+      onSuccess: () => {
+        onNext();
+      },
+      onError: () => {
+        errorToast("프로필 이미지를 업로드하지 못했어요.");
+      },
+    });
   };
 
   return (
@@ -53,14 +70,17 @@ export default function ProfileStep({ form, onNext }: ProfileStepProps) {
             <br />
             정해주세요
           </h1>
-          <label htmlFor="profile-image">
+          <label htmlFor="profile-image" className="relative mx-auto w-max cursor-pointer">
             <Image
               src={previewImage || defaultProfile}
               alt="profile"
               width={200}
               height={200}
-              className="mx-auto aspect-square rounded-full object-cover"
+              className="border-main-700 mx-auto aspect-square rounded-full border object-cover"
             />
+            <div className="text-main-900 bg-main-100 border-main-700 absolute bottom-2.5 right-2.5 rounded-full border p-2">
+              <Camera />
+            </div>
           </label>
           <input
             type="file"
@@ -68,10 +88,11 @@ export default function ProfileStep({ form, onNext }: ProfileStepProps) {
             id="profile-image"
             accept=".png,.jpeg,.jpg,image/png,image/jpeg,image/jpg"
             hidden
+            disabled={isPending}
           />
         </section>
       </main>
-      <FloatingButton onClick={onClickNext} disabled={!previewImage}>
+      <FloatingButton onClick={onClickNext} disabled={nextDisabled}>
         다음
       </FloatingButton>
     </>
