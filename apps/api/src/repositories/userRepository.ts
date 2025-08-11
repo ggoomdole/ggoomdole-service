@@ -1,4 +1,4 @@
-import { PrismaClient } from '@prisma/client';
+import { Native,PrismaClient } from '@prisma/client';
 const prisma = new PrismaClient();
 
 class UserRepository {
@@ -40,6 +40,14 @@ class UserRepository {
       },
     });
   }
+  
+  async updateUserNative(userId: number, native: Native | null) {
+    return await prisma.user.update({
+      where: { id: userId },
+      data: { native },
+      select: { native: true },
+    });
+  }  
 }
 
 export default new UserRepository();
