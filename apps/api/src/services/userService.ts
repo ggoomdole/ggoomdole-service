@@ -1,9 +1,9 @@
 import { PutObjectCommand } from '@aws-sdk/client-s3';
+import { userInfoDTO } from '@repo/types';
 
 import s3 from '../config/s3-config';
 import UserRepository from '../repositories/userRepository';
 import { ExistsError, NotFoundError } from '../utils/customError';
-import { userInfoDTO } from '@repo/types';
 
 class UserService {
   private BUCKET_NAME = process.env.AWS_S3_BUCKET_NAME!;
