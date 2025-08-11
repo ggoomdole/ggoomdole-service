@@ -29,6 +29,17 @@ class UserRepository {
       data: { profileImage: imageUrl },
     });
   }
+
+  async findUserById(userId: number) {
+    return await prisma.user.findUnique({
+      where: { id: userId },
+      select: {
+        nickName: true,
+        profileImage: true,
+        native: true,
+      },
+    });
+  }
 }
 
 export default new UserRepository();

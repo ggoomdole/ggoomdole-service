@@ -108,4 +108,10 @@ export interface DataSpotDTO {
     image: string | null;
     address: string;
     rating: number;
-}  
+}
+
+export interface userInfoDTO {
+    nickName: string;
+    profileImage: string;
+    native: string;
+}
