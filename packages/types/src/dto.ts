@@ -95,9 +95,9 @@ export interface addSpotDTO {
     spotInfo: {
         name: string;
         phone?: string;
-        address?: string;
-        latitude?: number;
-        longitude?: number;
+        address: string;
+        latitude: number;
+        longitude: number;
         hours?: string;
         avgRate?: number;
     };
