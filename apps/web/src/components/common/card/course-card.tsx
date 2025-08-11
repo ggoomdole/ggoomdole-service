@@ -27,6 +27,8 @@ const getLevelIcon = (level: NativeType) => {
   }
 };
 
+const DEFAULT_IMAGE_URL = "/static/default-thumbnail.png";
+
 export default function CourseCard({
   categoryId,
   title,
@@ -51,7 +53,7 @@ export default function CourseCard({
         <p className="typo-medium truncate">{intro}</p>
       </div>
       <Image
-        src={imageUrl || "/static/default-thumbnail.png"}
+        src={imageUrl || DEFAULT_IMAGE_URL}
         alt={title}
         width={60}
         height={60}
