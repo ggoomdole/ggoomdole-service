@@ -1,6 +1,6 @@
 import { PutObjectCommand } from '@aws-sdk/client-s3';
-import { userInfoDTO } from '@repo/types';
 import { Native } from '@prisma/client';
+import { userInfoDTO } from '@repo/types';
 
 import s3 from '../config/s3-config';
 import UserRepository from '../repositories/userRepository';

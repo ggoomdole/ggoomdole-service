@@ -1,4 +1,4 @@
-import { PrismaClient, Native } from '@prisma/client';
+import { Native,PrismaClient } from '@prisma/client';
 const prisma = new PrismaClient();
 
 class UserRepository {
