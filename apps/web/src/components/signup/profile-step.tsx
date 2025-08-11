@@ -1,9 +1,7 @@
 import { useState } from "react";
 import Image from "next/image";
 
-import { useUploadProfileImage } from "@/lib/tanstack/mutation/user";
 import { SignUpForm } from "@/schemas/signup";
-import { errorToast } from "@/utils/toast";
 
 import { Camera } from "lucide-react";
 import { UseFormReturn } from "react-hook-form";
@@ -26,9 +24,7 @@ export default function ProfileStep({ form, onNext }: ProfileStepProps) {
     return null;
   });
 
-  const { mutateAsync, isPending } = useUploadProfileImage();
-
-  const nextDisabled = !previewImage || isPending;
+  const nextDisabled = !previewImage;
 
   const onFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -48,17 +44,9 @@ export default function ProfileStep({ form, onNext }: ProfileStepProps) {
   };
 
   const onClickNext = async () => {
-    if (isPending) return;
     const formData = new FormData();
     formData.append("profile-image", form.getValues("profileImage"));
-    await mutateAsync(formData, {
-      onSuccess: () => {
-        onNext();
-      },
-      onError: () => {
-        errorToast("프로필 이미지를 업로드하지 못했어요.");
-      },
-    });
+    onNext();
   };
 
   return (
@@ -88,7 +76,6 @@ export default function ProfileStep({ form, onNext }: ProfileStepProps) {
             id="profile-image"
             accept=".png,.jpeg,.jpg,image/png,image/jpeg,image/jpg"
             hidden
-            disabled={isPending}
           />
         </section>
       </main>

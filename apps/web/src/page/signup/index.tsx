@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 
 import AgreementStep from "@/components/signup/agreement-step";
@@ -43,8 +43,27 @@ export default function SignupPage({ step }: SignupPageProps) {
   };
 
   if (+step < 4 && signupComplete.current) {
-    // bad request 처리하기
+    throw new Error("회원가입이 완료되었어요.");
   }
+
+  useEffect(() => {
+    const validatePreviousStepsOrThrow = (currentStep: number, values: SignUpForm): void => {
+      const isAgreementValid = values.agreement === true;
+      const isProfileImageValid = values.profileImage instanceof File;
+      const isNicknameValid = typeof values.nickname === "string" && values.nickname.length >= 1;
+
+      if (
+        (!isAgreementValid && currentStep >= 1) ||
+        (!isProfileImageValid && currentStep >= 2) ||
+        (!isNicknameValid && currentStep >= 3)
+      ) {
+        alert("잘못된 요청이에요. 처음부터 다시 진행해 주세요.");
+        router.replace("?");
+      }
+    };
+
+    validatePreviousStepsOrThrow(+step, form.getValues());
+  }, [step]);
 
   switch (step) {
     case "0":
