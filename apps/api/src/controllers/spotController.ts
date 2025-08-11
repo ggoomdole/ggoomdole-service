@@ -13,7 +13,7 @@ class SpotController {
     
       if (!lat || !lng) throw new BadRequestError('위도와 경도는 필수입니다.');
 
-      const spots = await spotService.fetchNearbySpots(Number(lat), Number(lng));
+      const spots = await spotService.fetchNearbySpots(String(lat), String(lng));
       return successHandler(res, '주변 관광지 조회 완료', spots);
     } catch (error) {
         next(error);
