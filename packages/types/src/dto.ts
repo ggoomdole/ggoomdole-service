@@ -24,7 +24,7 @@ export interface SpotDTO {
     spotId: string;
     number: number;
     introSpot: string;
-    name?: string;
+    name: string;
     address?: string;
     latitude?: number;
     longitude?: number;
@@ -62,6 +62,7 @@ export interface OneRoadResponseDTO {
 
 export interface SpotReviewDTO {
     spotId: string;
+    name: string;
     number: number;
     introSpot: string;
     avgReview: string;

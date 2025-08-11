@@ -105,10 +105,11 @@ class RoadService {
       createAt: newRoad.createAt,
       updateAt: newRoad.updateAt,
       categoryId: newRoad.categoryId,
-      spots: newRoad.spots.map((spot): SpotDTO => ({
-        spotId: spot.spotId,
-        number: spot.number,
-        introSpot: spot.introSpot,
+      spots: newRoad.spots.map((ps): SpotDTO => ({
+        spotId: ps.spotId,
+        name: ps.spot.name,
+        number: ps.number,
+        introSpot: ps.introSpot,
       })),
       participants: newRoad.participants.map((part): ParticipantDTO => ({
         userId: part.userId,
@@ -156,10 +157,11 @@ class RoadService {
       createAt: newRoad.createAt,
       updateAt: newRoad.updateAt,
       categoryId: newRoad.categoryId,
-      spots: newRoad.spots.map((spot): SpotDTO => ({
-        spotId: spot.spotId,
-        number: spot.number,
-        introSpot: spot.introSpot,
+      spots: newRoad.spots.map((ps): SpotDTO => ({
+        spotId: ps.spotId,
+        name: ps.spot.name,
+        number: ps.number,
+        introSpot: ps.introSpot,
       })),
       participants: newRoad.participants.map((part): ParticipantDTO => ({
         userId: part.userId,
@@ -206,10 +208,11 @@ class RoadService {
       createAt: updatedRoad.createAt,
       updateAt: updatedRoad.updateAt,
       categoryId: updatedRoad.categoryId,
-      spots: updatedRoad.spots.map((spot): SpotDTO => ({
-        spotId: spot.spotId,
-        number: spot.number,
-        introSpot: spot.introSpot,
+      spots: updatedRoad.spots.map((ps): SpotDTO => ({
+        spotId: ps.spotId,
+        name: ps.spot.name,
+        number: ps.number,
+        introSpot: ps.introSpot,
       })),
       participants: updatedRoad.participants.map((part): ParticipantDTO => ({
         userId: part.userId,
@@ -256,6 +259,7 @@ class RoadService {
       categoryId: road.categoryId,
       spots: spots.map((spot) => ({
         spotId: spot.spotId,
+        name: spot.spot.name,
         number: spot.number,
         introSpot: spot.introSpot,
         avgReview: averageRateStr(spot),
