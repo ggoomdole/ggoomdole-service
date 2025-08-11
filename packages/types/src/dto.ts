@@ -25,9 +25,9 @@ export interface SpotDTO {
     number: number;
     introSpot: string;
     name: string;
-    address?: string;
-    latitude?: number;
-    longitude?: number;
+    address: string;
+    latitude: number;
+    longitude: number;
     phone?: string;
     hours?: string;
     avgRate?: number;

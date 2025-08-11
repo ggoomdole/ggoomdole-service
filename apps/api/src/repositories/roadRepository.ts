@@ -62,10 +62,10 @@ class RoadRepository {
           await tx.spot.create({
             data: {
               id: spot.spotId,
-              name: spot.name ?? 'null',
-              address: spot.address ?? null,
-              latitude: spot.latitude ?? null,
-              longitude: spot.longitude ?? null,
+              name: spot.name,
+              address: spot.address,
+              latitude: spot.latitude,
+              longitude: spot.longitude,
               phone: spot.phone ?? null,
               hours: spot.hours ?? null,
               avgRate: spot.avgRate ?? 0,

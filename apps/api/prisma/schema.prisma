@@ -21,9 +21,9 @@ model Spot {
   id        String  @id
   name      String
   phone     String?
-  address   String?
-  latitude  Float?
-  longitude Float?
+  address   String
+  latitude  Float
+  longitude Float
   hours     String?
   avgRate   Int?
 

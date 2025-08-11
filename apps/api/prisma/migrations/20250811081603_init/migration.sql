@@ -14,9 +14,9 @@ CREATE TABLE `Spot` (
     `id` VARCHAR(191) NOT NULL,
     `name` VARCHAR(191) NOT NULL,
     `phone` VARCHAR(191) NULL,
-    `address` VARCHAR(191) NULL,
-    `latitude` DOUBLE NULL,
-    `longitude` DOUBLE NULL,
+    `address` VARCHAR(191) NOT NULL,
+    `latitude` DOUBLE NOT NULL,
+    `longitude` DOUBLE NOT NULL,
     `hours` VARCHAR(191) NULL,
     `avgRate` INTEGER NULL,
 

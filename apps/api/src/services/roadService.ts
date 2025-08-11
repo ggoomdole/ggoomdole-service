@@ -110,6 +110,9 @@ class RoadService {
         name: ps.spot.name,
         number: ps.number,
         introSpot: ps.introSpot,
+        address: ps.spot.address,
+        latitude: ps.spot.latitude,
+        longitude: ps.spot.longitude
       })),
       participants: newRoad.participants.map((part): ParticipantDTO => ({
         userId: part.userId,
@@ -162,6 +165,9 @@ class RoadService {
         name: ps.spot.name,
         number: ps.number,
         introSpot: ps.introSpot,
+        address: ps.spot.address,
+        latitude: ps.spot.latitude,
+        longitude: ps.spot.longitude
       })),
       participants: newRoad.participants.map((part): ParticipantDTO => ({
         userId: part.userId,
@@ -213,6 +219,9 @@ class RoadService {
         name: ps.spot.name,
         number: ps.number,
         introSpot: ps.introSpot,
+        address: ps.spot.address,
+        latitude: ps.spot.latitude,
+        longitude: ps.spot.longitude
       })),
       participants: updatedRoad.participants.map((part): ParticipantDTO => ({
         userId: part.userId,
