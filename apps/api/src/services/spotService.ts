@@ -9,14 +9,11 @@ import { NotFoundError, UnauthorizedError } from '../utils/customError';
 
 class RoadService {
   async fetchNearbySpots(lat: number, lng: number): Promise<DataSpotDTO[]> {
-    const url = "http://apis.data.go.kr/B551011/GoKrOpenService/rest/KorService/locationBasedList";
+    const url = "http://apis.data.go.kr/B551011/TarRlteTarService1/areaBasedList1";
 
     const params = {
       serviceKey: process.env.SERVICE_KEY,
-      mapX: lng,
-      mapY: lat,
-      radius: 3000,
-      MobileOS: "ETC",
+      MobileOS: "WEB",
       MobileApp: "ggoomdole-net",
       _type: "json",
       numOfRows: 10,
