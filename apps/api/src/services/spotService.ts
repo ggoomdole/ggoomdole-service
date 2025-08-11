@@ -8,26 +8,30 @@ import spotRepository from '../repositories/spotRepository';
 import { NotFoundError, UnauthorizedError } from '../utils/customError';
 
 class RoadService {
-  async fetchNearbySpots(lat: number, lng: number): Promise<DataSpotDTO[]> {
-    const url = "http://apis.data.go.kr/B551011/GoKrOpenService/rest/KorService/locationBasedList";
+  async fetchNearbySpots(lat: string, lng: string): Promise<DataSpotDTO[]> {
+    const url = "https://apis.data.go.kr/B551011/KorService2/locationBasedList2";
 
     const params = {
       serviceKey: process.env.SERVICE_KEY,
-      mapX: lng,
-      mapY: lat,
-      radius: 3000,
-      MobileOS: "ETC",
+      MobileOS: "WEB",
       MobileApp: "ggoomdole-net",
       _type: "json",
       numOfRows: 10,
       pageNo: 1,
+      arrange: "S",
+      contentTypeId: 12,
+      mapX: lng,
+      mapY: lat,
+      radius: 1000
     };
 
     const { data } = await axios.get(url, { params });
+    console.log(JSON.stringify(data, null, 2));
 
     const items = data?.response?.body?.items?.item ?? [];
+    const list = Array.isArray(items) ? items : [items];
 
-    const results: DataSpotDTO[] = items.map((item: any) => ({
+    const results: DataSpotDTO[] = list.map((item: any) => ({
       title: item.title,
       image: item.firstimage || null,
       address: item.addr1 || "주소 정보 없음",

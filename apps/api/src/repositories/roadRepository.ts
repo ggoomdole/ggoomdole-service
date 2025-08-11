@@ -62,10 +62,10 @@ class RoadRepository {
           await tx.spot.create({
             data: {
               id: spot.spotId,
-              name: spot.name ?? 'null',
-              address: spot.address ?? null,
-              latitude: spot.latitude ?? null,
-              longitude: spot.longitude ?? null,
+              name: spot.name,
+              address: spot.address,
+              latitude: spot.latitude,
+              longitude: spot.longitude,
               phone: spot.phone ?? null,
               hours: spot.hours ?? null,
               avgRate: spot.avgRate ?? 0,
@@ -102,7 +102,11 @@ class RoadRepository {
       const fullPilgrimage = await tx.pilgrimage.findUnique({
         where: { id: newRoad.id },
         include: {
-          spots: true,
+          spots: {
+            include: {
+              spot: true
+            }
+          },
           participants: true,
         },
       });
@@ -111,7 +115,6 @@ class RoadRepository {
     });
   }
   
-
   async findRoadByTitle(title: string) {  
     return await prisma.pilgrimage.findFirst({
       where: { title },
@@ -152,7 +155,14 @@ class RoadRepository {
   
       const final = await tx.pilgrimage.findUnique({
         where: { id: roadId },
-        include: { spots: true, participants: true },
+        include: {
+          spots: {
+            include: {
+              spot: true
+            }
+          },
+          participants: true
+        },
       });
   
       return final!;

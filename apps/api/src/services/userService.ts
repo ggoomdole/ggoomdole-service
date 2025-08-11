@@ -1,8 +1,9 @@
 import { PutObjectCommand } from '@aws-sdk/client-s3';
+import { userInfoDTO } from '@repo/types';
 
 import s3 from '../config/s3-config';
 import UserRepository from '../repositories/userRepository';
-import { ExistsError } from '../utils/customError';
+import { ExistsError, NotFoundError } from '../utils/customError';
 
 class UserService {
   private BUCKET_NAME = process.env.AWS_S3_BUCKET_NAME!;
@@ -41,6 +42,17 @@ class UserService {
     await UserRepository.updateProfileImage(userId, imageUrl);
 
     return imageUrl;
+  }
+
+  async userIdByInfo(userId: number): Promise<userInfoDTO> {
+    const user = await UserRepository.findUserById(userId);
+    if (!user) { throw new NotFoundError('유저를 찾을 수 없습니다.'); }
+
+    return {
+      nickName: user.nickName,
+      profileImage: user.profileImage ?? 'null',
+      native: user.native ?? '',
+    }; 
   }
 }
 

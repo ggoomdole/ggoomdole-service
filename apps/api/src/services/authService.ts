@@ -37,7 +37,10 @@
 
       // DB에서 사용자 찾고 없으면 생성
       let user = await AuthRepository.findUserByKakaoId(String(kakaoId));
+      let isFirstLogin = false;
+
       if (!user) {
+        isFirstLogin = true;
         user = await AuthRepository.createUser({
           kakaoId: String(kakaoId),
           nickName: String(nickname)
@@ -52,7 +55,8 @@
       return {
         userId: user.id,
         accessToken,
-        jwtToken
+        jwtToken,
+        isFirstLogin
       };
     }
 

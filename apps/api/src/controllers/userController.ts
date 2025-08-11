@@ -57,6 +57,17 @@ class UserController {
       next(error);
     }
   }
+
+  async getUserInfo(req: Request, res: Response, next: NextFunction) {
+    try {
+      const userId = req.user.userId;
+      
+      const userInfo = await userService.userIdByInfo(userId);
+      return successHandler(res, '유저 정보 조회 완료', userInfo);
+    } catch (error) {
+      next(error);
+    }
+  }
 }
 
 export default new UserController();

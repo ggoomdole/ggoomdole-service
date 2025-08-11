@@ -24,10 +24,10 @@ export interface SpotDTO {
     spotId: string;
     number: number;
     introSpot: string;
-    name?: string;
-    address?: string;
-    latitude?: number;
-    longitude?: number;
+    name: string;
+    address: string;
+    latitude: number;
+    longitude: number;
     phone?: string;
     hours?: string;
     avgRate?: number;
@@ -62,6 +62,7 @@ export interface OneRoadResponseDTO {
 
 export interface SpotReviewDTO {
     spotId: string;
+    name: string;
     number: number;
     introSpot: string;
     avgReview: string;
@@ -94,9 +95,9 @@ export interface addSpotDTO {
     spotInfo: {
         name: string;
         phone?: string;
-        address?: string;
-        latitude?: number;
-        longitude?: number;
+        address: string;
+        latitude: number;
+        longitude: number;
         hours?: string;
         avgRate?: number;
     };
@@ -107,4 +108,10 @@ export interface DataSpotDTO {
     image: string | null;
     address: string;
     rating: number;
-}  
+}
+
+export interface userInfoDTO {
+    nickName: string;
+    profileImage: string;
+    native: string;
+}
