@@ -58,6 +58,24 @@ class UserController {
     }
   }
 
+  async createUserInfo(req: Request, res: Response, next: NextFunction) {
+    try {
+      const userId = req.user.userId;
+      const { nickname } = req.body;
+      if (!nickname) { throw new BadRequestError('닉네임은 필수입니다.'); }
+      if (typeof nickname !== "string") { throw new BadRequestError('닉네임은 문자열이어야 합니다.'); }
+
+      const { term } = req.body;
+
+      const newNickname = await userService.createNickname(userId, nickname);
+      const imageUrl = await userService.uploadProfileImage(userId, req.file);
+      const termByUser = await userService.uploadTerm(userId, term);
+      return successHandler(res, '유저 정보 생성 완료', { nickname: newNickname, imageUrl: imageUrl, term: termByUser});
+    } catch (error) {
+      next(error);
+    }
+  }
+
   async getUserInfo(req: Request, res: Response, next: NextFunction) {
     try {
       const userId = req.user.userId;

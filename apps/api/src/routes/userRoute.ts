@@ -11,6 +11,8 @@ router.get("/nickname/check", userController.checkNickname);
 router.post("/nickname", authenticate, userController.createNickname);
 router.patch("/nickname", authenticate, userController.changeNickname);
 router.post("/image", authenticate, upload.single('profile-image'), userController.uploadProfileImage);
-router.get("/", authenticate, userController.getUserInfo);
+
+router.post("/", authenticate, userController.createUserInfo);
+router.get("/", authenticate, upload.single('profile-image'), userController.getUserInfo);
 
 export default router;

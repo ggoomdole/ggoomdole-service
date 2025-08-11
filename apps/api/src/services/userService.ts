@@ -1,5 +1,6 @@
 import { PutObjectCommand } from '@aws-sdk/client-s3';
 import { userInfoDTO } from '@repo/types';
+import { Native } from '@prisma/client';
 
 import s3 from '../config/s3-config';
 import UserRepository from '../repositories/userRepository';
@@ -27,21 +28,30 @@ class UserService {
     return nickname;
   }
 
-  async uploadProfileImage(userId: number, file: Express.Multer.File): Promise<string> {
-    const key = `profile-images/${userId}/${file.originalname}`;
-
+  async uploadProfileImage(userId: number, file?: Express.Multer.File | null): Promise<string | null> {
+    if (!file) {
+      return null;
+    }
+  
+    const key = `profile-images/${file.originalname}`;
+  
     await s3.send(new PutObjectCommand({
       Bucket: this.BUCKET_NAME,
       Key: key,
       Body: file.buffer,
       ContentType: file.mimetype,
     }));
-
+  
     const imageUrl = `https://${this.BUCKET_NAME}.s3.${process.env.AWS_REGION}.amazonaws.com/${key}`;
-
+  
     await UserRepository.updateProfileImage(userId, imageUrl);
-
+  
     return imageUrl;
+  }
+
+  async uploadTerm(userId: number, term?: string) {
+    const nativeValue = term ? parseTermToNative(term) : 'SHORT_TERM';
+    return await UserRepository.updateUserNative(userId, nativeValue);
   }
 
   async userIdByInfo(userId: number): Promise<userInfoDTO> {
@@ -53,6 +63,17 @@ class UserService {
       profileImage: user.profileImage ?? 'null',
       native: user.native ?? '',
     }; 
+  }
+}
+
+function parseTermToNative(term: string): Native {
+  switch (term.toUpperCase()) {
+    case 'SHORT_TERM': return Native.SHORT_TERM;
+    case 'MID_TERM': return Native.MID_TERM;
+    case 'LONG_TERM': return Native.LONG_TERM;
+    case 'RESIDENT': return Native.RESIDENT;
+    default:
+      throw new Error('유효하지 않은 term 값입니다.');
   }
 }
 

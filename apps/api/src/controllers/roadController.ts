@@ -35,7 +35,7 @@ class RoadController {
   async createRoad(req: Request, res: Response, next: NextFunction) {
     try {
       const userId = req.user.userId;
-      const dto = req.body as RoadRequestDTO;
+      const dto = JSON.parse(req.body.data) as RoadRequestDTO;
       const imageFile = req.file;
 
       if (!isAddRoadDTO(dto)) { throw new BadRequestError('요청 형식이 잘못되었습니다.'); }
@@ -50,7 +50,7 @@ class RoadController {
   async createMyRoad(req: Request, res: Response, next: NextFunction) {
     try {
       const userId = req.user.userId;
-      const dto = req.body as RoadRequestDTO;
+      const dto = JSON.parse(req.body.data) as RoadRequestDTO;
       const imageFile = req.file;
 
       if (!isAddRoadDTO(dto)) { throw new BadRequestError('요청 형식이 잘못되었습니다.'); }
@@ -66,7 +66,7 @@ class RoadController {
     try {
       const userId = req.user.userId;
       const roadId = parseInt(req.params.roadId);
-      const dto = req.body as Partial<RoadRequestDTO>;
+      const dto: Partial<RoadRequestDTO> = JSON.parse(req.body.data);
       const imageFile = req.file;
   
       if (isNaN(roadId)) throw new BadRequestError('유효하지 않은 roadId입니다.');
