@@ -1,5 +1,6 @@
 import { BaseResponseDTO } from "@/models";
-import { UploadRoadRequestDTO, UploadRoadResponseDTO } from "@/models/road";
+import { RoadResponseDTO, UploadRoadRequestDTO, UploadRoadResponseDTO } from "@/models/road";
+import { getParams } from "@/utils/params";
 
 import { clientApi } from "./api";
 
@@ -12,4 +13,12 @@ export const uploadRoad = async (props: {
 
 export const checkRoadNameDuplicate = async (title: string): Promise<BaseResponseDTO<boolean>> => {
   return clientApi.get(`road/name?title=${title}`);
+};
+
+export const getAllRoads = async (props: {
+  categoryId: string;
+  sortBy: string;
+}): Promise<BaseResponseDTO<RoadResponseDTO[]>> => {
+  const params = getParams(props);
+  return clientApi.get(`road?${params}`);
 };

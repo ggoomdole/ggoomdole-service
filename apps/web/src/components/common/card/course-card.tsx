@@ -51,7 +51,7 @@ export default function CourseCard({
         <p className="typo-medium truncate">{intro}</p>
       </div>
       <Image
-        src={imageUrl}
+        src={imageUrl || "/static/default-thumbnail.png"}
         alt={title}
         width={60}
         height={60}
