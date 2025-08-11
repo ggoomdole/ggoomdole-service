@@ -8,9 +8,9 @@ class SpotRepository {
     spotInfo: {
       name: string;
       phone?: string;
-      address?: string;
-      latitude?: number;
-      longitude?: number;
+      address: string;
+      latitude: number;
+      longitude: number;
       hours?: string;
       avgRate?: number;
     };
@@ -43,12 +43,12 @@ class SpotRepository {
           data: {
             id: spot.spotId,
             name: spot.spotInfo.name,
-            phone: spot.spotInfo.phone,
-            address: spot.spotInfo.address,
-            latitude: spot.spotInfo.latitude,
-            longitude: spot.spotInfo.longitude,
-            hours: spot.spotInfo.hours,
-            avgRate: spot.spotInfo.avgRate,
+            phone: spot.spotInfo.phone ?? null,
+            address: spot.spotInfo.address ?? "",
+            latitude: spot.spotInfo.latitude ?? 0,
+            longitude: spot.spotInfo.longitude ?? 0,
+            hours: spot.spotInfo.hours ?? null,
+            avgRate: spot.spotInfo.avgRate ?? null,
           },
         });
       }
