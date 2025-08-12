@@ -66,7 +66,7 @@ export default function HomePage({ promisedResponse }: HomePageProps) {
           <p className="typo-medium py-10 text-center">추천 순례길이 없어요.</p>
         )}
       </section>
-      <section className="space-y-5 p-5">
+      <section className="p-5">
         <h2 className="typo-semibold">주변 관광지 추천</h2>
         <NearbyTouristSpotList />
       </section>
