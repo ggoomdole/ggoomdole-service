@@ -3,6 +3,7 @@ import Image from "next/image";
 
 import { SignUpForm } from "@/schemas/signup";
 
+import { Camera } from "lucide-react";
 import { UseFormReturn } from "react-hook-form";
 
 import FloatingButton from "../common/button/floating-button";
@@ -40,10 +41,6 @@ export default function ProfileStep({ form, onNext }: ProfileStepProps) {
     }
   };
 
-  const onClickNext = () => {
-    onNext();
-  };
-
   return (
     <>
       <main className="pb-with-floating-button flex flex-col p-5">
@@ -53,14 +50,17 @@ export default function ProfileStep({ form, onNext }: ProfileStepProps) {
             <br />
             정해주세요
           </h1>
-          <label htmlFor="profile-image">
+          <label htmlFor="profile-image" className="relative mx-auto w-max cursor-pointer">
             <Image
               src={previewImage || defaultProfile}
               alt="profile"
               width={200}
               height={200}
-              className="mx-auto aspect-square rounded-full object-cover"
+              className="border-main-700 mx-auto aspect-square rounded-full border object-cover"
             />
+            <div className="text-main-900 bg-main-100 border-main-700 absolute bottom-2.5 right-2.5 rounded-full border p-2">
+              <Camera />
+            </div>
           </label>
           <input
             type="file"
@@ -71,9 +71,7 @@ export default function ProfileStep({ form, onNext }: ProfileStepProps) {
           />
         </section>
       </main>
-      <FloatingButton onClick={onClickNext} disabled={!previewImage}>
-        다음
-      </FloatingButton>
+      <FloatingButton onClick={onNext}>다음</FloatingButton>
     </>
   );
 }

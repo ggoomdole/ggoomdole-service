@@ -8,7 +8,7 @@ export default function NearbyTouristSpotList() {
   const { data } = useGetNearbyTouristSpots();
 
   return data && data.data.length > 0 ? (
-    <div className="flex gap-5 overflow-x-auto">
+    <div className="flex gap-5 overflow-x-auto px-2 py-5">
       {data.data.map((tourist) => (
         <NearbyTouristSpotItem key={`tourist-spot-item-${tourist.title}`} {...tourist} />
       ))}
