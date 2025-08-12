@@ -1,4 +1,4 @@
-import type { NativeType } from "@/types/user";
+import { NativeType } from "@/constants/user";
 
 export interface KakaoLoginResponseDTO {
   userId: number;

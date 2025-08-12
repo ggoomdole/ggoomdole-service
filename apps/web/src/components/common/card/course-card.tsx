@@ -4,9 +4,9 @@ import Link from "next/link";
 import BronzeMedal from "@/assets/bronze-medal.svg";
 import GoldMedal from "@/assets/gold-medal.svg";
 import SilverMedal from "@/assets/silver-medal.svg";
+import { NativeType } from "@/constants/user";
 import { RoadResponseDTO } from "@/models/road";
 import { CategoryType } from "@/types/category";
-import type { NativeType } from "@/types/user";
 
 import CategoryChip from "../chip/category-chip";
 

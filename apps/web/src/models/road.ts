@@ -1,5 +1,5 @@
+import { NativeType } from "@/constants/user";
 import type { SpotProps } from "@/types/road";
-import type { NativeType } from "@/types/user";
 
 export interface RoadResponseDTO {
   roadId: number;

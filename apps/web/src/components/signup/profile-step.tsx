@@ -24,8 +24,6 @@ export default function ProfileStep({ form, onNext }: ProfileStepProps) {
     return null;
   });
 
-  const nextDisabled = !previewImage;
-
   const onFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
@@ -41,12 +39,6 @@ export default function ProfileStep({ form, onNext }: ProfileStepProps) {
       form.setValue("profileImage", file);
       setPreviewImage(URL.createObjectURL(file));
     }
-  };
-
-  const onClickNext = async () => {
-    const formData = new FormData();
-    formData.append("profile-image", form.getValues("profileImage"));
-    onNext();
   };
 
   return (
@@ -79,9 +71,7 @@ export default function ProfileStep({ form, onNext }: ProfileStepProps) {
           />
         </section>
       </main>
-      <FloatingButton onClick={onClickNext} disabled={nextDisabled}>
-        다음
-      </FloatingButton>
+      <FloatingButton onClick={onNext}>다음</FloatingButton>
     </>
   );
 }
