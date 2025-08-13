@@ -12,6 +12,8 @@ const pretendard = localFont({
   display: "swap",
 });
 
+export const runtime = "edge";
+
 export const metadata: Metadata = {
   title: "순례해유",
   description: "나만의 대전 순례길을 만들고 다른 사람들과 공유하세요.",
