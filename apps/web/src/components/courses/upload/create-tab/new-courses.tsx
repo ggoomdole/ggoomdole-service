@@ -10,29 +10,13 @@ interface NewCoursesProps {
   form: UseFormReturn<UploadCourseForm>;
 }
 
-const dummyNewCourses = [
-  {
-    placeName: "서울 타워",
-    reason: "서울 타워",
-    placeId: "1",
-  },
-  {
-    placeName: "서울 타워1",
-    reason: "서울 타워1",
-    placeId: "2",
-  },
-  {
-    placeName: "서울 타워2",
-    reason: "서울 타워2",
-    placeId: "3",
-  },
-];
-
 export default function NewCourses({ form }: NewCoursesProps) {
   const removeCourseIds = form.watch("removeCourseIds") || [];
-  const filteredCourses = dummyNewCourses.filter(
-    (course) => !removeCourseIds.includes(course.placeName)
-  );
+  // const filteredCourses = dummyNewCourses.filter(
+  //   (course) => !removeCourseIds.includes(course.placeName)
+  // );
+  const filteredCourses: UploadCourseForm["spots"] = [];
+
   const [newCourses, setNewCourses] = useState(filteredCourses);
   const [selectedCourseIds, setSelectedCourseIds] = useState<string[]>([]);
 
