@@ -25,6 +25,9 @@ export const uploadCourseFormSchema = z.object({
         placeName: z.string().min(1),
         reason: z.string().min(1),
         placeId: z.string().min(1),
+        address: z.string().min(1),
+        latitude: z.number(),
+        longitude: z.number(),
       })
     )
     .min(1),

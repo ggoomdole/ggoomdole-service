@@ -1,44 +1,57 @@
+"use client";
+
+import { useGetReviewsById } from "@/lib/tanstack/query/review";
+
+import { Loader2 } from "lucide-react";
+
 import RegisterReview from "./register-review";
 import ReviewItem from "./review-item";
 import StarRating from "../../common/star/star-rating";
 
-const dummyReviews = [
-  {
-    id: 1,
-    name: "똘병",
-    rating: 5,
-    content:
-      "여기 사람이 많아도 사람이 금방 금방 빠져서 별로 안기달렸어요. 대전에 일이 있어서 기차타고 왔는데 드디어 성심당빵을 먹었네요. 튀김소보로랑 성심 순 크림빵 진짜 맛있어요. 명란바게트는 비주얼때문에 안사먹었네요. 맛있어서 하루에 두번 방문했어요. 대전에 오면 또 방문하고 싶어요 ㅎㅎ",
-  },
-  {
-    id: 2,
-    name: "똘병",
-    rating: 5,
-    content:
-      "여기 사람이 많아도 사람이 금방 금방 빠져서 별로 안기달렸어요. 대전에 일이 있어서 기차타고 왔는데 드디어 성심당빵을 먹었네요. 튀김소보로랑 성심 순 크림빵 진짜 맛있어요. 명란바게트는 비주얼때문에 안사먹었네요. 맛있어서 하루에 두번 방문했어요. 대전에 오면 또 방문하고 싶어요 ㅎㅎ",
-  },
-];
+interface ReviewTabProps {
+  id: string;
+}
 
-export default function ReviewTab() {
+export default function ReviewTab({ id }: ReviewTabProps) {
+  const { data, isLoading, error } = useGetReviewsById(id);
+
+  const isNotFoundError = error?.message.includes("404");
+
+  let totalRating = 0;
+  if (data?.data) {
+    totalRating = data.data.reduce((acc, review) => acc + review.rate, 0);
+  }
+
   return (
     <section className="divide-main-100 divide-y-8">
       <div className="typo-medium flex flex-col items-center gap-2 py-2.5">
         <h3 className="text-gray-700">방문 후기를 남겨주세요!</h3>
-        <RegisterReview locationId="1" />
+        <RegisterReview locationId={id} />
       </div>
       <div className="space-y-2.5 p-5">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2.5">
-            <p className="typo-medium text-gray-700">4.3</p>
-            <StarRating rating={4.3} className="size-5" />
+        {isLoading ? (
+          <div className="flex flex-col items-center gap-2.5">
+            <Loader2 className="size-5 animate-spin text-gray-500" />
+            <p className="typo-regular text-gray-500">후기를 불러오는 중이에요.</p>
           </div>
-          <p className="typo-regular text-gray-500">후기 474</p>
-        </div>
-        <div className="space-y-2.5">
-          {dummyReviews.map((review) => (
-            <ReviewItem key={review.id} {...review} />
-          ))}
-        </div>
+        ) : isNotFoundError ? (
+          <div className="flex flex-col items-center gap-2.5">
+            <p className="typo-regular text-gray-500">아직 등록된 후기가 없어요.</p>
+          </div>
+        ) : (
+          <>
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2.5">
+                <p className="typo-medium text-gray-700">{totalRating / data!.data.length || 0}</p>
+                <StarRating rating={totalRating / data!.data.length || 0} className="size-5" />
+              </div>
+              <p className="typo-regular text-gray-500">후기 {data?.data.length}</p>
+            </div>
+            <div className="space-y-2.5">
+              {data?.data.map((review) => <ReviewItem key={review.spotId} {...review} />)}
+            </div>
+          </>
+        )}
       </div>
     </section>
   );

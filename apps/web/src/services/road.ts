@@ -8,7 +8,7 @@ export const uploadRoad = async (props: {
   formData: FormData;
   body: UploadRoadRequestDTO;
 }): Promise<BaseResponseDTO<UploadRoadResponseDTO>> => {
-  return clientApi.post("road", props.body, { body: props.formData });
+  return clientApi.post("road", { data: JSON.stringify(props.body) }, { body: props.formData });
 };
 
 export const checkRoadNameDuplicate = async (title: string): Promise<BaseResponseDTO<boolean>> => {

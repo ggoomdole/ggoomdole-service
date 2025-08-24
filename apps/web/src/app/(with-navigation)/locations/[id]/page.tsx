@@ -1,3 +1,4 @@
+import { LOCATION } from "@/constants/location";
 import LocationsPage from "@/page/locations/[id]";
 
 interface LocationPageProps {
@@ -9,9 +10,17 @@ interface LocationPageProps {
   }>;
 }
 
+const TMAP_API_KEY = process.env.NEXT_PUBLIC_TMAP_API_KEY;
+
 export default async function Locations({ params, searchParams }: LocationPageProps) {
   const { id } = await params;
   const { tab } = await searchParams;
 
-  return <LocationsPage id={id} tab={tab} />;
+  const res = await fetch(
+    `https://apis.openapi.sk.com/tmap/pois/${id}?findOption=id&version=1&appKey=${TMAP_API_KEY}`,
+    { next: { tags: [LOCATION.DETAIL, id] } }
+  );
+  const data = await res.json();
+
+  return <LocationsPage id={id} tab={tab} data={data} />;
 }

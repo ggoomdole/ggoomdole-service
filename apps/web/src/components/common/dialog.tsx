@@ -115,4 +115,4 @@ function DialogContent(props: React.HTMLAttributes<HTMLDivElement>) {
   );
 }
 
-export { Dialog, DialogTrigger, DialogContent, DialogClose };
+export { Dialog, DialogTrigger, DialogContent, DialogClose, useDialog };
