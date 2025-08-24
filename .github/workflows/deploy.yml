@@ -31,12 +31,9 @@ jobs:
 
             cd /home/ubuntu/ggoomdole-service/apps/api
 
+            ./cleanup.sh
+
             git pull origin dev
-            
-            # echo "$BE_ENV" > .env
-            
-            # pnpm install
-            # 임시 삭제
 
             npx prisma migrate deploy
             npx prisma generate
