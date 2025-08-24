@@ -7,7 +7,12 @@ import Button from "@/components/common/button";
 import { Dialog, DialogClose, DialogContent, DialogTrigger } from "@/components/common/dialog";
 import Header from "@/components/common/header";
 import { COURSE_CATEGORIES } from "@/constants/category";
-import { useCheckRoadNameDuplicate, useUploadRoad } from "@/lib/tanstack/mutation/road";
+import {
+  useCheckRoadNameDuplicate,
+  useUpdateRoad,
+  useUploadRoad,
+} from "@/lib/tanstack/mutation/road";
+import { useGetRequestSpots } from "@/lib/tanstack/query/spot";
 import { cn } from "@/lib/utils";
 import { UploadCourseForm } from "@/schemas/course";
 import { CoursePlaceProps } from "@/types/course";
@@ -44,6 +49,9 @@ export default function CreateTab({ id, form, isEditCourse, isPrivate }: CreateT
   const { mutateAsync: uploadRoad, isPending: isUploadingRoad } = useUploadRoad();
   const { mutateAsync: checkRoadNameDuplicate, isPending: isCheckingDuplicate } =
     useCheckRoadNameDuplicate();
+  const { mutateAsync: updateRoad, isPending: isUpdatingRoad } = useUpdateRoad();
+
+  const { data: requestSpots, isLoading: isLoadingRequestSpots } = useGetRequestSpots(id);
 
   const category = form.watch("category");
   const thumbnail = form.watch("thumbnail");
@@ -134,7 +142,6 @@ export default function CreateTab({ id, form, isEditCourse, isPrivate }: CreateT
   const onSubmit = form.handleSubmit(async (data) => {
     if (isPrivate) {
       // 비공개 순례길 수정 API
-    } else if (isEditCourse) {
       // 순례길 수정 API
     } else {
       const formData = new FormData();
@@ -157,7 +164,11 @@ export default function CreateTab({ id, form, isEditCourse, isPrivate }: CreateT
         spots,
       };
 
-      await uploadRoad({ formData, body });
+      if (isEditCourse && id) {
+        await updateRoad({ formData, body, roadId: id });
+      } else {
+        await uploadRoad({ formData, body });
+      }
     }
   });
 
@@ -273,7 +284,13 @@ export default function CreateTab({ id, form, isEditCourse, isPrivate }: CreateT
           ) : (
             <DefaultMode id={id} fields={fields} onChangeReason={onChangeReason} remove={remove} />
           )}
-          {isEditCourse && !isPrivate && <NewCourses form={form} />}
+          {isEditCourse && !isPrivate && (
+            <NewCourses
+              form={form}
+              requestSpots={requestSpots || []}
+              isLoadingRequestSpots={isLoadingRequestSpots}
+            />
+          )}
           {isEditCourse ? (
             <div className="flex gap-5 py-5">
               <Dialog>

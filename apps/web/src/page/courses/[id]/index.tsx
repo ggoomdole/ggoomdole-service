@@ -116,13 +116,28 @@ export default function CourseDetailPage({
 
   const router = useRouter();
 
+  const markers = data.spots.map((spot) => ({
+    detailBizName: spot.name,
+    id: spot.spotId,
+    name: spot.name,
+    newAddressList: {
+      newAddress: [
+        {
+          fullAddressRoad: spot.name,
+          frontLat: spot.latitude.toString(),
+          frontLon: spot.longitude.toString(),
+        },
+      ],
+    },
+  }));
+
   // 출/도착 선택했을 때 선택된 마커 모양 없애는 로직 추가하기
   const onClickMap = () => {
     setSelectedMarker(null);
   };
 
   const onClickMarker = (e: TMapMarkerClickEvent) => {
-    const selectedPoi = dummyCourses.find((poi) => poi.id === e._marker_data.options.title);
+    const selectedPoi = markers.find((poi) => poi.id === e._marker_data.options.title);
     setSelectedMarker({
       title: selectedPoi?.name || "",
       address: selectedPoi?.newAddressList.newAddress[0].fullAddressRoad || "",
@@ -241,7 +256,7 @@ export default function CourseDetailPage({
         <TransitRouteMap
           mapInstanceRef={mapInstanceRef}
           transitData={transitData}
-          markers={dummyCourses as TMapPoi[]}
+          markers={markers}
           isShowPathMode={isShowPathMode}
           onClickMap={onClickMap}
           onClickMarker={onClickMarker}

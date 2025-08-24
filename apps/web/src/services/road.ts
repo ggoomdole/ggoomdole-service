@@ -22,3 +22,15 @@ export const getAllRoads = async (props: {
   const params = getParams(props);
   return clientApi.get(`road?${params}`);
 };
+
+export const updateRoad = async (props: {
+  formData: FormData;
+  body: UploadRoadRequestDTO;
+  roadId: string;
+}): Promise<BaseResponseDTO<unknown>> => {
+  return clientApi.patch(
+    `road/${props.roadId}`,
+    { data: JSON.stringify(props.body) },
+    { body: props.formData }
+  );
+};

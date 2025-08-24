@@ -1,6 +1,6 @@
 import { useRouter } from "next/navigation";
 
-import { checkRoadNameDuplicate, uploadRoad } from "@/services/road";
+import { checkRoadNameDuplicate, updateRoad, uploadRoad } from "@/services/road";
 import { successToast } from "@/utils/toast";
 import { useMutation } from "@tanstack/react-query";
 
@@ -22,5 +22,21 @@ export const useUploadRoad = () => {
 export const useCheckRoadNameDuplicate = () => {
   return useMutation({
     mutationFn: checkRoadNameDuplicate,
+  });
+};
+
+export const useUpdateRoad = () => {
+  const router = useRouter();
+
+  return useMutation({
+    mutationFn: updateRoad,
+    onSuccess: (data) => {
+      console.log("updateRoad data", data);
+      successToast("순례길 수정이 완료되었어요.");
+      router.back();
+    },
+    onError: (error) => {
+      console.error(error);
+    },
   });
 };

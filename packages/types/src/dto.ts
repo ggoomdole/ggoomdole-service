@@ -1,117 +1,118 @@
 export interface RoadRequestDTO {
-    title: string;
-    intro: string;
-    categoryId: number;
-    spots: SpotDTO[];
+  title: string;
+  intro: string;
+  categoryId: number;
+  spots: SpotDTO[];
 }
 
 export interface RoadResponseDTO {
-    roadId: number;
-    title: string;
-    intro: string;
-    imageUrl: string | null;
-    public: boolean;
-    categoryId: number;
+  roadId: number;
+  title: string;
+  intro: string;
+  imageUrl: string | null;
+  public: boolean;
+  categoryId: number;
 
-    spots: SpotDTO[];
-    participants: ParticipantDTO[];
+  spots: SpotDTO[];
+  participants: ParticipantDTO[];
 
-    createAt: Date;
-    updateAt: Date;
+  createAt: Date;
+  updateAt: Date;
 }
 
 export interface SpotDTO {
-    spotId: string;
-    number: number;
-    introSpot: string;
-    name: string;
-    address: string;
-    latitude: number;
-    longitude: number;
-    phone?: string;
-    hours?: string;
-    avgRate?: number;
+  spotId: string;
+  number: number;
+  introSpot: string;
+  name: string;
+  address: string;
+  latitude: number;
+  longitude: number;
+  phone?: string;
+  hours?: string;
+  avgRate?: number;
 }
 
 export interface ParticipantDTO {
-    userId: number;
-    type: boolean;
+  userId: number;
+  type: boolean;
 }
-
 
 export interface RoadListResponseDTO {
-    roadId: number;
-    title: string;
-    intro: string;
-    imageUrl: string | null;
-    categoryId: number;
-    participants: number;
-    native?: Native | null;
+  roadId: number;
+  title: string;
+  intro: string;
+  imageUrl: string | null;
+  categoryId: number;
+  participants: number;
+  native?: Native | null;
 }
 
-export type Native = 'SHORT_TERM' | 'MID_TERM' | 'LONG_TERM' | 'RESIDENT';
+export type Native = "SHORT_TERM" | "MID_TERM" | "LONG_TERM" | "RESIDENT";
 
 export interface OneRoadResponseDTO {
-    roadId: number;
-    title: string;
-    intro: string;
-    imageUrl: string | null;
-    categoryId: number;
-    spots: SpotReviewDTO[];
+  roadId: number;
+  title: string;
+  intro: string;
+  imageUrl: string | null;
+  categoryId: number;
+  spots: SpotReviewDTO[];
 }
 
 export interface SpotReviewDTO {
-    spotId: string;
-    name: string;
-    number: number;
-    introSpot: string;
-    avgReview: string;
-    numReview: string;
+  spotId: string;
+  name: string;
+  number: number;
+  introSpot: string;
+  avgReview: string;
+  numReview: string;
+  latitude: number;
+  longitude: number;
 }
 
 export interface ReviewCreateDTO {
-    spotId: string;
-    content: string;
-    rate: number;
-    imageUrl?: string;
+  spotId: string;
+  content: string;
+  rate: number;
+  imageUrl?: string;
 }
 
 export interface ReviewCheckDTO {
-    spotId: string;
-    content: string;
-    rate: number;
-    imageUrl?: string;
+  spotId: string;
+  content: string;
+  rate: number;
+  imageUrl?: string;
 }
 
 export interface SpotReqDTO {
-    roadId: number; 
-    spots: addSpotDTO[];
+  roadId: number;
+  spots: addSpotDTO[];
 }
 
 export interface addSpotDTO {
-    spotId: string;
-    addNumber: number;
-    addReason: string;
-    spotInfo: {
-        name: string;
-        phone?: string;
-        address: string;
-        latitude: number;
-        longitude: number;
-        hours?: string;
-        avgRate?: number;
-    };
+  spotId: string;
+  addNumber: number;
+  addReason: string;
+  spotInfo: {
+    name: string;
+    phone?: string;
+    address: string;
+    latitude: number;
+    longitude: number;
+    hours?: string;
+    avgRate?: number;
+  };
 }
 
 export interface DataSpotDTO {
-    title: string;
-    image: string | null;
-    address: string;
-    rating: number;
+  title: string;
+  image: string | null;
+  address: string;
+  rating: number;
 }
 
 export interface userInfoDTO {
-    nickName: string;
-    profileImage: string;
-    native: string;
+  nickName: string;
+  profileImage: string;
+  native: string;
 }

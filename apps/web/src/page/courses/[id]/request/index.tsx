@@ -1,7 +1,11 @@
 "use client";
 
+import { Usable } from "react";
+
 import FindByMapTab from "@/components/common/map/find-by-map-tab";
 import RequestTab from "@/components/courses/request/request-tab";
+import { BaseResponseDTO } from "@/models";
+import { RoadResponseDTO } from "@/models/road";
 import { RequestCourseForm, requestCourseFormSchema } from "@/schemas/course";
 import { zodResolver } from "@hookform/resolvers/zod";
 
@@ -11,9 +15,15 @@ interface CourseRequestPageProps {
   id: string;
   tab: string;
   word: string;
+  promisedResponse: Usable<BaseResponseDTO<RoadResponseDTO>>;
 }
 
-export default function CourseRequestPage({ id, tab, word }: CourseRequestPageProps) {
+export default function CourseRequestPage({
+  id,
+  tab,
+  word,
+  promisedResponse,
+}: CourseRequestPageProps) {
   const form = useForm<RequestCourseForm>({
     mode: "onChange",
     resolver: zodResolver(requestCourseFormSchema),
@@ -33,6 +43,6 @@ export default function CourseRequestPage({ id, tab, word }: CourseRequestPagePr
         <FindByMapTab query={word} tab={tab} currentPlaces={currentPlaces} onSelectPlace={append} />
       );
     default:
-      return <RequestTab id={id} query={word} form={form} />;
+      return <RequestTab id={id} query={word} form={form} promisedResponse={promisedResponse} />;
   }
 }
