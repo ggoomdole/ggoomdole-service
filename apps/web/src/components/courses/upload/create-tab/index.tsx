@@ -144,8 +144,11 @@ export default function CreateTab({ id, form, isEditCourse, isPrivate }: CreateT
       const spots = data.spots.map((spot, index) => ({
         number: index + 1,
         spotId: spot.placeId,
-        spotName: spot.placeName,
+        name: spot.placeName,
         introSpot: spot.reason,
+        address: spot.address,
+        latitude: spot.latitude,
+        longitude: spot.longitude,
       }));
       const body = {
         title: data.title,

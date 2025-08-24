@@ -1,5 +1,6 @@
 import { NativeType } from "@/constants/user";
 import type { SpotProps } from "@/types/road";
+import { SpotReviewDTO } from "@repo/types";
 
 export interface RoadResponseDTO {
   roadId: number;
@@ -9,6 +10,7 @@ export interface RoadResponseDTO {
   categoryId: number;
   participants: number;
   native: NativeType;
+  spots: SpotReviewDTO[];
 }
 
 export interface SearchRoadResponseDTO {

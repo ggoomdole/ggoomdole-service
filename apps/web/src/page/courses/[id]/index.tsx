@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { Usable, use, useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -14,6 +14,8 @@ import Header from "@/components/common/header";
 import TransitRouteMap from "@/components/common/map/transit-route-map";
 import FloatingActionButton from "@/components/courses/floating-action-button";
 import RouteItem from "@/components/courses/route-item";
+import { BaseResponseDTO } from "@/models";
+import { RoadResponseDTO } from "@/models/road";
 import type { TMap, TMapMarkerClickEvent, TMapPoi, TMapTransitResponse } from "@/types/tmap";
 import { getParams } from "@/utils/params";
 import { formatDistance, formatTime } from "@/utils/time";
@@ -31,6 +33,7 @@ interface CourseDetailPageProps {
   id: string;
   start: string;
   end: string;
+  promisedResponse: Usable<BaseResponseDTO<RoadResponseDTO>>;
 }
 
 const DEFAULT_THUMBNAIL = "/static/default-thumbnail.png";
@@ -91,7 +94,14 @@ const SummarySection = ({
   );
 };
 
-export default function CourseDetailPage({ id, start, end }: CourseDetailPageProps) {
+export default function CourseDetailPage({
+  id,
+  start,
+  end,
+  promisedResponse,
+}: CourseDetailPageProps) {
+  const { data } = use(promisedResponse);
+
   const mapInstanceRef = useRef<TMap | null>(null);
   const [selectedMarker, setSelectedMarker] = useState<LocationProps | null>(null);
   const [transitData, setTransitData] = useState<TMapTransitResponse | null>(null);
@@ -213,10 +223,16 @@ export default function CourseDetailPage({ id, start, end }: CourseDetailPagePro
           "길찾기"
         ) : (
           <div className="flex items-center gap-2.5">
-            <div className="aspect-square size-10 shrink-0 rounded-sm bg-gray-300" />
+            <Image
+              src={data.imageUrl || DEFAULT_THUMBNAIL}
+              alt={data.title}
+              width={40}
+              height={40}
+              className="aspect-square shrink-0 rounded-sm"
+            />
             <div className="space-y-1 text-start">
-              <h1 className="typo-semibold line-clamp-1">카스의 빵지순례</h1>
-              <p className="typo-regular line-clamp-1">빵을 좋아하는 사람이라면 누구나!</p>
+              <h1 className="typo-semibold line-clamp-1">{data.title}</h1>
+              <p className="typo-regular line-clamp-1">{data.intro}</p>
             </div>
           </div>
         )}
@@ -234,7 +250,7 @@ export default function CourseDetailPage({ id, start, end }: CourseDetailPagePro
         {isSearchMode && (
           <section className="bg-main-300 absolute w-full space-y-2.5 p-5">
             <div className="flex items-center justify-between gap-2.5">
-              <p className="typo-semibold line-clamp-1">카스의 빵지순례</p>
+              <p className="typo-semibold line-clamp-1">{data.title}</p>
               <button onClick={() => onClearDestination()}>
                 <Close className="shrink-0" />
               </button>

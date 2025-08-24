@@ -4,7 +4,12 @@ import Clock from "@/assets/clock.svg";
 import MapPin from "@/assets/map-pin.svg";
 import Phone from "@/assets/phone.svg";
 import { cn } from "@/lib/utils";
+import { GetDetailPOIDTO } from "@/models/tmap";
 import { errorToast, successToast } from "@/utils/toast";
+
+interface HomeTabProps {
+  data: GetDetailPOIDTO;
+}
 
 const getOperatingHours = (str: string): string[] | null => {
   const operatingHours = str.split("[").filter((a) => a.includes("영업시간"))[0];
@@ -107,7 +112,7 @@ const getOperatingStatusColor = (status: "영업 중" | "브레이크 타임" | 
   }
 };
 
-export default function HomeTab() {
+export default function HomeTab({ data }: HomeTabProps) {
   const onCopy = (e: React.MouseEvent, text: string) => {
     e.stopPropagation();
 
@@ -117,22 +122,17 @@ export default function HomeTab() {
     navigator.clipboard.writeText(text).then(defaultSuccess).catch(defaultFailure);
   };
 
-  // data에서 additionalInfo를 이용해서 파싱하기
-  const str = "[영업시간]매일 08:00~22:00;공휴일 08:00~22:00;[좌석수]200;";
-  const operatingHours = getOperatingHours(str);
+  const operatingHours = getOperatingHours(data.poiDetailInfo.additionalInfo);
 
   return (
     <section className="typo-regular space-y-2.5 px-5 py-2.5">
       <div className="flex items-center gap-2.5">
         <MapPin className="size-5" />
         <div className="flex gap-1">
-          {/* 
-            data의 bldAddr, bldNo1, bldNo2 join 해서 표시하기
-           */}
-          <p>대전광역시 동구 중앙로 215 대전역사 2F</p>
+          <p>{data.poiDetailInfo.bldAddr}</p>
           <button
             className="text-gray-500 underline"
-            onClick={(e) => onCopy(e, "대전광역시 동구 중앙로 215 대전역사 2F")}
+            onClick={(e) => onCopy(e, data.poiDetailInfo.bldAddr)}
           >
             복사
           </button>
@@ -141,14 +141,15 @@ export default function HomeTab() {
       <div className="flex items-center gap-2.5">
         <Phone className="size-5" />
         <div className="flex gap-1">
-          {/* 
-            data의 tel 사용하기
-            없다면 없다고 표시하고 복사 버튼 없애기
-           */}
-          <p>042-220-2138</p>
-          <button className="text-gray-500 underline" onClick={(e) => onCopy(e, "042-220-2138")}>
-            복사
-          </button>
+          <p>{data.poiDetailInfo.tel || "정보가 없어요."}</p>
+          {data.poiDetailInfo.tel && (
+            <button
+              className="text-gray-500 underline"
+              onClick={(e) => onCopy(e, data.poiDetailInfo.tel)}
+            >
+              복사
+            </button>
+          )}
         </div>
       </div>
       <div className="flex gap-2.5">

@@ -14,6 +14,8 @@ interface LocationProps {
   title: string;
   address: string;
   id: string;
+  latitude: number;
+  longitude: number;
 }
 
 interface FindByMapTabProps {
@@ -54,6 +56,8 @@ export default function FindByMapTab({
       title: selectedPoi?.name || "",
       address: selectedPoi?.newAddressList.newAddress[0].fullAddressRoad || "",
       id: selectedPoi?.id || "",
+      latitude: Number(selectedPoi?.newAddressList.newAddress[0].frontLat) || 0,
+      longitude: Number(selectedPoi?.newAddressList.newAddress[0].frontLon) || 0,
     });
   };
 
@@ -70,6 +74,9 @@ export default function FindByMapTab({
       placeName: selectedMarker.title,
       placeId: selectedMarker.id,
       reason: "",
+      address: selectedMarker.address,
+      latitude: selectedMarker.latitude,
+      longitude: selectedMarker.longitude,
     });
     setSelectedMarker(null);
 
