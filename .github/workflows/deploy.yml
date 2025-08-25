@@ -31,8 +31,6 @@ jobs:
 
             cd /home/ubuntu/ggoomdole-service/apps/api
 
-            ./cleanup.sh
-
             git pull origin dev
 
             npx prisma migrate deploy
