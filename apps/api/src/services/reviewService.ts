@@ -1,5 +1,5 @@
 import { PutObjectCommand } from '@aws-sdk/client-s3';
-import { ReviewCheckDTO, ReviewCreateDTO, AllReviewCheckDTO } from '@repo/types';
+import { AllReviewCheckDTO,ReviewCheckDTO, ReviewCreateDTO } from '@repo/types';
 
 import s3 from '../config/s3-config';
 import reviewRepository from '../repositories/reviewRepository';

@@ -365,12 +365,12 @@ class RoadService {
 // 평균 평점 숫자 조정
 function averageRateStr(spot: any): string {
   const avg = averageRate(spot);
-  return avg ? avg.toFixed(1) : "0.0";
+  return (avg ?? 0).toFixed(1);
 }
 
 // 평균 평점 계산
 export function averageRate(spot: any): number {
-  const reviews = spot?.place?.reviews ?? [];
+  const reviews = spot?.spot?.reviews ?? [];
   const rates = reviews
     .filter((r: any) => r.rate !== null && r.rate !== undefined)
     .map((r: any) => r.rate);
