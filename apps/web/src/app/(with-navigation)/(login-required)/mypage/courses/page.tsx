@@ -32,7 +32,7 @@ export default async function MyCourses({ searchParams }: MyCoursesProps) {
     <>
       <Header>나만의 순례길</Header>
       <Suspense fallback={<Fallback text="나만의 순례길을 불러오는 중..." />}>
-        <MyCoursesPage category={category} promisedReponse={promisedReponse} />
+        <MyCoursesPage promisedReponse={promisedReponse} />
       </Suspense>
     </>
   );

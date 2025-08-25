@@ -10,7 +10,7 @@ const API_TIMEOUT = 10000; // 10초
 export const serverApi = {
   async get<T>(endpoint: string, options?: RequestInit): Promise<T> {
     const url = `${API_BASE_URL}/${endpoint}`;
-    const token = await getCookie("accessToken");
+    const token = await getCookie("jwtToken");
     const response = await fetch(url, {
       ...options,
       headers: {
@@ -29,7 +29,7 @@ export const serverApi = {
 
   async post<T>(endpoint: string, data?: unknown, options?: RequestInit): Promise<T> {
     const url = `${API_BASE_URL}/${endpoint}`;
-    const token = await getCookie("accessToken");
+    const token = await getCookie("jwtToken");
     const response = await fetch(url, {
       method: "POST",
       headers: {
@@ -50,7 +50,7 @@ export const serverApi = {
 
   async put<T>(endpoint: string, data?: unknown, options?: RequestInit): Promise<T> {
     const url = `${API_BASE_URL}/${endpoint}`;
-    const token = await getCookie("accessToken");
+    const token = await getCookie("jwtToken");
     const response = await fetch(url, {
       method: "PUT",
       headers: {
@@ -71,7 +71,7 @@ export const serverApi = {
 
   async delete<T>(endpoint: string, options?: RequestInit): Promise<T> {
     const url = `${API_BASE_URL}/${endpoint}`;
-    const token = await getCookie("accessToken");
+    const token = await getCookie("jwtToken");
     const response = await fetch(url, {
       method: "DELETE",
       headers: {
@@ -102,7 +102,7 @@ const clientKy = ky.create({
     beforeRequest: [
       async (request) => {
         // 클라이언트측에서 필요한 헤더 추가 (예: 인증 토큰)
-        const token = await getCookie("accessToken");
+        const token = await getCookie("jwtToken");
         if (token) {
           request.headers.set("Authorization", `Bearer ${token}`);
         }
@@ -113,7 +113,7 @@ const clientKy = ky.create({
         // 응답 처리 로직 (예: 토큰 갱신)
         if (response.status === 401) {
           // 토큰 만료 처리
-          deleteCookie("accessToken");
+          deleteCookie("jwtToken");
           window.location.href = "/home";
         }
         return response;

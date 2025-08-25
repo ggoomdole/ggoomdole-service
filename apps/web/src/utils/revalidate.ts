@@ -1,7 +1,11 @@
 "use server";
 
-import { revalidateTag } from "next/cache";
+import { revalidatePath as nextRevalidatePath, revalidateTag } from "next/cache";
 
 export const revalidateTags = async (tags: string[]) => {
   tags.forEach((tag) => revalidateTag(tag));
+};
+
+export const revalidatePath = async (path: string) => {
+  nextRevalidatePath(path);
 };
