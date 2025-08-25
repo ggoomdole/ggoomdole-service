@@ -25,3 +25,12 @@ export const getRequestSpots = async (
 ): Promise<BaseResponseDTO<RequestSpotResponseDTO[]>> => {
   return clientApi.get(`spot/add/check/${roadId}`);
 };
+
+export const updateRequestSpots = async (props: {
+  roadId: string;
+  approve: string[];
+  reject: string[];
+}): Promise<BaseResponseDTO<unknown>> => {
+  const { roadId, ...restProps } = props;
+  return clientApi.patch(`spot/add/accept/${roadId}`, restProps);
+};

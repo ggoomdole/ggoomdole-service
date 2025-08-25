@@ -12,7 +12,6 @@ import {
   useUpdateRoad,
   useUploadRoad,
 } from "@/lib/tanstack/mutation/road";
-import { useGetRequestSpots } from "@/lib/tanstack/query/spot";
 import { cn } from "@/lib/utils";
 import { UploadCourseForm } from "@/schemas/course";
 import { CoursePlaceProps } from "@/types/course";
@@ -50,8 +49,6 @@ export default function CreateTab({ id, form, isEditCourse, isPrivate }: CreateT
   const { mutateAsync: checkRoadNameDuplicate, isPending: isCheckingDuplicate } =
     useCheckRoadNameDuplicate();
   const { mutateAsync: updateRoad, isPending: isUpdatingRoad } = useUpdateRoad();
-
-  const { data: requestSpots, isLoading: isLoadingRequestSpots } = useGetRequestSpots(id);
 
   const category = form.watch("category");
   const thumbnail = form.watch("thumbnail");
@@ -284,13 +281,7 @@ export default function CreateTab({ id, form, isEditCourse, isPrivate }: CreateT
           ) : (
             <DefaultMode id={id} fields={fields} onChangeReason={onChangeReason} remove={remove} />
           )}
-          {isEditCourse && !isPrivate && (
-            <NewCourses
-              form={form}
-              requestSpots={requestSpots || []}
-              isLoadingRequestSpots={isLoadingRequestSpots}
-            />
-          )}
+          {isEditCourse && !isPrivate && <NewCourses id={id || ""} />}
           {isEditCourse ? (
             <div className="flex gap-5 py-5">
               <Dialog>

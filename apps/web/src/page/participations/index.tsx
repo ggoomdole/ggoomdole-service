@@ -29,7 +29,6 @@ const SORT_OPTIONS = COURSE_CATEGORIES.map((category) => ({
 
 export default function ParticipationsPage({ promisedReponse }: ParticipationsPageProps) {
   const { data } = use(promisedReponse);
-  console.log(data);
 
   return (
     <main>

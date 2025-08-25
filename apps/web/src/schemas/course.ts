@@ -21,7 +21,6 @@ export const uploadCourseFormSchema = z.object({
   category: z.string().min(1),
   intro: z.string().min(1),
   spots: z.array(courseSchema).min(1),
-  removeCourseIds: z.array(z.string()).optional(),
 });
 
 export type UploadCourseForm = z.infer<typeof uploadCourseFormSchema>;

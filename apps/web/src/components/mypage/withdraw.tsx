@@ -11,9 +11,7 @@ import { DialogClose, DialogContent } from "../common/dialog";
 
 export default function Withdraw() {
   const [isPending, setIsPending] = useState(false);
-  const { mutateAsync: withdraw, isPending: isWithdrawPending } = useWithdraw();
-
-  const buttonDisabled = isPending || isWithdrawPending;
+  const { mutateAsync: withdraw } = useWithdraw();
 
   const onWithdraw = async () => {
     setIsPending(true);
@@ -39,12 +37,12 @@ export default function Withdraw() {
       </p>
       <div className="flex gap-2.5">
         <DialogClose
-          disabled={buttonDisabled}
+          disabled={isPending}
           className="typo-semibold from-main-700 to-main-900 flex-1 rounded-xl bg-gradient-to-r py-5 text-white disabled:from-gray-100 disabled:to-gray-100 disabled:text-gray-300"
         >
           취소
         </DialogClose>
-        <Button className="flex-1" variant="warning" onClick={onWithdraw} disabled={buttonDisabled}>
+        <Button className="flex-1" variant="warning" onClick={onWithdraw} disabled={isPending}>
           탈퇴
         </Button>
       </div>

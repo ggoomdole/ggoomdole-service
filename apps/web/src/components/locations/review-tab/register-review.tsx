@@ -96,7 +96,7 @@ function RegisterReviewDialogContent({ locationId }: RegisterReviewProps) {
       close();
       reset();
     } catch (error) {
-      console.log(error);
+      console.error(error);
     }
   };
 
