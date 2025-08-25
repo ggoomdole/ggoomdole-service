@@ -34,3 +34,10 @@ export const updateRoad = async (props: {
     { body: props.formData }
   );
 };
+
+export const getMyCustomRoads = async (
+  categoryId: string
+): Promise<BaseResponseDTO<RoadResponseDTO[]>> => {
+  const params = getParams({ categoryId });
+  return clientApi.get(`road/custom?${params}`);
+};

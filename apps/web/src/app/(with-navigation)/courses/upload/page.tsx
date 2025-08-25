@@ -1,11 +1,10 @@
 import { Suspense } from "react";
 
+import Fallback from "@/components/common/fallback";
 import { BaseResponseDTO } from "@/models";
 import UploadCoursePage from "@/page/courses/upload";
 import { serverApi } from "@/services/api";
 import { RoadResponseDTO } from "@repo/types";
-
-import { Loader2 } from "lucide-react";
 
 interface UploadCourseProps {
   searchParams: Promise<{
@@ -28,14 +27,7 @@ export default async function UploadCourse({ searchParams }: UploadCourseProps) 
   }
 
   return (
-    <Suspense
-      fallback={
-        <main className="flex flex-col items-center justify-center">
-          <Loader2 className="size-8 animate-spin text-gray-500" />
-          <p className="typo-medium mt-4 text-gray-500">순례길 정보를 불러오는 중...</p>
-        </main>
-      }
-    >
+    <Suspense fallback={<Fallback text="순례길 정보를 불러오는 중..." />}>
       <UploadCoursePage {...resolvedSearchParams} promisedResponse={promisedReponse} />
     </Suspense>
   );

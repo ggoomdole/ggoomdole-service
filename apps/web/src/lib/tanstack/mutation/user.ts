@@ -1,4 +1,9 @@
-import { checkNicknameDuplicate, signup, uploadProfileImage } from "@/services/user";
+import {
+  checkNicknameDuplicate,
+  signup,
+  updateUserNickname,
+  uploadProfileImage,
+} from "@/services/user";
 import { useMutation } from "@tanstack/react-query";
 
 export const useUploadProfileImage = () => {
@@ -16,5 +21,11 @@ export const useCheckNicknameDuplicate = () => {
 export const useSignup = () => {
   return useMutation({
     mutationFn: signup,
+  });
+};
+
+export const useUpdateUserNickname = () => {
+  return useMutation({
+    mutationFn: updateUserNickname,
   });
 };
