@@ -78,6 +78,16 @@ export interface ReviewCreateDTO {
 }
 
 export interface ReviewCheckDTO {
+  reviewId: number;
+  userId: number;
+  nickname: string;
+  spotId: string;
+  content: string;
+  rate: number;
+  imageUrl?: string;
+}
+
+export interface AllReviewCheckDTO {
   spotId: string;
   content: string;
   rate: number;
