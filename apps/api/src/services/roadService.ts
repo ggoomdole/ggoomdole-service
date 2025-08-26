@@ -318,6 +318,7 @@ class RoadService {
         numReview: spot.spot.reviews.length.toString(),
         latitude: spot.spot.latitude,
         longitude: spot.spot.longitude,
+        address: spot.spot.address,
       })),
     };
   }
