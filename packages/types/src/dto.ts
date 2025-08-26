@@ -5,10 +5,6 @@ export interface RoadRequestDTO {
   spots: SpotDTO[];
 }
 
-export interface MyRoadRequestDTO extends RoadRequestDTO {
-  imageUrl: string | null;
-}
-
 export interface RoadResponseDTO {
   roadId: number;
   title: string;

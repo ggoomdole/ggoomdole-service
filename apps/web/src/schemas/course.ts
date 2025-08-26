@@ -17,8 +17,8 @@ export type RequestCourseForm = z.infer<typeof requestCourseFormSchema>;
 
 export const uploadCourseFormSchema = z.object({
   title: z.string().min(1),
-  thumbnail: z.instanceof(File),
-  category: z.string().min(1),
+  imageUrl: z.instanceof(File).nullable().optional(),
+  categoryId: z.number(),
   intro: z.string().min(1),
   spots: z.array(courseSchema).min(1),
 });

@@ -122,21 +122,6 @@ class RoadRepository {
     });
   }
 
-  async checkIsExists(title: string, userId: number) {
-    return await prisma.pilgrimage.findFirst({
-      where: {
-        title,
-        participants: {
-          some: {
-            userId,
-            type: true,
-          },
-        },
-        public: false,
-      },
-    });
-  }
-
   async updateRoad(roadId: number, data: Partial<RoadRequestDTO & { imageUrl?: string }>) {
     return await prisma.$transaction(async (tx) => {
       // 기존 데이터 업데이트

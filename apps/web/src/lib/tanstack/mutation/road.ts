@@ -1,8 +1,12 @@
 import { useRouter } from "next/navigation";
 
-import { checkRoadNameDuplicate, updateRoad, uploadRoad } from "@/services/road";
+import { ROAD } from "@/constants/road";
+import { checkRoadNameDuplicate, createMyRoad, updateRoad, uploadRoad } from "@/services/road";
+import { revalidateTags } from "@/utils/revalidate";
 import { successToast } from "@/utils/toast";
 import { useMutation } from "@tanstack/react-query";
+
+import { invalidateQueries } from "..";
 
 export const useUploadRoad = () => {
   const router = useRouter();
@@ -11,10 +15,9 @@ export const useUploadRoad = () => {
     mutationFn: uploadRoad,
     onSuccess: () => {
       successToast("순례길 생성이 완료되었어요.");
+      invalidateQueries([ROAD.ALL_ROADS]);
+      revalidateTags([ROAD.PARTICIPATIONS]);
       router.push("/courses");
-    },
-    onError: (error) => {
-      console.error(error);
     },
   });
 };
@@ -30,10 +33,25 @@ export const useUpdateRoad = () => {
 
   return useMutation({
     mutationFn: updateRoad,
-    onSuccess: (data) => {
-      console.log("updateRoad data", data);
+    onSuccess: () => {
       successToast("순례길 수정이 완료되었어요.");
+      invalidateQueries([ROAD.ALL_ROADS]);
+      revalidateTags([ROAD.PARTICIPATIONS]);
       router.back();
+    },
+  });
+};
+
+export const useCreateMyRoad = () => {
+  return useMutation({
+    mutationFn: createMyRoad,
+    onSuccess: (data) => {
+      successToast("커스텀 순례길 생성이 완료되었어요.");
+      console.log(data);
+      // successToast("커스텀 순례길 생성이 완료되었어요.");
+      // invalidateQueries([ROAD.ALL_ROADS]);
+      // revalidateTags([ROAD.PARTICIPATIONS]);
+      // router.push("/courses");
     },
     onError: (error) => {
       console.error(error);

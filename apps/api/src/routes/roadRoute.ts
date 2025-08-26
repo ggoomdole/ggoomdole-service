@@ -13,7 +13,7 @@ router.get("/", roadController.loadAllRoad);
 router.post("/", authenticate, upload.single("road-image"), roadController.createRoad);
 
 router.get("/custom", authenticate, roadController.loadCustom);
-router.post("/custom", authenticate, roadController.createMyRoad);
+router.post("/custom", authenticate, upload.single("road-image"), roadController.createMyRoad);
 
 router.get("/recommend", roadController.loadPapularRoad);
 router.get("/participation", authenticate, roadController.loadParticipation);

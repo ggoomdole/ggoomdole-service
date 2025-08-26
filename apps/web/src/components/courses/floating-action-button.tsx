@@ -39,6 +39,8 @@ export default function FloatingActionButton({ id }: FloatingActionButtonProps) 
   const onClick = (value: (typeof ACTION_BUTTONS)[number]["value"]) => {
     if (value === "request") {
       router.push(`/courses/${id}/request`);
+    } else if (value === "my-course") {
+      router.push(`/courses/upload?id=${id}&view=replicate`);
     }
   };
 

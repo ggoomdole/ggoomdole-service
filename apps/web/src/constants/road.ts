@@ -3,4 +3,5 @@ export const ROAD = {
   DETAIL: "detail",
   MY_CUSTOM_ROADS: "my-custom-roads",
   PARTICIPATIONS: "participations",
+  RECOMMEND: "recommend",
 };

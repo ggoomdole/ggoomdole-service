@@ -15,14 +15,14 @@ interface UploadCoursePageProps {
   tab: string;
   word: string;
   id: string;
-  view: "private";
+  view: "private" | "replicate";
   promisedResponse: Usable<BaseResponseDTO<RoadResponseDTO>> | undefined;
 }
 
 const DEFAULT_VALUES = {
   title: "",
-  thumbnail: undefined,
-  category: "",
+  imageUrl: null,
+  categoryId: 0,
   intro: "",
   spots: [],
   removeCourseIds: [],
@@ -38,12 +38,14 @@ export default function UploadCoursePage({
 }: UploadCoursePageProps) {
   const isEditCourse = !!id;
   const isPrivate = view === "private";
+  const isReplicate = view === "replicate";
 
   const defaultValues = (() => {
     if (promisedResponse) {
       const { data } = use(promisedResponse);
       return {
         ...data,
+        imageUrl: data.imageUrl ? new File([], data.imageUrl) : null,
         spots: data.spots.map((spot) => ({
           placeId: spot.spotId,
           placeName: spot.name,
@@ -81,6 +83,14 @@ export default function UploadCoursePage({
         />
       );
     default:
-      return <CreateTab id={id} form={form} isEditCourse={isEditCourse} isPrivate={isPrivate} />;
+      return (
+        <CreateTab
+          id={id}
+          form={form}
+          isEditCourse={isEditCourse}
+          isPrivate={isPrivate}
+          isReplicate={isReplicate}
+        />
+      );
   }
 }
