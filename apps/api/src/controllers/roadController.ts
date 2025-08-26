@@ -54,7 +54,7 @@ class RoadController {
   async createMyRoad(req: Request, res: Response, next: NextFunction) {
     try {
       const userId = req.user.userId;
-      const dto = JSON.parse(req.body.data) as MyRoadRequestDTO;
+      const dto = req.body as MyRoadRequestDTO;
 
       if (!isAddRoadDTO(dto)) {
         throw new BadRequestError("요청 형식이 잘못되었습니다.");
