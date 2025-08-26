@@ -28,6 +28,7 @@ function SortDrawerWithoutSuspense({ options, className }: SortDrawerProps) {
   const onSortChange = (value: string) => {
     const defaultParams: Record<string, string> = {};
     for (const [key, value] of searchParams.entries()) {
+      if (key === "sort") continue;
       defaultParams[key] = value;
     }
     const params = getParams(defaultParams, { sort: value });

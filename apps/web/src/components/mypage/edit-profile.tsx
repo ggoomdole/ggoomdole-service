@@ -1,21 +1,46 @@
 "use client";
 
-import { useState } from "react";
+import { useContext, useState } from "react";
 import Image from "next/image";
 
 import Camera from "@/assets/camera.svg";
 import Close from "@/assets/close.svg";
-import { infoToast } from "@/utils/toast";
+import { USER } from "@/constants/user";
+import {
+  useCheckNicknameDuplicate,
+  useUpdateUserNickname,
+  useUploadProfileImage,
+} from "@/lib/tanstack/mutation/user";
+import { revalidateTags } from "@/utils/revalidate";
+import { infoToast, successToast } from "@/utils/toast";
 
+import { MypageContext } from "../../context/mypage-context";
 import Button from "../common/button";
-import { DialogClose, DialogContent } from "../common/dialog";
-
-const defaultProfileImage = "/static/default-profile.png";
+import { DialogClose, DialogContent, useDialog } from "../common/dialog";
 
 export default function EditProfile() {
+  const { nickname: initialNickname, profileImage: initialProfileImage } =
+    useContext(MypageContext);
   const [profileImage, setProfileImage] = useState<File | null>(null);
-  const [previewImage, setPreviewImage] = useState("");
-  const [nickname, setNickname] = useState("");
+  const [previewImage, setPreviewImage] = useState(initialProfileImage);
+  const [nickname, setNickname] = useState(initialNickname || "");
+  const [isNicknameChecked, setIsNicknameChecked] = useState(true);
+
+  const { close } = useDialog();
+
+  const { mutateAsync: checkNicknameDuplicate, isPending: isCheckingNickname } =
+    useCheckNicknameDuplicate();
+  const { mutateAsync: updateUserNickname, isPending: isUpdatingNickname } =
+    useUpdateUserNickname();
+  const { mutateAsync: uploadProfileImage, isPending: isUploadingProfileImage } =
+    useUploadProfileImage();
+
+  const submitDisabled =
+    !nickname.trim() ||
+    !isNicknameChecked ||
+    isCheckingNickname ||
+    isUpdatingNickname ||
+    isUploadingProfileImage;
 
   const onFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -34,7 +59,40 @@ export default function EditProfile() {
     }
   };
 
-  const submitDisabled = !nickname.trim();
+  const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    let isRevalidateRequired = false;
+    if (nickname !== initialNickname) {
+      await updateUserNickname(nickname);
+      isRevalidateRequired = true;
+    }
+    if (previewImage.includes("blob") && profileImage) {
+      const formData = new FormData();
+      formData.append("profile-image", profileImage);
+      await uploadProfileImage(formData);
+      isRevalidateRequired = true;
+    }
+    if (isRevalidateRequired) {
+      successToast("프로필 수정이 완료되었어요.");
+      revalidateTags([USER.GET_USER_INFO]);
+    }
+    close();
+  };
+
+  const onNicknameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    if (value === initialNickname) {
+      setIsNicknameChecked(true);
+    } else {
+      setIsNicknameChecked(false);
+    }
+    setNickname(value);
+  };
+
+  const onNicknameCheck = async () => {
+    const { data } = await checkNicknameDuplicate(nickname);
+    setIsNicknameChecked(data);
+  };
 
   return (
     <DialogContent className="flex flex-col items-center gap-5">
@@ -44,10 +102,10 @@ export default function EditProfile() {
           <Close />
         </DialogClose>
       </div>
-      <div className="flex w-full flex-col items-center gap-2.5">
+      <form className="flex w-full flex-col items-center gap-2.5" onSubmit={onSubmit}>
         <label htmlFor="profile-image" className="relative cursor-pointer">
           <Image
-            src={previewImage || defaultProfileImage}
+            src={previewImage}
             alt="default-profile"
             width={144}
             height={144}
@@ -69,16 +127,21 @@ export default function EditProfile() {
             placeholder="닉네임을 입력해주세요"
             className="typo-medium w-full"
             value={nickname}
-            onChange={(e) => setNickname(e.target.value)}
+            onChange={onNicknameChange}
           />
-          <button className="bg-main-900 typo-regular text-nowrap rounded-full px-2 py-1 text-white transition-colors disabled:bg-gray-100 disabled:text-gray-300">
+          <button
+            type="button"
+            className="bg-main-900 typo-regular text-nowrap rounded-full px-2 py-1 text-white transition-colors disabled:bg-gray-100 disabled:text-gray-300"
+            disabled={isNicknameChecked}
+            onClick={onNicknameCheck}
+          >
             중복확인
           </button>
         </div>
-      </div>
-      <Button className="w-full" disabled={submitDisabled}>
-        수정하기
-      </Button>
+        <Button type="submit" className="w-full" disabled={submitDisabled}>
+          수정하기
+        </Button>
+      </form>
     </DialogContent>
   );
 }

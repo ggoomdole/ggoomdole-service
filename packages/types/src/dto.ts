@@ -68,6 +68,7 @@ export interface SpotReviewDTO {
   numReview: string;
   latitude: number;
   longitude: number;
+  address: string;
 }
 
 export interface ReviewCreateDTO {

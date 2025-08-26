@@ -1,26 +1,35 @@
+"use client";
+
+import { Usable, use } from "react";
+
 import CourseCard from "@/components/common/card/course-card";
 import QueryTabNav from "@/components/query-tab-nav";
 import { COURSE_CATEGORIES } from "@/constants/category";
+import { BaseResponseDTO } from "@/models";
+import { RoadResponseDTO } from "@/models/road";
 
 interface MyCoursesPageProps {
-  category: string;
+  promisedReponse: Usable<BaseResponseDTO<RoadResponseDTO[]>>;
 }
 
-export default function MyCoursesPage({ category }: MyCoursesPageProps) {
-  // category 이용해서 무한스크롤
+export default function MyCoursesPage({ promisedReponse }: MyCoursesPageProps) {
+  const { data } = use(promisedReponse);
 
   return (
     <main>
       <QueryTabNav navKey="category" navs={COURSE_CATEGORIES} />
       <section className="px-5">
-        {/* {dummyCourses.map((course) => (
-          <CourseCard
-            key={`course-item-${course.category}-${course.id}`}
-            href={`/courses/upload?id=${course.id}&view=private`}
-            {...course}
-          />
-        ))} */}
-        <p className="typo-medium py-10 text-center">등록된 순례길이 없어요.</p>
+        {data.length > 0 ? (
+          data.map((course) => (
+            <CourseCard
+              key={`course-item-${course.roadId}`}
+              href={`/courses/upload?id=${course.roadId}&view=private`}
+              {...course}
+            />
+          ))
+        ) : (
+          <p className="typo-medium py-10 text-center">등록된 순례길이 없어요.</p>
+        )}
       </section>
     </main>
   );

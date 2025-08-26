@@ -19,6 +19,7 @@ interface HomePageProps {
 
 export default function HomePage({ promisedResponse }: HomePageProps) {
   const response = use(promisedResponse);
+  console.log(response);
 
   return (
     <main className="pb-navigation">

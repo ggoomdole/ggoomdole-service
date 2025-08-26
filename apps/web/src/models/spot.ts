@@ -9,5 +9,6 @@ export interface NearbyTouristSpotResponseDTO {
 
 export interface RequestSpotResponseDTO {
   spot: SpotDTO;
+  spotId: string;
   introSpot: string;
 }

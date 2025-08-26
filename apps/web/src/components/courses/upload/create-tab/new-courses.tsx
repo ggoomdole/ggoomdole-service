@@ -1,41 +1,31 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 import Checkbox from "@/components/checkbox";
 import LocationInputCard from "@/components/common/card/location-input-card";
-import { RequestSpotResponseDTO } from "@/models/spot";
-import { UploadCourseForm } from "@/schemas/course";
+import { useUpdateRequestSpots } from "@/lib/tanstack/mutation/spot";
+import { useGetRequestSpots } from "@/lib/tanstack/query/spot";
 
 import { Loader2 } from "lucide-react";
-import { useFieldArray, UseFormReturn } from "react-hook-form";
 
 interface NewCoursesProps {
-  form: UseFormReturn<UploadCourseForm>;
-  requestSpots: RequestSpotResponseDTO[];
-  isLoadingRequestSpots: boolean;
+  id: string;
 }
 
-export default function NewCourses({ form, requestSpots, isLoadingRequestSpots }: NewCoursesProps) {
-  const removeCourseIds = form.watch("removeCourseIds") || [];
-
-  const filteredCourses = requestSpots.filter(
-    (spot) => !removeCourseIds.includes(spot.spot.spotId)
-  );
-  const [newCourses, setNewCourses] = useState(filteredCourses);
+export default function NewCourses({ id }: NewCoursesProps) {
   const [selectedCourseIds, setSelectedCourseIds] = useState<string[]>([]);
 
-  const isAllChecked = selectedCourseIds.length === newCourses.length;
+  const { data: requestSpots, isLoading: isLoadingRequestSpots } = useGetRequestSpots(id);
+  const { mutateAsync: updateRequestSpots } = useUpdateRequestSpots({ id, setSelectedCourseIds });
 
-  const { fields } = useFieldArray({
-    control: form.control,
-    name: "spots",
-    keyName: "fieldId",
-  });
+  const spots = requestSpots || [];
+
+  const isAllChecked = selectedCourseIds.length === spots.length;
 
   const onToggleAllCheckbox = () => {
     if (isAllChecked) {
       setSelectedCourseIds([]);
     } else {
-      setSelectedCourseIds(newCourses.map((course) => course.spot.spotId));
+      setSelectedCourseIds(spots.map((course) => course.spot.spotId));
     }
   };
 
@@ -47,36 +37,24 @@ export default function NewCourses({ form, requestSpots, isLoadingRequestSpots }
     }
   };
 
-  const onAddCourses = () => {
+  const onAddCourses = async () => {
     if (selectedCourseIds.length === 0) return;
-    const addedCourses = newCourses
-      .filter((course) => selectedCourseIds.includes(course.spot.spotId))
-      .map((course) => ({
-        placeName: course.spot.name,
-        reason: course.introSpot,
-        placeId: course.spot.spotId,
-        address: course.spot.address,
-        latitude: course.spot.latitude,
-        longitude: course.spot.longitude,
-      }));
-    form.setValue("spots", [...fields, ...addedCourses]);
-    onRemoveCourses();
+
+    await updateRequestSpots({
+      roadId: id,
+      approve: selectedCourseIds,
+      reject: [],
+    });
   };
 
-  const onRemoveCourses = () => {
+  const onRemoveCourses = async () => {
     if (selectedCourseIds.length === 0) return;
-    setNewCourses((prev) =>
-      prev.filter((course) => !selectedCourseIds.includes(course.spot.spotId))
-    );
-    form.setValue("removeCourseIds", [...removeCourseIds, ...selectedCourseIds]);
-    setSelectedCourseIds([]);
+    await updateRequestSpots({
+      roadId: id,
+      approve: [],
+      reject: selectedCourseIds,
+    });
   };
-
-  useEffect(() => {
-    if (!isLoadingRequestSpots) {
-      setNewCourses(requestSpots);
-    }
-  }, [isLoadingRequestSpots]);
 
   return (
     <>
@@ -98,15 +76,15 @@ export default function NewCourses({ form, requestSpots, isLoadingRequestSpots }
             <Loader2 className="size-4 animate-spin text-gray-500" />
             <span className="typo-regular">요청 들어온 장소 조회중...</span>
           </div>
-        ) : newCourses.length > 0 ? (
-          newCourses.map((place) => (
+        ) : spots.length > 0 ? (
+          spots.map((place) => (
             <div
-              key={`request-item-${place.spot.spotId}`}
+              key={`request-item-${place.spotId}`}
               className="flex items-center gap-2.5 px-5 py-2.5"
             >
               <Checkbox
-                checked={selectedCourseIds.includes(place.spot.spotId)}
-                onChange={() => onToggleCheckbox(place.spot.spotId)}
+                checked={selectedCourseIds.includes(place.spotId)}
+                onChange={() => onToggleCheckbox(place.spotId)}
               />
               <LocationInputCard placeName={place.spot.name} value={place.introSpot} readOnly />
             </div>
