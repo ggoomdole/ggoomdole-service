@@ -1,5 +1,6 @@
 import { PutObjectCommand } from "@aws-sdk/client-s3";
 import {
+  MyRoadRequestDTO,
   OneRoadResponseDTO,
   ParticipantDTO,
   RoadListResponseDTO,
@@ -141,39 +142,13 @@ class RoadService {
     };
   }
 
-  async createMyRoad(
-    data: RoadRequestDTO,
-    userId: number,
-    imageFile?: Express.Multer.File
-  ): Promise<RoadResponseDTO> {
+  async createMyRoad(data: MyRoadRequestDTO, userId: number): Promise<RoadResponseDTO> {
     const exists = await roadRepository.findRoadByTitle(data.title);
     if (exists) throw new ExistsError("이미 존재하는 순례길 이름입니다.");
 
-    let imageUrl: string | null = null;
-    if (imageFile) {
-      const fileExt = imageFile.originalname.split(".").pop();
-      const key = `road-image/${data.title}.${fileExt}`;
-
-      await s3.send(
-        new PutObjectCommand({
-          Bucket: this.BUCKET_NAME,
-          Key: key,
-          Body: imageFile.buffer,
-          ContentType: imageFile.mimetype,
-          ACL: "public-read",
-        })
-      );
-
-      imageUrl = `https://${this.BUCKET_NAME}.s3.${process.env.AWS_REGION}.amazonaws.com/${key}`;
-    }
-
     const newRoad = await roadRepository.createRoad({
-      title: data.title,
-      intro: data.intro,
-      categoryId: data.categoryId,
-      spots: data.spots,
+      ...data,
       public: false,
-      imageUrl,
       userId,
     });
 
