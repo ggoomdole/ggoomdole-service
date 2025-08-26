@@ -143,8 +143,8 @@ class RoadService {
   }
 
   async createMyRoad(data: MyRoadRequestDTO, userId: number): Promise<RoadResponseDTO> {
-    const exists = await roadRepository.findRoadByTitle(data.title);
-    if (exists) throw new ExistsError("이미 존재하는 순례길 이름입니다.");
+    const isExist = await roadRepository.checkIsExists(data.title, userId);
+    if (isExist) throw new ExistsError("이미 존재하는 순례길입니다.");
 
     const newRoad = await roadRepository.createRoad({
       ...data,

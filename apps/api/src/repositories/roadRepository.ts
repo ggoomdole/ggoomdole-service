@@ -1,7 +1,7 @@
-import { Prisma,PrismaClient } from '@prisma/client';
+import { Prisma, PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 
-import { RoadRequestDTO, SpotDTO } from '@repo/types';
+import { RoadRequestDTO, SpotDTO } from "@repo/types";
 
 class RoadRepository {
   async allRoadList(categoryId?: number) {
@@ -51,13 +51,13 @@ class RoadRepository {
           },
         },
       });
-  
+
       // spots 순회하며 Spot 없으면 생성, PilgrimageSpot 연결
       for (const spot of data.spots) {
         const existingSpot = await tx.spot.findUnique({
           where: { id: spot.spotId },
         });
-  
+
         if (!existingSpot) {
           await tx.spot.create({
             data: {
@@ -72,7 +72,7 @@ class RoadRepository {
             },
           });
         }
-  
+
         // PilgrimageSpot 생성
         await tx.pilgrimageSpot.create({
           data: {
@@ -86,7 +86,7 @@ class RoadRepository {
           },
         });
       }
-  
+
       // 참가자 생성 (관리자)
       await tx.pilgrimageUser.create({
         data: {
@@ -97,32 +97,47 @@ class RoadRepository {
           updateAt: new Date(),
         },
       });
-  
+
       // 전체 정보 다시 조회하여 반환
       const fullPilgrimage = await tx.pilgrimage.findUnique({
         where: { id: newRoad.id },
         include: {
           spots: {
             include: {
-              spot: true
-            }
+              spot: true,
+            },
           },
           participants: true,
         },
       });
-  
+
       return fullPilgrimage!;
     });
   }
-  
-  async findRoadByTitle(title: string) {  
+
+  async findRoadByTitle(title: string) {
     return await prisma.pilgrimage.findFirst({
       where: { title },
       select: { id: true },
     });
   }
 
-  async updateRoad(roadId: number, data: Partial<RoadRequestDTO & { imageUrl?: string; }>) {
+  async checkIsExists(title: string, userId: number) {
+    return await prisma.pilgrimage.findFirst({
+      where: {
+        title,
+        participants: {
+          some: {
+            userId,
+            type: true,
+          },
+        },
+        public: false,
+      },
+    });
+  }
+
+  async updateRoad(roadId: number, data: Partial<RoadRequestDTO & { imageUrl?: string }>) {
     return await prisma.$transaction(async (tx) => {
       // 기존 데이터 업데이트
       const updated = await tx.pilgrimage.update({
@@ -135,11 +150,11 @@ class RoadRepository {
           updateAt: new Date(),
         },
       });
-  
+
       // spots 업데이트 (기존 삭제 후 새로 삽입)
       if (data.spots && Array.isArray(data.spots)) {
         await tx.pilgrimageSpot.deleteMany({ where: { pilgrimageId: roadId } });
-  
+
         await tx.pilgrimageSpot.createMany({
           data: data.spots.map((spot) => ({
             pilgrimageId: roadId,
@@ -152,19 +167,19 @@ class RoadRepository {
           })),
         });
       }
-  
+
       const final = await tx.pilgrimage.findUnique({
         where: { id: roadId },
         include: {
           spots: {
             include: {
-              spot: true
-            }
+              spot: true,
+            },
           },
-          participants: true
+          participants: true,
         },
       });
-  
+
       return final!;
     });
   }
@@ -174,7 +189,7 @@ class RoadRepository {
       where: { id: roadId },
       include: {
         spots: {
-          orderBy: { number: 'asc' },
+          orderBy: { number: "asc" },
         },
         participants: {
           include: {
@@ -185,7 +200,7 @@ class RoadRepository {
       },
     });
   }
-  
+
   async checkPilgrimageOwner(userId: number, pilgrimageId: number): Promise<boolean> {
     const record = await prisma.pilgrimageUser.findUnique({
       where: {
@@ -204,7 +219,7 @@ class RoadRepository {
 
   async existsPilgrimageName(title: string): Promise<boolean> {
     const existing = await prisma.pilgrimage.findUnique({
-      where: { title }
+      where: { title },
     });
     return existing !== null;
   }
@@ -238,13 +253,13 @@ class RoadRepository {
       public: true,
       ...(categoryId && { categoryId }),
     };
-  
+
     if (maker) {
       // 내가 만든 순례길만 조회
       whereClause.participants = {
         some: {
           userId,
-          type: true,  // 제작자 표시로 가정
+          type: true, // 제작자 표시로 가정
         },
       };
     } else {
@@ -260,14 +275,14 @@ class RoadRepository {
             participants: {
               some: {
                 userId,
-                type: true,  // 내가 만든 순례길 제외
+                type: true, // 내가 만든 순례길 제외
               },
             },
           },
         },
       ];
     }
-  
+
     return await prisma.pilgrimage.findMany({
       where: whereClause,
       include: {
@@ -278,7 +293,7 @@ class RoadRepository {
         },
       },
     });
-  }   
+  }
 
   async findMyPrivateRoads(userId: number, categoryId?: number) {
     const whereClause: any = {
@@ -291,7 +306,7 @@ class RoadRepository {
         },
       },
     };
-  
+
     return await prisma.pilgrimage.findMany({
       where: whereClause,
       include: {
@@ -302,7 +317,7 @@ class RoadRepository {
         },
       },
     });
-  }   
+  }
 }
 
 export default new RoadRepository();
