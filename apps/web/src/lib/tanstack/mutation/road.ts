@@ -1,12 +1,19 @@
 import { useRouter } from "next/navigation";
 
 import { ROAD } from "@/constants/road";
-import { checkRoadNameDuplicate, createMyRoad, updateRoad, uploadRoad } from "@/services/road";
+import {
+  checkRoadNameDuplicate,
+  createMyRoad,
+  participateRoad,
+  removeRoad,
+  updateRoad,
+  uploadRoad,
+} from "@/services/road";
 import { revalidateTags } from "@/utils/revalidate";
-import { successToast } from "@/utils/toast";
+import { errorToast, successToast } from "@/utils/toast";
 import { useMutation } from "@tanstack/react-query";
 
-import { invalidateQueries } from "..";
+import { invalidateMany, invalidateQueries } from "..";
 
 export const useUploadRoad = () => {
   const router = useRouter();
@@ -51,6 +58,41 @@ export const useCreateMyRoad = () => {
       successToast("커스텀 순례길 생성이 완료되었어요.");
       revalidateTags([ROAD.PARTICIPATIONS]);
       router.push("/mypage/courses");
+    },
+  });
+};
+
+export const useParticipateRoad = () => {
+  return useMutation({
+    mutationFn: participateRoad,
+    onSuccess: () => {
+      successToast("순례길 참여가 완료되었어요.");
+      invalidateQueries([ROAD.PARTICIPATIONS]);
+    },
+    onError: () => {
+      errorToast("순례길 참여에 실패했어요.");
+    },
+  });
+};
+
+export const useRemoveRoad = () => {
+  const router = useRouter();
+
+  return useMutation({
+    mutationFn: removeRoad,
+    onSuccess: () => {
+      successToast("순례길 삭제가 완료되었어요.");
+      invalidateMany([
+        [ROAD.ALL_ROADS],
+        [ROAD.DETAIL],
+        [ROAD.MY_CUSTOM_ROADS],
+        [ROAD.PARTICIPATIONS],
+        [ROAD.RECOMMEND],
+      ]);
+      router.back();
+    },
+    onError: () => {
+      errorToast("순례길 삭제에 실패했어요.");
     },
   });
 };
