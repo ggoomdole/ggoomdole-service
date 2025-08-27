@@ -1,10 +1,17 @@
+import { Usable, use } from "react";
+import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 import FloatingButton from "@/components/common/button/floating-button";
 import LocationInputCard from "@/components/common/card/location-input-card";
 import Header from "@/components/common/header";
+import { useRequestSpot } from "@/lib/tanstack/mutation/spot";
+import { BaseResponseDTO } from "@/models";
+import { RoadResponseDTO } from "@/models/road";
 import { RequestCourseForm } from "@/schemas/course";
 import { getParams } from "@/utils/params";
+import { errorToast, successToast } from "@/utils/toast";
 
 import { useFieldArray, UseFormReturn } from "react-hook-form";
 
@@ -12,10 +19,18 @@ interface RequestTabProps {
   id: string;
   query: string;
   form: UseFormReturn<RequestCourseForm>;
+  promisedResponse: Usable<BaseResponseDTO<RoadResponseDTO>>;
 }
 
-export default function RequestTab({ id, query, form }: RequestTabProps) {
+const DEFAULT_THUMBNAIL = "/static/default-thumbnail.png";
+
+export default function RequestTab({ id, query, form, promisedResponse }: RequestTabProps) {
   const params = getParams({ query }, { tab: "find-by-map" });
+  const { data } = use(promisedResponse);
+
+  const router = useRouter();
+
+  const { mutateAsync: requestSpot } = useRequestSpot();
 
   const { fields, update, remove } = useFieldArray({
     control: form.control,
@@ -35,12 +50,32 @@ export default function RequestTab({ id, query, form }: RequestTabProps) {
     });
   };
 
-  const onSubmit = () => {
+  const onSubmit = async () => {
     if (!isValid) return;
 
     const values = form.getValues();
-    console.log("순례길 추가 요청:", values);
-    // TODO: API 호출
+    const spots = values.places.map((place, idx) => ({
+      spotId: place.placeId,
+      addNumber: idx + 1,
+      addReason: place.reason,
+      spotInfo: {
+        name: place.placeName,
+        address: place.address,
+        latitude: place.latitude,
+        longitude: place.longitude,
+      },
+    }));
+    try {
+      await requestSpot({
+        roadId: +id,
+        spots,
+      });
+      successToast("순례길 추가를 요청했어요.");
+      router.push(`/courses/${id}`);
+    } catch (error) {
+      console.error(error);
+      errorToast("순례길 추가를 요청하는데 실패했어요.");
+    }
   };
 
   return (
@@ -48,10 +83,16 @@ export default function RequestTab({ id, query, form }: RequestTabProps) {
       <Header>순례길 추가 요청</Header>
       <main>
         <div className="flex items-center gap-2.5 px-5 py-3">
-          <div className="aspect-square size-10 shrink-0 rounded-sm bg-gray-300" />
+          <Image
+            src={data.imageUrl || DEFAULT_THUMBNAIL}
+            alt={data.title}
+            width={40}
+            height={40}
+            className="aspect-square shrink-0 rounded-sm"
+          />
           <div className="space-y-1 text-start">
-            <h1 className="typo-semibold line-clamp-1">카스의 빵지순례</h1>
-            <p className="typo-regular line-clamp-1">빵을 좋아하는 사람이라면 누구나!</p>
+            <h1 className="typo-semibold line-clamp-1">{data.title}</h1>
+            <p className="typo-regular line-clamp-1">{data.intro}</p>
           </div>
         </div>
         {fields.map((place, index) => (

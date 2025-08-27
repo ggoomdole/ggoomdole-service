@@ -1,14 +1,13 @@
 import { BaseResponseDTO } from "@/models";
-import { RoadResponseDTO, UploadRoadRequestDTO, UploadRoadResponseDTO } from "@/models/road";
+import { RoadResponseDTO, UploadRoadResponseDTO } from "@/models/road";
 import { getParams } from "@/utils/params";
 
 import { clientApi } from "./api";
 
 export const uploadRoad = async (props: {
   formData: FormData;
-  body: UploadRoadRequestDTO;
 }): Promise<BaseResponseDTO<UploadRoadResponseDTO>> => {
-  return clientApi.post("road", { data: JSON.stringify(props.body) }, { body: props.formData });
+  return clientApi.post("road", undefined, { body: props.formData });
 };
 
 export const checkRoadNameDuplicate = async (title: string): Promise<BaseResponseDTO<boolean>> => {
@@ -21,4 +20,22 @@ export const getAllRoads = async (props: {
 }): Promise<BaseResponseDTO<RoadResponseDTO[]>> => {
   const params = getParams(props);
   return clientApi.get(`road?${params}`);
+};
+
+export const updateRoad = async (props: {
+  formData: FormData;
+  roadId: string;
+}): Promise<BaseResponseDTO<unknown>> => {
+  return clientApi.patch(`road/${props.roadId}`, undefined, { body: props.formData });
+};
+
+export const getMyCustomRoads = async (
+  categoryId: string
+): Promise<BaseResponseDTO<RoadResponseDTO[]>> => {
+  const params = getParams({ categoryId });
+  return clientApi.get(`road/custom?${params}`);
+};
+
+export const createMyRoad = async (formData: FormData): Promise<BaseResponseDTO<unknown>> => {
+  return clientApi.post("road/custom", undefined, { body: formData });
 };

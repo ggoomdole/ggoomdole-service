@@ -48,7 +48,9 @@ export default function ReviewTab({ id }: ReviewTabProps) {
               <p className="typo-regular text-gray-500">후기 {data?.data.length}</p>
             </div>
             <div className="space-y-2.5">
-              {data?.data.map((review) => <ReviewItem key={review.spotId} {...review} />)}
+              {data?.data.map((review, index) => (
+                <ReviewItem key={`review-item-${index}`} {...review} />
+              ))}
             </div>
           </>
         )}

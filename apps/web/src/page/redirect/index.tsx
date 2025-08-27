@@ -18,12 +18,16 @@ export default function RedirectPage({ promisedResponse }: RedirectPageProps) {
 
   useEffect(() => {
     if (response.success) {
-      setCookie("accessToken", response.data.jwtToken);
+      setCookie("jwtToken", response.data.jwtToken);
+      setCookie("accessToken", response.data.accessToken);
+
       if (response.data.isFirstLogin) {
         redirect("/signup", RedirectType.replace);
       } else {
         redirect("/home", RedirectType.replace);
       }
+    } else {
+      redirect("/", RedirectType.replace);
     }
   }, [response]);
 

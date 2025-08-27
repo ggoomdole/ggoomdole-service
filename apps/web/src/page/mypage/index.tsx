@@ -1,6 +1,12 @@
 import Image from "next/image";
 
 import MenuButton from "@/components/mypage/menu-button";
+import { MypageProvider } from "@/context/mypage-context";
+import { userInfoDTO } from "@repo/types";
+
+interface MypagePageProps {
+  user: userInfoDTO;
+}
 
 const defaultProfileImage = "/static/default-profile.png";
 
@@ -37,19 +43,29 @@ const MENUS = [
   },
 ];
 
-export default function MypagePage() {
+export default function MypagePage({ user }: MypagePageProps) {
+  const profileImage = user.profileImage === "null" ? defaultProfileImage : user.profileImage;
+
   return (
     <main className="bg-main-300">
       <section className="flex flex-col items-center justify-center gap-5 py-10">
-        <Image src={defaultProfileImage} alt="default-profile" width={150} height={150} />
-        <p className="typo-bold">꿈돌이넷</p>
+        <Image
+          src={profileImage}
+          alt="default-profile"
+          width={150}
+          height={150}
+          className="rounded-full"
+        />
+        <p className="typo-bold">{user.nickName}</p>
       </section>
       <section className="rounded-t-5xl pb-navigation flex-1 bg-white p-5">
-        <ul className="typo-medium flex flex-col">
-          {MENUS.map((menu) => (
-            <MenuButton key={menu.value} {...menu} />
-          ))}
-        </ul>
+        <MypageProvider nickname={user.nickName} profileImage={profileImage}>
+          <ul className="typo-medium flex flex-col">
+            {MENUS.map((menu) => (
+              <MenuButton key={menu.value} {...menu} />
+            ))}
+          </ul>
+        </MypageProvider>
       </section>
     </main>
   );

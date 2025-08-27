@@ -17,13 +17,6 @@ export interface SearchRoadResponseDTO {
   results: RoadResponseDTO[];
 }
 
-export interface UploadRoadRequestDTO {
-  title: string;
-  categoryId: number;
-  intro: string;
-  spots: SpotProps[];
-}
-
 export interface UploadRoadResponseDTO {
   roadId: number;
   title: string;

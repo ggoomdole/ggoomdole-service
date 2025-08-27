@@ -16,7 +16,7 @@ import FloatingActionButton from "@/components/courses/floating-action-button";
 import RouteItem from "@/components/courses/route-item";
 import { BaseResponseDTO } from "@/models";
 import { RoadResponseDTO } from "@/models/road";
-import type { TMap, TMapMarkerClickEvent, TMapPoi, TMapTransitResponse } from "@/types/tmap";
+import type { TMap, TMapMarkerClickEvent, TMapTransitResponse } from "@/types/tmap";
 import { getParams } from "@/utils/params";
 import { formatDistance, formatTime } from "@/utils/time";
 import { searchTransitRoute } from "@/utils/tmap";
@@ -38,35 +38,6 @@ interface CourseDetailPageProps {
 
 const DEFAULT_THUMBNAIL = "/static/default-thumbnail.png";
 const LOADING_IMAGE = "/static/loading.png";
-
-const dummyCourses = [
-  {
-    id: "6780537",
-    name: "성심당 롯데백화점대전점",
-    newAddressList: {
-      newAddress: [
-        {
-          fullAddressRoad: "대전광역시 중구 중앙로 100",
-          frontLat: "36.33999186",
-          frontLon: "127.39004564",
-        },
-      ],
-    },
-  },
-  {
-    id: "2930518",
-    name: "성심당 대전역점",
-    newAddressList: {
-      newAddress: [
-        {
-          fullAddressRoad: "대전 동구 중앙로 215",
-          frontLat: "36.33071591",
-          frontLon: "127.43312537",
-        },
-      ],
-    },
-  },
-];
 
 const checkSameMarker = ({ start, end }: { start: string; end: string }): boolean => {
   const [startLat, startLng] = start?.split(",") || [];
@@ -116,13 +87,28 @@ export default function CourseDetailPage({
 
   const router = useRouter();
 
+  const markers = data.spots.map((spot) => ({
+    detailBizName: spot.name,
+    id: spot.spotId,
+    name: spot.name,
+    newAddressList: {
+      newAddress: [
+        {
+          fullAddressRoad: spot.name,
+          frontLat: spot.latitude.toString(),
+          frontLon: spot.longitude.toString(),
+        },
+      ],
+    },
+  }));
+
   // 출/도착 선택했을 때 선택된 마커 모양 없애는 로직 추가하기
   const onClickMap = () => {
     setSelectedMarker(null);
   };
 
   const onClickMarker = (e: TMapMarkerClickEvent) => {
-    const selectedPoi = dummyCourses.find((poi) => poi.id === e._marker_data.options.title);
+    const selectedPoi = markers.find((poi) => poi.id === e._marker_data.options.title);
     setSelectedMarker({
       title: selectedPoi?.name || "",
       address: selectedPoi?.newAddressList.newAddress[0].fullAddressRoad || "",
@@ -241,7 +227,7 @@ export default function CourseDetailPage({
         <TransitRouteMap
           mapInstanceRef={mapInstanceRef}
           transitData={transitData}
-          markers={dummyCourses as TMapPoi[]}
+          markers={markers}
           isShowPathMode={isShowPathMode}
           onClickMap={onClickMap}
           onClickMarker={onClickMarker}

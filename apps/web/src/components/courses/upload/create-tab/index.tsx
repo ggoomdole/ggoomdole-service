@@ -7,7 +7,12 @@ import Button from "@/components/common/button";
 import { Dialog, DialogClose, DialogContent, DialogTrigger } from "@/components/common/dialog";
 import Header from "@/components/common/header";
 import { COURSE_CATEGORIES } from "@/constants/category";
-import { useCheckRoadNameDuplicate, useUploadRoad } from "@/lib/tanstack/mutation/road";
+import {
+  useCheckRoadNameDuplicate,
+  useUpdateRoad,
+  useUploadRoad,
+} from "@/lib/tanstack/mutation/road";
+import { useCreateMyRoad } from "@/lib/tanstack/mutation/road";
 import { cn } from "@/lib/utils";
 import { UploadCourseForm } from "@/schemas/course";
 import { CoursePlaceProps } from "@/types/course";
@@ -24,6 +29,7 @@ interface CreateTabProps {
   form: UseFormReturn<UploadCourseForm>;
   isEditCourse: boolean;
   isPrivate: boolean;
+  view: "private" | "replicate";
 }
 
 const CATEGORIES = COURSE_CATEGORIES.slice(1);
@@ -36,21 +42,27 @@ const getHeaderText = (isEditCourse: boolean, isPrivate: boolean) => {
   return isEditCourse ? "순례길 수정하기" : "순례길 생성하기";
 };
 
-export default function CreateTab({ id, form, isEditCourse, isPrivate }: CreateTabProps) {
+export default function CreateTab({ id, form, isEditCourse, isPrivate, view }: CreateTabProps) {
+  const isReplicate = view === "replicate";
+  const initialDuplicateStatus = Boolean(id) && !isReplicate;
+
   const [isEditOrderMode, setIsEditOrderMode] = useState(false);
-  const [isNameDuplicateChecked, setIsNameDuplicateChecked] = useState(false);
-  const [isNameAvailable, setIsNameAvailable] = useState(false);
+  const [isNameDuplicateChecked, setIsNameDuplicateChecked] = useState(initialDuplicateStatus);
+  const [isNameAvailable, setIsNameAvailable] = useState(initialDuplicateStatus);
+  const prevImageUrl = useRef(form.getValues("imageUrl"));
 
   const { mutateAsync: uploadRoad, isPending: isUploadingRoad } = useUploadRoad();
   const { mutateAsync: checkRoadNameDuplicate, isPending: isCheckingDuplicate } =
     useCheckRoadNameDuplicate();
+  const { mutateAsync: updateRoad, isPending: isUpdatingRoad } = useUpdateRoad();
+  const { mutateAsync: createMyRoad, isPending: isCreatingRoad } = useCreateMyRoad();
 
-  const category = form.watch("category");
-  const thumbnail = form.watch("thumbnail");
+  const categoryId = form.watch("categoryId");
+  const thumbnail = form.watch("imageUrl");
 
   const [previewImage, setPreviewImage] = useState<string | null>(() => {
     if (!thumbnail) return null;
-    return URL.createObjectURL(thumbnail);
+    return thumbnail.name;
   });
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -60,17 +72,16 @@ export default function CreateTab({ id, form, isEditCourse, isPrivate }: CreateT
     keyName: "fieldId",
   });
 
-  const { formState } = form;
-  const { isValid } = formState;
-
   const submitDisabled =
-    !isValid ||
+    !form.formState.isValid ||
     fields.length === 0 ||
     isEditOrderMode ||
     isUploadingRoad ||
     isCheckingDuplicate ||
     !isNameDuplicateChecked ||
-    !isNameAvailable;
+    !isNameAvailable ||
+    isUpdatingRoad ||
+    isCreatingRoad;
 
   const onChangeReason = (index: number, reason: string) => {
     update(index, {
@@ -95,9 +106,9 @@ export default function CreateTab({ id, form, isEditCourse, isPrivate }: CreateT
     form.setValue("spots", newOrder);
   };
 
-  const onChangeCategory = (categoryName: string) => {
-    if (category === categoryName) return;
-    form.setValue("category", categoryName);
+  const onChangeCategory = (categoryPath: string) => {
+    if (categoryId === +categoryPath) return;
+    form.setValue("categoryId", +categoryPath);
   };
 
   const onTitleChange = () => {
@@ -119,7 +130,7 @@ export default function CreateTab({ id, form, isEditCourse, isPrivate }: CreateT
       };
       reader.readAsDataURL(file);
 
-      form.setValue("thumbnail", file);
+      form.setValue("imageUrl", file);
     }
   };
 
@@ -132,32 +143,48 @@ export default function CreateTab({ id, form, isEditCourse, isPrivate }: CreateT
   };
 
   const onSubmit = form.handleSubmit(async (data) => {
-    if (isPrivate) {
-      // 비공개 순례길 수정 API
-    } else if (isEditCourse) {
-      // 순례길 수정 API
-    } else {
-      const formData = new FormData();
-      formData.append("road-image", data.thumbnail);
-      const categoryId = CATEGORIES.find((category) => category.name === data.category)
-        ?.path as string;
-      const spots = data.spots.map((spot, index) => ({
-        number: index + 1,
-        spotId: spot.placeId,
-        name: spot.placeName,
-        introSpot: spot.reason,
-        address: spot.address,
-        latitude: spot.latitude,
-        longitude: spot.longitude,
-      }));
-      const body = {
-        title: data.title,
-        categoryId: +categoryId,
-        intro: data.intro,
-        spots,
-      };
+    const formData = new FormData();
+    const spots = data.spots.map((spot, index) => ({
+      number: index + 1,
+      spotId: spot.placeId,
+      name: spot.placeName,
+      introSpot: spot.reason,
+      address: spot.address,
+      latitude: spot.latitude,
+      longitude: spot.longitude,
+    }));
+    const body = {
+      title: data.title,
+      categoryId: data.categoryId,
+      intro: data.intro,
+      spots,
+    };
+    formData.append("data", JSON.stringify(body));
+    if (isReplicate) {
+      if (data.imageUrl) {
+        let file = data.imageUrl;
+        if (data.imageUrl.name.startsWith("https://")) {
+          const res = await fetch(data.imageUrl.name);
 
-      await uploadRoad({ formData, body });
+          if (!res.ok) throw new Error("이미지 요청 실패");
+
+          const blob = await res.blob();
+
+          file = new File([blob], `origin-road-image-${id}`, { type: blob.type });
+        }
+        formData.append("road-image", file);
+      }
+      await createMyRoad(formData);
+    } else if (isEditCourse && id) {
+      if (prevImageUrl.current !== data.imageUrl && data.imageUrl) {
+        formData.append("update-road-image", data.imageUrl);
+      }
+      await updateRoad({ formData, roadId: id });
+    } else {
+      if (data.imageUrl) {
+        formData.append("road-image", data.imageUrl);
+      }
+      await uploadRoad({ formData });
     }
   });
 
@@ -230,9 +257,9 @@ export default function CreateTab({ id, form, isEditCourse, isPrivate }: CreateT
                       key={categoryItem.name}
                       className={cn(
                         "rounded-full px-4 py-1",
-                        category === categoryItem.name && "bg-main-700"
+                        categoryId === +categoryItem.path && "bg-main-700"
                       )}
-                      onClick={() => onChangeCategory(categoryItem.name)}
+                      onClick={() => onChangeCategory(categoryItem.path)}
                     >
                       {categoryItem.name}
                     </button>
@@ -271,30 +298,38 @@ export default function CreateTab({ id, form, isEditCourse, isPrivate }: CreateT
               onReorder={onReorder}
             />
           ) : (
-            <DefaultMode id={id} fields={fields} onChangeReason={onChangeReason} remove={remove} />
+            <DefaultMode
+              id={id}
+              fields={fields}
+              view={view}
+              onChangeReason={onChangeReason}
+              remove={remove}
+            />
           )}
-          {isEditCourse && !isPrivate && <NewCourses form={form} />}
+          {isEditCourse && !isPrivate && !isReplicate && <NewCourses id={id || ""} />}
           {isEditCourse ? (
             <div className="flex gap-5 py-5">
-              <Dialog>
-                <DialogTrigger className="typo-semibold flex-1 rounded-xl bg-gradient-to-r from-red-300 to-red-500 py-5 text-white">
-                  삭제하기
-                </DialogTrigger>
-                <DialogContent className="space-y-5 text-center">
-                  <h3 className="typo-semibold">삭제하시겠습니까?</h3>
-                  <p className="typo-medium">삭제된 순례길은 복구할 수 없어요.</p>
-                  <div className="flex gap-2.5">
-                    <DialogClose className="typo-semibold from-main-700 to-main-900 flex-1 rounded-xl bg-gradient-to-r py-5 text-white">
-                      취소
-                    </DialogClose>
-                    <Button className="flex-1" variant="warning" onClick={onDeleteCourse}>
-                      삭제
-                    </Button>
-                  </div>
-                </DialogContent>
-              </Dialog>
+              {!isReplicate && (
+                <Dialog>
+                  <DialogTrigger className="typo-semibold flex-1 rounded-xl bg-gradient-to-r from-red-300 to-red-500 py-5 text-white">
+                    삭제하기
+                  </DialogTrigger>
+                  <DialogContent className="space-y-5 text-center">
+                    <h3 className="typo-semibold">삭제하시겠습니까?</h3>
+                    <p className="typo-medium">삭제된 순례길은 복구할 수 없어요.</p>
+                    <div className="flex gap-2.5">
+                      <DialogClose className="typo-semibold from-main-700 to-main-900 flex-1 rounded-xl bg-gradient-to-r py-5 text-white">
+                        취소
+                      </DialogClose>
+                      <Button className="flex-1" variant="warning" onClick={onDeleteCourse}>
+                        삭제
+                      </Button>
+                    </div>
+                  </DialogContent>
+                </Dialog>
+              )}
               <Button disabled={submitDisabled} className="flex-1" onClick={onSubmit}>
-                수정하기
+                {isReplicate ? "생성하기" : "수정하기"}
               </Button>
             </div>
           ) : (

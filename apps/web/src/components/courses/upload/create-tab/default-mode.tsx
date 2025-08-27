@@ -7,12 +7,19 @@ import { getParams } from "@/utils/params";
 interface DefaultModeProps {
   id?: string;
   fields: CoursePlaceProps[];
+  view: "private" | "replicate";
   onChangeReason: (index: number, reason: string) => void;
   remove: (index: number) => void;
 }
 
-export default function DefaultMode({ id, fields, onChangeReason, remove }: DefaultModeProps) {
-  const params = getParams({ tab: "find-by-map", id });
+export default function DefaultMode({
+  id,
+  fields,
+  view,
+  onChangeReason,
+  remove,
+}: DefaultModeProps) {
+  const params = getParams({ tab: "find-by-map", id, view });
 
   return (
     <>
