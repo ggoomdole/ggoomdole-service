@@ -43,18 +43,14 @@ export const useUpdateRoad = () => {
 };
 
 export const useCreateMyRoad = () => {
+  const router = useRouter();
+
   return useMutation({
     mutationFn: createMyRoad,
-    onSuccess: (data) => {
+    onSuccess: () => {
       successToast("커스텀 순례길 생성이 완료되었어요.");
-      console.log(data);
-      // successToast("커스텀 순례길 생성이 완료되었어요.");
-      // invalidateQueries([ROAD.ALL_ROADS]);
-      // revalidateTags([ROAD.PARTICIPATIONS]);
-      // router.push("/courses");
-    },
-    onError: (error) => {
-      console.error(error);
+      revalidateTags([ROAD.PARTICIPATIONS]);
+      router.push("/mypage/courses");
     },
   });
 };

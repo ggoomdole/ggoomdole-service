@@ -12,12 +12,12 @@ import { getParams } from "@/utils/params";
 
 interface HomeProps {
   searchParams: Promise<{
-    categoryId: string;
+    category: string;
   }>;
 }
 
 export default async function Home({ searchParams }: HomeProps) {
-  const { categoryId } = await searchParams;
+  const { category: categoryId } = await searchParams;
 
   const params = getParams({ categoryId });
   const promisedResponse = serverApi.get<BaseResponseDTO<RoadResponseDTO[]>>(
