@@ -14,6 +14,7 @@ const pretendard = localFont({
 
 export const runtime = "edge";
 
+// metadata 설정하기
 export const metadata: Metadata = {
   title: "순례해유",
   description: "나만의 대전 순례길을 만들고 다른 사람들과 공유하세요.",

@@ -9,6 +9,7 @@ import Header from "@/components/common/header";
 import { COURSE_CATEGORIES } from "@/constants/category";
 import {
   useCheckRoadNameDuplicate,
+  useRemoveRoad,
   useUpdateRoad,
   useUploadRoad,
 } from "@/lib/tanstack/mutation/road";
@@ -56,6 +57,7 @@ export default function CreateTab({ id, form, isEditCourse, isPrivate, view }: C
     useCheckRoadNameDuplicate();
   const { mutateAsync: updateRoad, isPending: isUpdatingRoad } = useUpdateRoad();
   const { mutateAsync: createMyRoad, isPending: isCreatingRoad } = useCreateMyRoad();
+  const { mutateAsync: removeRoad, isPending: isRemovingRoad } = useRemoveRoad();
 
   const categoryId = form.watch("categoryId");
   const thumbnail = form.watch("imageUrl");
@@ -81,7 +83,8 @@ export default function CreateTab({ id, form, isEditCourse, isPrivate, view }: C
     !isNameDuplicateChecked ||
     !isNameAvailable ||
     isUpdatingRoad ||
-    isCreatingRoad;
+    isCreatingRoad ||
+    isRemovingRoad;
 
   const onChangeReason = (index: number, reason: string) => {
     update(index, {
@@ -139,7 +142,7 @@ export default function CreateTab({ id, form, isEditCourse, isPrivate, view }: C
   };
 
   const onDeleteCourse = async () => {
-    // API 요청 후 /participations로 이동 및 invalidate
+    await removeRoad(id || "");
   };
 
   const onSubmit = form.handleSubmit(async (data) => {
