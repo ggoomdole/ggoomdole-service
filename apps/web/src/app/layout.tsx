@@ -12,9 +12,6 @@ const pretendard = localFont({
   display: "swap",
 });
 
-export const runtime = "edge";
-
-// metadata 설정하기
 export const metadata: Metadata = {
   title: "순례해유",
   description: "나만의 대전 순례길을 만들고 다른 사람들과 공유하세요.",
@@ -22,7 +19,7 @@ export const metadata: Metadata = {
     title: "순례해유",
     description: "나만의 대전 순례길을 만들고 다른 사람들과 공유하세요.",
     images: "/og-image.png",
-    url: "http://localhost:3000/",
+    url: "https://ggoomdole.vercel.app/",
     siteName: "순례해유",
     locale: "ko_KR",
     type: "website",
@@ -41,7 +38,7 @@ export const metadata: Metadata = {
   ],
   applicationName: "순례해유",
   alternates: {
-    canonical: "http://localhost:3000/",
+    canonical: "https://ggoomdole.vercel.app/",
   },
   robots: {
     index: true,
