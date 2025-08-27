@@ -361,6 +361,28 @@ class RoadService {
       })
     );
   }
+
+  async participateByRoadId(userId: number, roadId: number): Promise<{ userId: number; pilgrimageId: number }> {
+    const road = await roadRepository.findRoadWithSpots(roadId);
+    if (!road) throw new NotFoundError("순례길이 존재하지 않습니다.");
+
+    const participation = await roadRepository.upsertParticipation(userId, roadId);
+    return {
+      userId: participation.userId,
+      pilgrimageId: participation.pilgrimageId,
+    };
+  }
+
+  async deleteRoad(userId: number, roadId: number): Promise<Number> {
+    const isAdmin = await roadRepository.checkPilgrimageOwner(userId, roadId);
+    if (!isAdmin) { throw new UnauthorizedError("관리자 권한이 없습니다."); }
+
+    const road = await roadRepository.findRoadById(roadId);
+    if (!road) { throw new NotFoundError("해당 순례길이 존재하지 않습니다."); }
+
+    await roadRepository.deleteRoad(roadId);
+    return roadId;
+  }
 }
 
 // 평균 평점 숫자 조정
