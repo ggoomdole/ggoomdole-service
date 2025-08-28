@@ -71,7 +71,7 @@ class SpotRepository {
             spotId: spot.spotId,
             number: nextNumber++,
             introSpot: spot.introSpot,
-            request: spot.request,
+            request: true,
           },
         });
         createdSpots.push(created);

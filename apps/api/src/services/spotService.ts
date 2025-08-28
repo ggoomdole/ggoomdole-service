@@ -5,7 +5,7 @@ import axios from "axios";
 
 import roadRepository from '../repositories/roadRepository';
 import spotRepository from '../repositories/spotRepository';
-import { NotFoundError, UnauthorizedError } from '../utils/customError';
+import { NotFoundError, UnauthorizedError, BadRequestError } from '../utils/customError';
 
 class RoadService {
   async fetchNearbySpots(lat: string, lng: string): Promise<DataSpotDTO[]> {
@@ -41,9 +41,12 @@ class RoadService {
     return results;
   }
 
-  async reqAddSpot(data: SpotReqDTO): Promise<SpotReqDTO[]> {
+  async reqAddSpot(data: SpotReqDTO, userId: number): Promise<SpotReqDTO[]> {
     const checkPilgrimager = await roadRepository.findRoadById(data.roadId);
     if (!checkPilgrimager) throw new NotFoundError('해당 순례길이 존재하지 않습니다.');
+
+    const owner = await roadRepository.checkPilgrimageOwner(userId, data.roadId);
+    if (owner) { throw new BadRequestError('자신의 순례길에는 장소 추가 요청을 할 수 없습니다.'); }
   
     const createdSpots = await spotRepository.reqSpot(
       data.spots.map((spot) => ({
@@ -65,8 +68,8 @@ class RoadService {
           name: spot.spot.name,
           phone: spot.spot.phone ?? undefined,
           address: spot.spot.address ?? undefined,
-          latitude: spot.spot.latitude ?? undefined,
-          longitude: spot.spot.longitude ?? undefined,
+          latitude: spot.spot.latitude,
+          longitude: spot.spot.longitude,
           hours: spot.spot.hours ?? undefined,
           avgRate: spot.spot.avgRate ?? undefined,
         }
