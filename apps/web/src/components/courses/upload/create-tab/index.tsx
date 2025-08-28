@@ -9,6 +9,7 @@ import Header from "@/components/common/header";
 import { COURSE_CATEGORIES } from "@/constants/category";
 import {
   useCheckRoadNameDuplicate,
+  useRemoveRoad,
   useUpdateRoad,
   useUploadRoad,
 } from "@/lib/tanstack/mutation/road";
@@ -29,7 +30,7 @@ interface CreateTabProps {
   form: UseFormReturn<UploadCourseForm>;
   isEditCourse: boolean;
   isPrivate: boolean;
-  isReplicate: boolean;
+  view: "private" | "replicate";
 }
 
 const CATEGORIES = COURSE_CATEGORIES.slice(1);
@@ -42,13 +43,8 @@ const getHeaderText = (isEditCourse: boolean, isPrivate: boolean) => {
   return isEditCourse ? "순례길 수정하기" : "순례길 생성하기";
 };
 
-export default function CreateTab({
-  id,
-  form,
-  isEditCourse,
-  isPrivate,
-  isReplicate,
-}: CreateTabProps) {
+export default function CreateTab({ id, form, isEditCourse, isPrivate, view }: CreateTabProps) {
+  const isReplicate = view === "replicate";
   const initialDuplicateStatus = Boolean(id) && !isReplicate;
 
   const [isEditOrderMode, setIsEditOrderMode] = useState(false);
@@ -60,7 +56,8 @@ export default function CreateTab({
   const { mutateAsync: checkRoadNameDuplicate, isPending: isCheckingDuplicate } =
     useCheckRoadNameDuplicate();
   const { mutateAsync: updateRoad, isPending: isUpdatingRoad } = useUpdateRoad();
-  const { mutateAsync: createMyRoad } = useCreateMyRoad();
+  const { mutateAsync: createMyRoad, isPending: isCreatingRoad } = useCreateMyRoad();
+  const { mutateAsync: removeRoad, isPending: isRemovingRoad } = useRemoveRoad();
 
   const categoryId = form.watch("categoryId");
   const thumbnail = form.watch("imageUrl");
@@ -85,7 +82,9 @@ export default function CreateTab({
     isCheckingDuplicate ||
     !isNameDuplicateChecked ||
     !isNameAvailable ||
-    isUpdatingRoad;
+    isUpdatingRoad ||
+    isCreatingRoad ||
+    isRemovingRoad;
 
   const onChangeReason = (index: number, reason: string) => {
     update(index, {
@@ -143,7 +142,7 @@ export default function CreateTab({
   };
 
   const onDeleteCourse = async () => {
-    // API 요청 후 /participations로 이동 및 invalidate
+    await removeRoad(id || "");
   };
 
   const onSubmit = form.handleSubmit(async (data) => {
@@ -166,7 +165,17 @@ export default function CreateTab({
     formData.append("data", JSON.stringify(body));
     if (isReplicate) {
       if (data.imageUrl) {
-        formData.append("road-image", data.imageUrl);
+        let file = data.imageUrl;
+        if (data.imageUrl.name.startsWith("https://")) {
+          const res = await fetch(data.imageUrl.name);
+
+          if (!res.ok) throw new Error("이미지 요청 실패");
+
+          const blob = await res.blob();
+
+          file = new File([blob], `origin-road-image-${id}`, { type: blob.type });
+        }
+        formData.append("road-image", file);
       }
       await createMyRoad(formData);
     } else if (isEditCourse && id) {
@@ -292,7 +301,13 @@ export default function CreateTab({
               onReorder={onReorder}
             />
           ) : (
-            <DefaultMode id={id} fields={fields} onChangeReason={onChangeReason} remove={remove} />
+            <DefaultMode
+              id={id}
+              fields={fields}
+              view={view}
+              onChangeReason={onChangeReason}
+              remove={remove}
+            />
           )}
           {isEditCourse && !isPrivate && !isReplicate && <NewCourses id={id || ""} />}
           {isEditCourse ? (

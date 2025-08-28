@@ -23,6 +23,7 @@ interface FindByMapTabProps {
   tab: string;
   currentPlaces: CoursePlaceProps[];
   id?: string;
+  view?: "private" | "replicate";
   onSelectPlace: (place: CoursePlaceProps) => void;
 }
 
@@ -36,6 +37,7 @@ export default function FindByMapTab({
   tab,
   currentPlaces,
   id,
+  view,
   onSelectPlace,
 }: FindByMapTabProps) {
   // 07/21 장소 검색 및 상세 조회에서 썸네일이 없기 때문에 우선 기본 썸네일 + 별점 X 버전으로 진행
@@ -80,7 +82,7 @@ export default function FindByMapTab({
     });
     setSelectedMarker(null);
 
-    const params = getParams({ id });
+    const params = getParams({ id, view });
     router.push(`?${params}`);
   };
 
@@ -109,7 +111,7 @@ export default function FindByMapTab({
 
   return (
     <>
-      <SearchHeader id={id} word={query} tab={tab} />
+      <SearchHeader id={id} word={query} tab={tab} view={view} />
       <main className="relative">
         <Map
           mapInstanceRef={mapInstanceRef}

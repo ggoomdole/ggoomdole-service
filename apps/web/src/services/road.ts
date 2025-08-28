@@ -39,3 +39,11 @@ export const getMyCustomRoads = async (
 export const createMyRoad = async (formData: FormData): Promise<BaseResponseDTO<unknown>> => {
   return clientApi.post("road/custom", undefined, { body: formData });
 };
+
+export const participateRoad = async (roadId: string): Promise<BaseResponseDTO<unknown>> => {
+  return clientApi.post(`road/${roadId}`);
+};
+
+export const removeRoad = async (roadId: string): Promise<BaseResponseDTO<unknown>> => {
+  return clientApi.delete(`road/${roadId}`);
+};

@@ -38,7 +38,6 @@ export default function UploadCoursePage({
 }: UploadCoursePageProps) {
   const isEditCourse = !!id;
   const isPrivate = view === "private";
-  const isReplicate = view === "replicate";
 
   const defaultValues = (() => {
     if (promisedResponse) {
@@ -79,6 +78,7 @@ export default function UploadCoursePage({
           tab={tab}
           currentPlaces={currentPlaces}
           id={id}
+          view={view}
           onSelectPlace={append}
         />
       );
@@ -89,7 +89,7 @@ export default function UploadCoursePage({
           form={form}
           isEditCourse={isEditCourse}
           isPrivate={isPrivate}
-          isReplicate={isReplicate}
+          view={view}
         />
       );
   }

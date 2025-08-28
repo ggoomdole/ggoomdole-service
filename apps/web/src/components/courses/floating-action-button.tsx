@@ -7,12 +7,12 @@ import Folder from "@/assets/folder.svg";
 import Enter from "@/assets/login.svg";
 import More from "@/assets/more.svg";
 import Send from "@/assets/send.svg";
+import { useParticipateRoad } from "@/lib/tanstack/mutation/road";
 import { cn } from "@/lib/utils";
 
 const ACTION_BUTTONS = [
   {
     icon: Enter,
-    // 이미 참여중인 순례길이면 "순례길 나가기" 텍스트 보여주기
     text: "순례길 참여하기",
     value: "participate" as const,
   },
@@ -36,11 +36,15 @@ export default function FloatingActionButton({ id }: FloatingActionButtonProps) 
   const [isOpen, setIsOpen] = useState(false);
   const router = useRouter();
 
-  const onClick = (value: (typeof ACTION_BUTTONS)[number]["value"]) => {
+  const { mutateAsync: participateRoad } = useParticipateRoad();
+
+  const onClick = async (value: (typeof ACTION_BUTTONS)[number]["value"]) => {
     if (value === "request") {
       router.push(`/courses/${id}/request`);
     } else if (value === "my-course") {
       router.push(`/courses/upload?id=${id}&view=replicate`);
+    } else if (value === "participate") {
+      await participateRoad(id);
     }
   };
 
