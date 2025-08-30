@@ -5,7 +5,13 @@ import Link from "next/link";
 
 const errorImage = "/static/error.png";
 
-export default function Error() {
+interface ErrorProps {
+  error: Error;
+}
+
+export default function Error({ error }: ErrorProps) {
+  console.error("Error", error);
+
   return (
     <main className="flex h-screen flex-col items-center justify-center">
       <Image src={errorImage} alt="error" width={300} height={300} />
