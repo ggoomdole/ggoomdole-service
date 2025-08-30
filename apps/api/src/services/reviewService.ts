@@ -1,5 +1,5 @@
 import { PutObjectCommand } from '@aws-sdk/client-s3';
-import { ReviewCheckDTO, ReviewCreateDTO } from '@repo/types';
+import { AllReviewCheckDTO,ReviewCheckDTO, ReviewCreateDTO } from '@repo/types';
 
 import s3 from '../config/s3-config';
 import reviewRepository from '../repositories/reviewRepository';
@@ -32,6 +32,9 @@ class ReviewService {
     const newReview = await reviewRepository.reveiwUpload(userId, data);
     
     return{
+      reviewId: newReview.id,
+      userId: newReview.userId,
+      nickname: newReview.user.nickName,
       spotId: newReview.spotId,
       content: newReview.text,
       rate: newReview.rate,
@@ -54,6 +57,9 @@ class ReviewService {
     if (!reviewById) { throw new NotFoundError('리뷰가 존재하지 않습니다.'); }
   
     return {
+      reviewId: reviewById.id,
+      userId: reviewById.userId,
+      nickname: reviewById.user.nickName,
       spotId: reviewById.spotId,
       content: reviewById.text,
       rate: reviewById.rate,
@@ -61,12 +67,12 @@ class ReviewService {
     };
   }  
 
-  async showAllReview(spotId: string): Promise<ReviewCheckDTO[]> {
+  async showAllReview(spotId: string): Promise<AllReviewCheckDTO[]> {
     const rawReviews = await reviewRepository.findAllReviewById(spotId);
   
     if (!rawReviews || rawReviews.length === 0) { throw new NotFoundError('해당 장소에 리뷰가 존재하지 않습니다.'); }
   
-    return rawReviews.map((p): ReviewCheckDTO => ({
+    return rawReviews.map((p): AllReviewCheckDTO => ({
       spotId: p.spotId,
       content: p.text,
       rate: p.rate ?? 0,

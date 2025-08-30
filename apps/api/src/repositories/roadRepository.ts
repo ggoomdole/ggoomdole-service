@@ -303,6 +303,28 @@ class RoadRepository {
       },
     });
   }
+
+  async upsertParticipation(userId: number, roadId: number) {
+    return prisma.pilgrimageUser.upsert({
+      where: {
+        userId_pilgrimageId: {
+          userId: userId,
+          pilgrimageId: roadId,
+        },
+      },
+      update: {},
+      create: {
+        userId: userId,
+        pilgrimageId: roadId,
+      },
+    });
+  }
+
+  async deleteRoad(roadId: number) {
+    return prisma.pilgrimage.delete({
+      where: { id: roadId }
+    });
+  }
 }
 
 export default new RoadRepository();

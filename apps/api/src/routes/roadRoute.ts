@@ -17,6 +17,7 @@ router.post("/custom", authenticate, upload.single("road-image"), roadController
 
 router.get("/recommend", roadController.loadPapularRoad);
 router.get("/participation", authenticate, roadController.loadParticipation);
+router.post("/participation/:roadId", authenticate, roadController.partiForRoad);
 
 router.get("/:roadId", roadController.loadDetail);
 router.patch(
@@ -25,5 +26,7 @@ router.patch(
   upload.single("update-road-image"),
   roadController.updateRoad
 );
+
+router.delete("/:roadId", authenticate, roadController.deleteRoad);
 
 export default router;
