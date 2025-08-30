@@ -5,7 +5,7 @@ import axios from "axios";
 
 import roadRepository from '../repositories/roadRepository';
 import spotRepository from '../repositories/spotRepository';
-import { NotFoundError, UnauthorizedError, BadRequestError } from '../utils/customError';
+import { BadRequestError,NotFoundError, UnauthorizedError } from '../utils/customError';
 
 class RoadService {
   async fetchNearbySpots(lat: string, lng: string): Promise<DataSpotDTO[]> {
