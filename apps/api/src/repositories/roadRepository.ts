@@ -214,6 +214,9 @@ class RoadRepository {
       where: { id: roadId },
       include: {
         spots: {
+          where: {
+            request: false,
+          },
           include: {
             spot: {
               include: {
