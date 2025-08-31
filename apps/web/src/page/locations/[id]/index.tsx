@@ -1,7 +1,6 @@
 import Link from "next/link";
 
 import Header from "@/components/common/header";
-import AverageStarRating from "@/components/common/star/average-star-rating";
 import CourseTab from "@/components/locations/course-tab";
 import HomeTab from "@/components/locations/home-tab";
 import ReviewTab from "@/components/locations/review-tab";
@@ -53,7 +52,6 @@ export default function LocationsPage({ id, tab, data }: LocationsPageProps) {
               <h1 className="typo-semibold line-clamp-1 text-gray-700">
                 {data.poiDetailInfo.name}
               </h1>
-              <AverageStarRating rating={4.3} participants={474} />
               <p className="typo-regular line-clamp-1 text-gray-500">
                 {data.poiDetailInfo.bldAddr}
               </p>

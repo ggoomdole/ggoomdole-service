@@ -9,6 +9,8 @@ import More from "@/assets/more.svg";
 import Send from "@/assets/send.svg";
 import { useParticipateRoad } from "@/lib/tanstack/mutation/road";
 import { cn } from "@/lib/utils";
+import { getCookie } from "@/utils/cookie";
+import { infoToast } from "@/utils/toast";
 
 const ACTION_BUTTONS = [
   {
@@ -39,6 +41,9 @@ export default function FloatingActionButton({ id }: FloatingActionButtonProps) 
   const { mutateAsync: participateRoad } = useParticipateRoad();
 
   const onClick = async (value: (typeof ACTION_BUTTONS)[number]["value"]) => {
+    const isTokenExistd = !!(await getCookie("jwtToken"));
+    if (!isTokenExistd) return infoToast("로그인 후 이용해주세요.");
+
     if (value === "request") {
       router.push(`/courses/${id}/request`);
     } else if (value === "my-course") {

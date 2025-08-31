@@ -32,7 +32,7 @@ function SortDrawerWithoutSuspense({ options, className }: SortDrawerProps) {
       defaultParams[key] = value;
     }
     const params = getParams(defaultParams, { sort: value });
-    router.push(`?${params}`);
+    router.replace(`?${params}`);
   };
 
   return (
