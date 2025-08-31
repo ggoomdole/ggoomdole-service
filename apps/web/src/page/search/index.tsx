@@ -7,21 +7,24 @@ import Close from "@/assets/close.svg";
 import CourseCard from "@/components/common/card/course-card";
 import { SEARCH } from "@/constants/search";
 import { useClearAllRecentSearch, useRemoveRecentSearch } from "@/lib/tanstack/mutation/search";
+import { useGetRecentSearchWords } from "@/lib/tanstack/query/search";
 import { BaseResponseDTO } from "@/models";
 import { RoadResponseDTO } from "@/models/road";
 import { revalidateTags } from "@/utils/revalidate";
 
 interface SearchPageProps {
+  isTokenExist: boolean;
   roadRecommendResponse: Usable<BaseResponseDTO<RoadResponseDTO[]>>;
-  recentSearchResponse: Usable<BaseResponseDTO<string[]>>;
 }
 
 export default function SearchPage({
+  isTokenExist,
   roadRecommendResponse,
-  recentSearchResponse,
+  // recentSearchResponse,
 }: SearchPageProps) {
   const roadRecommend = use(roadRecommendResponse);
-  const recentSearch = use(recentSearchResponse);
+  // const recentSearch = use(recentSearchResponse);
+  const { data: recentSearch } = useGetRecentSearchWords(isTokenExist);
 
   const router = useRouter();
 
@@ -61,7 +64,7 @@ export default function SearchPage({
       <section className="space-y-2.5">
         <div className="flex items-center gap-2.5">
           <h2 className="typo-semibold">최근 검색어</h2>
-          {recentSearch.data.length > 0 && (
+          {recentSearch && recentSearch.data.length > 0 && (
             <button
               onClick={onClearAllSearchKeywords}
               className="typo-regular text-gray-300 underline disabled:text-gray-400"
@@ -72,7 +75,7 @@ export default function SearchPage({
           )}
         </div>
         <div className="flex flex-col items-start gap-1">
-          {recentSearch.data.length > 0 ? (
+          {recentSearch && recentSearch.data.length > 0 ? (
             recentSearch.data.map((search) => (
               <div
                 key={search}

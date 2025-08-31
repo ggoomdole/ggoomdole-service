@@ -1,10 +1,10 @@
 import SearchHeader from "@/components/common/header/search-header";
-import { SEARCH } from "@/constants/search";
 import { BaseResponseDTO } from "@/models";
 import { RoadResponseDTO } from "@/models/road";
 import SearchPage from "@/page/search";
 import SearchResultPage from "@/page/search/search-result";
 import { serverApi } from "@/services/api";
+import { getCookie } from "@/utils/cookie";
 
 interface SearchProps {
   searchParams: Promise<{
@@ -16,10 +16,9 @@ interface SearchProps {
 
 export default async function Search({ searchParams }: SearchProps) {
   const resolvedSearchParams = await searchParams;
+  const isTokenExist = !!(await getCookie("jwtToken"));
+
   const roadRecommendResponse = serverApi.get<BaseResponseDTO<RoadResponseDTO[]>>("road/recommend");
-  const recentSearchResponse = serverApi.get<BaseResponseDTO<string[]>>("search/recent", {
-    next: { tags: [SEARCH.RECENT] },
-  });
 
   return (
     <>
@@ -27,10 +26,7 @@ export default async function Search({ searchParams }: SearchProps) {
       {resolvedSearchParams.word ? (
         <SearchResultPage {...resolvedSearchParams} />
       ) : (
-        <SearchPage
-          roadRecommendResponse={roadRecommendResponse}
-          recentSearchResponse={recentSearchResponse}
-        />
+        <SearchPage isTokenExist={isTokenExist} roadRecommendResponse={roadRecommendResponse} />
       )}
     </>
   );

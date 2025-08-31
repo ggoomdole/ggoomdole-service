@@ -21,8 +21,10 @@ interface ParticipationsProps {
 export default async function Participations({ searchParams }: ParticipationsProps) {
   const { tab, sort } = await searchParams;
 
+  const isCreatTab = Boolean(tab);
+
   const params = getParams({
-    maker: Boolean(tab),
+    maker: isCreatTab,
     categoryId: sort,
   });
   const promisedReponse = serverApi.get<BaseResponseDTO<RoadResponseDTO[]>>(
@@ -45,7 +47,7 @@ export default async function Participations({ searchParams }: ParticipationsPro
         }
       />
       <Suspense fallback={<Fallback text="순례길을 불러오는 중..." />}>
-        <ParticipationsPage promisedReponse={promisedReponse} />
+        <ParticipationsPage isCreatTab={isCreatTab} promisedReponse={promisedReponse} />
       </Suspense>
     </>
   );
