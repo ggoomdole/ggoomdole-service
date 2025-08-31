@@ -83,7 +83,7 @@ export default function FindByMapTab({
     setSelectedMarker(null);
 
     const params = getParams({ id, view });
-    router.push(`?${params}`);
+    router.replace(`?${params}`);
   };
 
   useEffect(() => {

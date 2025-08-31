@@ -12,7 +12,14 @@ class reviewController {
         text: data.content,
         rate: data.rate,
         imageUrl: data.imageUrl
-      }
+      },
+      include: {
+        user: {
+          select: {
+            nickName: true,
+          },
+        },
+      },
     });
   }
 
@@ -24,7 +31,14 @@ class reviewController {
 
   async findReviewById(reviewId: number) {
     return await prisma.review.findFirst({
-      where: { id: reviewId }
+      where: { id: reviewId },
+      include: {
+        user: {
+          select: {
+            nickName: true,
+          },
+        },
+      },
     });
   }
 
@@ -41,6 +55,13 @@ class reviewController {
   async findAllReviewById(spotId: string) {
     return await prisma.review.findMany({
       where: { spotId },
+      include: {
+        user: {
+          select: {
+            nickName: true,
+          },
+        },
+      },
     });
   }
 }

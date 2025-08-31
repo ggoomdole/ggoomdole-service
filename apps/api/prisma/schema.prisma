@@ -14,7 +14,7 @@ model SearchKeyword {
   createAt  DateTime @default(now())
   updateAt  DateTime @updatedAt
 
-  user      User     @relation(fields: [userId], references: [id])
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model Spot {
@@ -27,21 +27,21 @@ model Spot {
   hours     String?
   avgRate   Int?
 
-  reviews   Review[]
+  reviews   Review[] 
   pilgrimageSpots PilgrimageSpot[]
 }
 
 model Review {
-  id        Int               @id @default(autoincrement())
+  id        Int       @id @default(autoincrement())
   userId    Int
-  spotId   String
+  spotId    String
   text      String
   rate      Int
   imageUrl  String?
-  createAt     DateTime       @default(now())
+  createAt  DateTime @default(now())
 
-  user      User     @relation(fields: [userId], references: [id])
-  spot     Spot    @relation(fields: [spotId], references: [id])
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  spot      Spot     @relation(fields: [spotId], references: [id], onDelete: Cascade)
 }
 
 model PilgrimageSpot {
@@ -50,11 +50,11 @@ model PilgrimageSpot {
   number       Int
   introSpot    String
   request      Boolean
-  createAt     DateTime       @default(now())
-  updateAt     DateTime       @updatedAt
+  createAt     DateTime @default(now())
+  updateAt     DateTime @updatedAt
 
-  pilgrimage   Pilgrimage @relation(fields: [pilgrimageId], references: [id])
-  spot        Spot      @relation(fields: [spotId], references: [id])
+  pilgrimage   Pilgrimage @relation(fields: [pilgrimageId], references: [id], onDelete: Cascade)
+  spot         Spot       @relation(fields: [spotId], references: [id], onDelete: Cascade)
 
   @@id([pilgrimageId, spotId])
 }
@@ -62,12 +62,12 @@ model PilgrimageSpot {
 model PilgrimageUser {
   userId       Int
   pilgrimageId Int
-  type         Boolean        @default(false)
-  createAt     DateTime       @default(now())
-  updateAt     DateTime       @updatedAt
+  type         Boolean   @default(false)
+  createAt     DateTime  @default(now())
+  updateAt     DateTime  @updatedAt
 
-  user         User        @relation(fields: [userId], references: [id])
-  pilgrimage   Pilgrimage  @relation(fields: [pilgrimageId], references: [id])
+  user         User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  pilgrimage   Pilgrimage @relation(fields: [pilgrimageId], references: [id], onDelete: Cascade)
 
   @@id([userId, pilgrimageId])
 }
@@ -82,8 +82,8 @@ model Pilgrimage {
   createAt   DateTime   @default(now())
   updateAt   DateTime   @updatedAt
 
-  categoryId  Int
-  category    Category   @relation(fields: [categoryId], references: [id])
+  categoryId Int
+  category   Category   @relation(fields: [categoryId], references: [id], onDelete: Cascade)
 
   spots      PilgrimageSpot[]
   participants PilgrimageUser[]

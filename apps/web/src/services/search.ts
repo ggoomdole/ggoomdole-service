@@ -20,3 +20,7 @@ export const removeRecentSearch = async (word: string) => {
 export const clearAllRecentSearch = async () => {
   return clientApi.delete("search/delete/all");
 };
+
+export const getRecentSearchWords = async () => {
+  return clientApi.get<BaseResponseDTO<string[]>>("search/recent");
+};

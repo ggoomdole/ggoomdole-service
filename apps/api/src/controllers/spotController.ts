@@ -24,8 +24,9 @@ class SpotController {
     try {
         const dto = req.body as SpotReqDTO;
         if (!isAddRoadDTO(dto)) { throw new BadRequestError('요청 형식이 잘못되었습니다.'); }
+        const userId = req.user.userId;
 
-        const reqAddSpot = await spotService.reqAddSpot(dto);
+        const reqAddSpot = await spotService.reqAddSpot(dto, userId);
         return successHandler(res, '장소 추가 요청 전송 완료', reqAddSpot);
     } catch (error) {
       next(error);

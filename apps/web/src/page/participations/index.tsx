@@ -9,6 +9,7 @@ import { RoadResponseDTO } from "@/models/road";
 
 interface ParticipationsPageProps {
   promisedReponse: Usable<BaseResponseDTO<RoadResponseDTO[]>>;
+  isCreatTab: boolean;
 }
 
 const NAVS = [
@@ -27,7 +28,10 @@ const SORT_OPTIONS = COURSE_CATEGORIES.map((category) => ({
   value: category.path,
 }));
 
-export default function ParticipationsPage({ promisedReponse }: ParticipationsPageProps) {
+export default function ParticipationsPage({
+  promisedReponse,
+  isCreatTab,
+}: ParticipationsPageProps) {
   const { data } = use(promisedReponse);
 
   return (
@@ -40,7 +44,9 @@ export default function ParticipationsPage({ promisedReponse }: ParticipationsPa
             <CourseCard
               key={`course-item-${course.roadId}`}
               {...course}
-              href={`/courses/upload?id=${course.roadId}`}
+              href={
+                isCreatTab ? `/courses/upload?id=${course.roadId}` : `/courses/${course.roadId}`
+              }
             />
           ))
         ) : (

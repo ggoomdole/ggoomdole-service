@@ -150,6 +150,30 @@ class RoadController {
       next(error);
     }
   }
+  
+  async partiForRoad(req: Request, res:Response, next: NextFunction) {
+    try {
+      const userId = req.user.userId;
+      const roadId = Number(req.params.roadId);
+
+      const participate = await roadService.participateByRoadId(userId, roadId);
+      return successHandler(res, "순례길 참여 완료", participate);
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  async deleteRoad(req: Request, res: Response, next: NextFunction) {
+    try{
+      const userId = req.user.userId;
+      const roadId = Number(req.params.roadId);
+
+      const result = await roadService.deleteRoad(userId, roadId);
+      return successHandler(res, "순례길 삭제 완료", result);
+    } catch (error) {
+      next(error);
+    }
+  }
 }
 
 function isAddRoadDTO(obj: any): obj is RoadRequestDTO {
