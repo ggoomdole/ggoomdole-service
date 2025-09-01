@@ -6,7 +6,10 @@ import { RoadRequestDTO, SpotDTO } from "@repo/types";
 class RoadRepository {
   async allRoadList(categoryId?: number) {
     return await prisma.pilgrimage.findMany({
-      where: categoryId ? { categoryId } : undefined,
+      where: {
+        public: true,
+        ...(categoryId && { categoryId })
+      },
       include: {
         spots: {
           include: {
@@ -307,6 +310,14 @@ class RoadRepository {
     });
   }
 
+  async findParticipation(userId: number, roadId: number) {
+    return prisma.pilgrimageUser.findUnique({
+      where: {
+        userId_pilgrimageId: { userId, pilgrimageId: roadId },
+      },
+    });
+  }
+
   async upsertParticipation(userId: number, roadId: number) {
     return prisma.pilgrimageUser.upsert({
       where: {
@@ -327,6 +338,17 @@ class RoadRepository {
     return prisma.pilgrimage.delete({
       where: { id: roadId }
     });
+  }
+
+  async checkPilgrimageParti(roadId: number, userId: number) {
+    return prisma.pilgrimageUser.delete({
+      where: {
+        userId_pilgrimageId: {
+          userId,
+          pilgrimageId: roadId
+        }
+      }
+    })
   }
 }
 

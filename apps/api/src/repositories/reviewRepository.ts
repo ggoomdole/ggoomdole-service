@@ -17,6 +17,7 @@ class reviewController {
         user: {
           select: {
             nickName: true,
+            profileImage: true
           },
         },
       },
@@ -36,6 +37,7 @@ class reviewController {
         user: {
           select: {
             nickName: true,
+            profileImage: true
           },
         },
       },
@@ -59,6 +61,7 @@ class reviewController {
         user: {
           select: {
             nickName: true,
+            profileImage: true
           },
         },
       },
