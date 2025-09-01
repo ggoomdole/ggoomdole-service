@@ -38,7 +38,7 @@ class ReviewService {
       spotId: newReview.spotId,
       content: newReview.text,
       rate: newReview.rate,
-      imageUrl: newReview.imageUrl ?? undefined
+      imageUrl: newReview.imageUrl ?? ""
     };
   }
 
@@ -60,12 +60,13 @@ class ReviewService {
       reviewId: reviewById.id,
       userId: reviewById.userId,
       nickname: reviewById.user.nickName,
+      profileImage: reviewById.user.profileImage,
       spotId: reviewById.spotId,
       content: reviewById.text,
       rate: reviewById.rate,
-      imageUrl: reviewById.imageUrl ?? undefined
+      imageUrl: reviewById.imageUrl
     };
-  }  
+  }
 
   async showAllReview(spotId: string): Promise<AllReviewCheckDTO[]> {
     const rawReviews = await reviewRepository.findAllReviewById(spotId);
@@ -76,7 +77,9 @@ class ReviewService {
       spotId: p.spotId,
       content: p.text,
       rate: p.rate ?? 0,
-      imageUrl: p.imageUrl ?? undefined
+      imageUrl: p.imageUrl ?? "",
+      nickname: p.user.nickName,
+      profileImage: p.user.profileImage
     }));
   }
 }
