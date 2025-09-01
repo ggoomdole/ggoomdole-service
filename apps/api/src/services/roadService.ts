@@ -402,10 +402,10 @@ class RoadService {
     const road = await roadRepository.findRoadById(roadId);
     if (!road) { throw new NotFoundError("해당 순례길이 존재하지 않습니다."); }
 
-    const isAdmin = await roadRepository.checkPilgrimageParti(userId, roadId);
+    const isAdmin = await roadRepository.isParticipateByUserId(userId, roadId);
     if (!isAdmin) { throw new UnauthorizedError("순례길에 참여하고 있지 않습니다."); }
 
-    await roadRepository.deleteRoad(roadId);
+    await roadRepository.deleteRoadById(roadId, userId);
     return roadId;
   }
 }

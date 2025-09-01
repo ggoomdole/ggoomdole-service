@@ -15,7 +15,7 @@ router.get('/kakao/callback', (req: Request, res: Response) => {
       return res.status(400).send('인가코드가 없습니다.');
     }
   
-    res.redirect(`${process.env.FRONTEND_KAKAO_URL}?code=${code}`);
+    res.redirect(`${process.env.KAKAO_REDIRECT_URI}?code=${code}`);
 });
 
 export default router;
