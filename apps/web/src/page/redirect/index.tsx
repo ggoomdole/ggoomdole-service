@@ -20,6 +20,7 @@ export default function RedirectPage({ promisedResponse }: RedirectPageProps) {
     if (response.success) {
       setCookie("jwtToken", response.data.jwtToken);
       setCookie("accessToken", response.data.accessToken);
+      setCookie("userId", response.data.userId.toString());
 
       if (response.data.isFirstLogin) {
         redirect("/signup", RedirectType.replace);

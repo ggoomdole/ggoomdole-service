@@ -1,5 +1,6 @@
 import { LOCATION } from "@/constants/location";
 import LocationsPage from "@/page/locations/[id]";
+import { getCookie } from "@/utils/cookie";
 
 interface LocationPageProps {
   params: Promise<{
@@ -21,6 +22,7 @@ export default async function Locations({ params, searchParams }: LocationPagePr
     { next: { tags: [LOCATION.DETAIL, id] } }
   );
   const data = await res.json();
+  const currentUserId = await getCookie("userId");
 
-  return <LocationsPage id={id} tab={tab} data={data} />;
+  return <LocationsPage id={id} tab={tab} data={data} currentUserId={currentUserId ?? null} />;
 }

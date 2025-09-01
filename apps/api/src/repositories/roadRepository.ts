@@ -6,7 +6,10 @@ import { RoadRequestDTO, SpotDTO } from "@repo/types";
 class RoadRepository {
   async allRoadList(categoryId?: number) {
     return await prisma.pilgrimage.findMany({
-      where: categoryId ? { categoryId } : undefined,
+      where: {
+        public: true,
+        ...(categoryId && { categoryId })
+      },
       include: {
         spots: {
           include: {
@@ -115,6 +118,19 @@ class RoadRepository {
     });
   }
 
+  async isParticipateByUserId(userId: number, roadId: number) {
+    const isParti = await prisma.pilgrimageUser.findUnique({
+      where: {
+        userId_pilgrimageId: {
+          userId,
+          pilgrimageId: roadId
+        },
+      },
+    })
+
+    return !!isParti;
+  }
+
   async findRoadByTitle(title: string) {
     return await prisma.pilgrimage.findFirst({
       where: { title },
@@ -214,6 +230,9 @@ class RoadRepository {
       where: { id: roadId },
       include: {
         spots: {
+          where: {
+            request: false,
+          },
           include: {
             spot: {
               include: {
@@ -304,6 +323,14 @@ class RoadRepository {
     });
   }
 
+  async findParticipation(userId: number, roadId: number) {
+    return prisma.pilgrimageUser.findUnique({
+      where: {
+        userId_pilgrimageId: { userId, pilgrimageId: roadId },
+      },
+    });
+  }
+
   async upsertParticipation(userId: number, roadId: number) {
     return prisma.pilgrimageUser.upsert({
       where: {
@@ -324,6 +351,17 @@ class RoadRepository {
     return prisma.pilgrimage.delete({
       where: { id: roadId }
     });
+  }
+
+  async deleteRoadById(roadId: number, userId: number) {
+    return prisma.pilgrimageUser.delete({
+      where: {
+        userId_pilgrimageId: {
+          userId,
+          pilgrimageId: roadId
+        }
+      }
+    })
   }
 }
 

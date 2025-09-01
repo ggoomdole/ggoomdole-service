@@ -1,3 +1,5 @@
+import optionalAuth from "@/middlewares/optionalAuth";
+
 import { Router } from "express";
 import multer from "multer";
 
@@ -19,7 +21,7 @@ router.get("/recommend", roadController.loadPapularRoad);
 router.get("/participation", authenticate, roadController.loadParticipation);
 router.post("/participation/:roadId", authenticate, roadController.partiForRoad);
 
-router.get("/:roadId", roadController.loadDetail);
+router.get("/:roadId", optionalAuth, roadController.loadDetail);
 router.patch(
   "/:roadId",
   authenticate,
@@ -28,5 +30,6 @@ router.patch(
 );
 
 router.delete("/:roadId", authenticate, roadController.deleteRoad);
+router.delete("/out/:roadId", authenticate, roadController.partioutRoad);
 
 export default router;

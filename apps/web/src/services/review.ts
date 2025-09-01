@@ -16,3 +16,7 @@ export const createReview = async ({
 }): Promise<BaseResponseDTO<unknown>> => {
   return clientApi.post("review", body, { body: formData });
 };
+
+export const removeReview = async (reviewId: number): Promise<BaseResponseDTO<unknown>> => {
+  return clientApi.delete(`review/${reviewId}`);
+};

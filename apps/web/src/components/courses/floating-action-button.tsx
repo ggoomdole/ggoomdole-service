@@ -7,38 +7,40 @@ import Folder from "@/assets/folder.svg";
 import Enter from "@/assets/login.svg";
 import More from "@/assets/more.svg";
 import Send from "@/assets/send.svg";
-import { useParticipateRoad } from "@/lib/tanstack/mutation/road";
+import { useParticipateRoad, useWithdrawRoad } from "@/lib/tanstack/mutation/road";
 import { cn } from "@/lib/utils";
 import { getCookie } from "@/utils/cookie";
 import { infoToast } from "@/utils/toast";
 
-const ACTION_BUTTONS = [
-  {
-    icon: Enter,
-    text: "순례길 참여하기",
-    value: "participate" as const,
-  },
-  {
-    icon: Send,
-    text: "장소 추가 요청하기",
-    value: "request" as const,
-  },
-  {
-    icon: Folder,
-    text: "나의 순례길로 가져오기",
-    value: "my-course" as const,
-  },
-];
-
 interface FloatingActionButtonProps {
   id: string;
+  isParticipate: boolean;
 }
 
-export default function FloatingActionButton({ id }: FloatingActionButtonProps) {
+export default function FloatingActionButton({ id, isParticipate }: FloatingActionButtonProps) {
   const [isOpen, setIsOpen] = useState(false);
   const router = useRouter();
 
   const { mutateAsync: participateRoad } = useParticipateRoad();
+  const { mutateAsync: withdrawRoad } = useWithdrawRoad();
+
+  const ACTION_BUTTONS = [
+    {
+      icon: Enter,
+      text: isParticipate ? "순례길 나가기" : "순례길 참여하기",
+      value: "participate" as const,
+    },
+    {
+      icon: Send,
+      text: "장소 추가 요청하기",
+      value: "request" as const,
+    },
+    {
+      icon: Folder,
+      text: "나의 순례길로 가져오기",
+      value: "my-course" as const,
+    },
+  ];
 
   const onClick = async (value: (typeof ACTION_BUTTONS)[number]["value"]) => {
     const isTokenExistd = !!(await getCookie("jwtToken"));
@@ -47,10 +49,15 @@ export default function FloatingActionButton({ id }: FloatingActionButtonProps) 
     if (value === "request") {
       router.push(`/courses/${id}/request`);
     } else if (value === "my-course") {
-      router.push(`/courses/upload?id=${id}&view=replicate`);
+      router.push(`/courses/upload?id=${id}&view=duplicate`);
     } else if (value === "participate") {
-      await participateRoad(id);
+      if (isParticipate) {
+        await withdrawRoad(id);
+      } else {
+        await participateRoad(id);
+      }
     }
+    setIsOpen(false);
   };
 
   return (

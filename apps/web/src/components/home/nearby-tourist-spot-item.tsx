@@ -15,9 +15,12 @@ export default function NearbyTouristSpotItem({
   image,
   address,
 }: NearbyTouristSpotItemProps) {
+  // TODO: 제목으로 장소 검색하고 결과가 있으면
+  // 해당 ID로 locations 페이지로 이동하기
+
   return (
     <Link
-      href={`/tourist-spot/${title}`}
+      href={`/locations/${title}`}
       className="w-max max-w-40 shrink-0 overflow-hidden rounded-sm shadow-lg"
     >
       <Image

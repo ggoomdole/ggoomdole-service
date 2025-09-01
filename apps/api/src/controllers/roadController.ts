@@ -107,13 +107,14 @@ class RoadController {
 
   async loadDetail(req: Request, res: Response, next: NextFunction) {
     try {
+      const userId = req.user?.userId;
       const roadId = Number(req.params.roadId);
       if (!roadId) throw new NotFoundError("순례길 ID는 필수입니다.");
 
       const sortBy = (req.query.sortBy as string) || "default";
       if (!sortBy) throw new NotFoundError("정렬 기준이 존재하지 않습니다.");
 
-      const result = await roadService.getOneRoadWithSpots(roadId, sortBy);
+      const result = await roadService.getOneRoadWithSpots(userId, roadId, sortBy);
       return successHandler(res, "순례길 세부 내용 조회 성공", result);
     } catch (error) {
       next(error);
@@ -150,21 +151,36 @@ class RoadController {
       next(error);
     }
   }
-  
-  async partiForRoad(req: Request, res:Response, next: NextFunction) {
+
+  async partiForRoad(req: Request, res: Response, next: NextFunction) {
     try {
       const userId = req.user.userId;
       const roadId = Number(req.params.roadId);
 
       const participate = await roadService.participateByRoadId(userId, roadId);
-      return successHandler(res, "순례길 참여 완료", participate);
+      return successHandler(res, participate.message, {
+        userId: participate.userId,
+        pilgrimageId: participate.pilgrimageId,
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  async partioutRoad(req: Request, res: Response, next: NextFunction) {
+    try {
+      const userId = req.user.userId;
+      const roadId = Number(req.params.roadId);
+
+      const outRoad = await roadService.outByRoadId(userId, roadId);
+      return successHandler(res, "순례길 나가기 완료", outRoad);
     } catch (error) {
       next(error);
     }
   }
 
   async deleteRoad(req: Request, res: Response, next: NextFunction) {
-    try{
+    try {
       const userId = req.user.userId;
       const roadId = Number(req.params.roadId);
 

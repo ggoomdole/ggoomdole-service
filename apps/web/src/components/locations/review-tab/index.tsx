@@ -10,9 +10,10 @@ import StarRating from "../../common/star/star-rating";
 
 interface ReviewTabProps {
   id: string;
+  currentUserId: string | null;
 }
 
-export default function ReviewTab({ id }: ReviewTabProps) {
+export default function ReviewTab({ id, currentUserId }: ReviewTabProps) {
   const { data, isLoading, error } = useGetReviewsById(id);
 
   const isNotFoundError = error?.message.includes("404");
@@ -49,7 +50,12 @@ export default function ReviewTab({ id }: ReviewTabProps) {
             </div>
             <div className="space-y-2.5">
               {data?.data.map((review, index) => (
-                <ReviewItem key={`review-item-${index}`} {...review} />
+                <ReviewItem
+                  key={`review-item-${index}`}
+                  {...review}
+                  currentUserId={currentUserId}
+                  spotId={id}
+                />
               ))}
             </div>
           </>

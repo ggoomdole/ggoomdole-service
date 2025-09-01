@@ -7,7 +7,7 @@ import { NotFoundError } from '../utils/customError';
 class SearchController {
   async searchRoad(req: Request, res: Response, next: NextFunction) {
     try{
-        const userId = req.user.userId;
+        const userId = req.user?.userId ?? null; 
 
         const word = req.query.word;
         if (!word || typeof word !== 'string') { throw new NotFoundError('검색어는 필수입니다.'); }

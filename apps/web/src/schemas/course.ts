@@ -20,7 +20,7 @@ export const uploadCourseFormSchema = z.object({
   imageUrl: z.instanceof(File).nullable().optional(),
   categoryId: z.number(),
   intro: z.string().min(1),
-  spots: z.array(courseSchema).min(1),
+  spots: z.array(courseSchema).min(3),
 });
 
 export type UploadCourseForm = z.infer<typeof uploadCourseFormSchema>;
