@@ -6,7 +6,10 @@ import { RoadRequestDTO, SpotDTO } from "@repo/types";
 class RoadRepository {
   async allRoadList(categoryId?: number) {
     return await prisma.pilgrimage.findMany({
-      where: categoryId ? { categoryId } : undefined,
+      where: {
+        public: true,
+        ...(categoryId && { categoryId })
+      },
       include: {
         spots: {
           include: {
