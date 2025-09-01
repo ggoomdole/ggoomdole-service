@@ -28,5 +28,6 @@ router.patch(
 );
 
 router.delete("/:roadId", authenticate, roadController.deleteRoad);
+router.delete("/out/:roadId", authenticate, roadController.partioutRoad);
 
 export default router;
