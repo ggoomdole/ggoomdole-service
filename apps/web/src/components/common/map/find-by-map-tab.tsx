@@ -104,6 +104,12 @@ export default function FindByMapTab({
       const res = await fetch(`https://apis.openapi.sk.com/tmap/pois?${params}`);
       const data = await res.json();
       setSearchResult(data.searchPoiInfo.pois.poi);
+      if (data.searchPoiInfo.pois.poi.length > 0) {
+        const { frontLat, frontLon } = data.searchPoiInfo.pois.poi[0].newAddressList.newAddress[0];
+        mapInstanceRef.current?.setCenter(
+          new window.Tmapv3.LatLng(Number(frontLat), Number(frontLon))
+        );
+      }
     };
 
     fetchSearchResult();

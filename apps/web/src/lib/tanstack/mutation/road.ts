@@ -44,7 +44,7 @@ export const useUpdateRoad = () => {
       successToast("순례길 수정이 완료되었어요.");
       invalidateQueries([ROAD.ALL_ROADS]);
       revalidateTags([ROAD.PARTICIPATIONS]);
-      router.replace("/mypage/courses");
+      router.back();
     },
   });
 };
@@ -94,7 +94,7 @@ export const useRemoveRoad = () => {
         [ROAD.RECOMMEND],
       ]);
       revalidateTags([ROAD.MY_CUSTOM_ROADS]);
-      router.replace("/mypage/courses");
+      router.back();
     },
     onError: () => {
       errorToast("순례길 삭제에 실패했어요.");
