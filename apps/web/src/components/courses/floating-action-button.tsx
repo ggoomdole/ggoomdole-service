@@ -51,6 +51,7 @@ export default function FloatingActionButton({ id }: FloatingActionButtonProps) 
     } else if (value === "participate") {
       await participateRoad(id);
     }
+    setIsOpen(false);
   };
 
   return (

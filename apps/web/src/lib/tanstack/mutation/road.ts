@@ -10,7 +10,7 @@ import {
   uploadRoad,
 } from "@/services/road";
 import { revalidateTags } from "@/utils/revalidate";
-import { errorToast, successToast } from "@/utils/toast";
+import { errorToast, infoToast, successToast } from "@/utils/toast";
 import { useMutation } from "@tanstack/react-query";
 
 import { invalidateMany, invalidateQueries } from "..";
@@ -65,7 +65,11 @@ export const useCreateMyRoad = () => {
 export const useParticipateRoad = () => {
   return useMutation({
     mutationFn: participateRoad,
-    onSuccess: () => {
+    onSuccess: (data) => {
+      if (data.message === "이미 참여중인 순례길입니다.") {
+        infoToast("이미 참여중인 순례길입니다.");
+        return;
+      }
       successToast("순례길 참여가 완료되었어요.");
       invalidateQueries([ROAD.PARTICIPATIONS]);
     },
