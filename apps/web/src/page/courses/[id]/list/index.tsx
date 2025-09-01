@@ -53,7 +53,7 @@ export default function CourseDetailListPage({ id, promisedResponse }: CourseDet
           <LocationCard key={spot.spotId} {...spot} />
         ))}
       </main>
-      <FloatingActionButton id={id} />
+      <FloatingActionButton id={id} isParticipate={data.isParti} />
     </>
   );
 }

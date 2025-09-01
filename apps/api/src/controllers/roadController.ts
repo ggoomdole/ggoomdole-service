@@ -107,7 +107,7 @@ class RoadController {
 
   async loadDetail(req: Request, res: Response, next: NextFunction) {
     try {
-      const userId = req.user.userId;
+      const userId = req.user?.userId;
       const roadId = Number(req.params.roadId);
       if (!roadId) throw new NotFoundError("순례길 ID는 필수입니다.");
 
@@ -151,8 +151,8 @@ class RoadController {
       next(error);
     }
   }
-  
-  async partiForRoad(req: Request, res:Response, next: NextFunction) {
+
+  async partiForRoad(req: Request, res: Response, next: NextFunction) {
     try {
       const userId = req.user.userId;
       const roadId = Number(req.params.roadId);
@@ -160,14 +160,14 @@ class RoadController {
       const participate = await roadService.participateByRoadId(userId, roadId);
       return successHandler(res, participate.message, {
         userId: participate.userId,
-        pilgrimageId: participate.pilgrimageId
+        pilgrimageId: participate.pilgrimageId,
       });
     } catch (error) {
       next(error);
     }
   }
 
-  async partioutRoad(req: Request, res:Response, next: NextFunction) {
+  async partioutRoad(req: Request, res: Response, next: NextFunction) {
     try {
       const userId = req.user.userId;
       const roadId = Number(req.params.roadId);
@@ -180,7 +180,7 @@ class RoadController {
   }
 
   async deleteRoad(req: Request, res: Response, next: NextFunction) {
-    try{
+    try {
       const userId = req.user.userId;
       const roadId = Number(req.params.roadId);
 

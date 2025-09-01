@@ -344,7 +344,7 @@ export default function CourseDetailPage({
             </div>
           </section>
         ) : isSearchMode ? null : (
-          <FloatingActionButton id={id} />
+          <FloatingActionButton id={id} isParticipate={data.isParti} />
         )}
       </main>
     </>
