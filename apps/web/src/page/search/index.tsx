@@ -17,13 +17,8 @@ interface SearchPageProps {
   roadRecommendResponse: Usable<BaseResponseDTO<RoadResponseDTO[]>>;
 }
 
-export default function SearchPage({
-  isTokenExist,
-  roadRecommendResponse,
-  // recentSearchResponse,
-}: SearchPageProps) {
+export default function SearchPage({ isTokenExist, roadRecommendResponse }: SearchPageProps) {
   const roadRecommend = use(roadRecommendResponse);
-  // const recentSearch = use(recentSearchResponse);
   const { data: recentSearch } = useGetRecentSearchWords(isTokenExist);
 
   const router = useRouter();
