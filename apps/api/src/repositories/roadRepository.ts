@@ -328,6 +328,17 @@ class RoadRepository {
       where: { id: roadId }
     });
   }
+
+  async checkPilgrimageParti(roadId: number, userId: number) {
+    return prisma.pilgrimageUser.delete({
+      where: {
+        userId_pilgrimageId: {
+          userId,
+          pilgrimageId: roadId
+        }
+      }
+    })
+  }
 }
 
 export default new RoadRepository();

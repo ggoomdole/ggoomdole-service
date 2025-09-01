@@ -163,6 +163,18 @@ class RoadController {
     }
   }
 
+  async partioutRoad(req: Request, res:Response, next: NextFunction) {
+    try {
+      const userId = req.user.userId;
+      const roadId = Number(req.params.roadId);
+
+      const outRoad = await roadService.outByRoadId(userId, roadId);
+      return successHandler(res, "순례길 나가기 완료", outRoad);
+    } catch (error) {
+      next(error);
+    }
+  }
+
   async deleteRoad(req: Request, res: Response, next: NextFunction) {
     try{
       const userId = req.user.userId;
