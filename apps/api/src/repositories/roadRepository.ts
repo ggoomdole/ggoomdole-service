@@ -307,6 +307,14 @@ class RoadRepository {
     });
   }
 
+  async findParticipation(userId: number, roadId: number) {
+    return prisma.pilgrimageUser.findUnique({
+      where: {
+        userId_pilgrimageId: { userId, pilgrimageId: roadId },
+      },
+    });
+  }
+
   async upsertParticipation(userId: number, roadId: number) {
     return prisma.pilgrimageUser.upsert({
       where: {

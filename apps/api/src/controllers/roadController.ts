@@ -157,7 +157,10 @@ class RoadController {
       const roadId = Number(req.params.roadId);
 
       const participate = await roadService.participateByRoadId(userId, roadId);
-      return successHandler(res, "순례길 참여 완료", participate);
+      return successHandler(res, participate.message, {
+        userId: participate.userId,
+        pilgrimageId: participate.pilgrimageId
+      });
     } catch (error) {
       next(error);
     }
