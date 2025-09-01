@@ -1,6 +1,6 @@
 "use client";
 
-import { Usable, use, useState } from "react";
+import { Usable, use, useEffect, useState } from "react";
 
 import FindByMapTab from "@/components/common/map/find-by-map-tab";
 import CreateTab from "@/components/courses/upload/create-tab";
@@ -78,6 +78,10 @@ export default function UploadCoursePage({
   });
 
   const currentPlaces = form.getValues("spots");
+
+  useEffect(() => {
+    form.setValue("spots", defaultValues.spots);
+  }, [promisedResponse]);
 
   switch (tab) {
     case "find-by-map":

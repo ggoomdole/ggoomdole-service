@@ -86,7 +86,7 @@ export default function CreateTab({
   const duplicateButtonDisabled = isCheckingDuplicate || isNameAvailable || title === initialTitle;
   const submitDisabled =
     !form.formState.isValid ||
-    fields.length === 0 ||
+    fields.length < 3 ||
     isEditOrderMode ||
     isUploadingRoad ||
     isCheckingDuplicate ||
