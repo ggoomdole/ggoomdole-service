@@ -11,6 +11,7 @@ interface LocationsPageProps {
   id: string;
   tab: string;
   data: GetDetailPOIDTO;
+  currentUserId: string | null;
 }
 
 const NAVS = [
@@ -28,11 +29,11 @@ const NAVS = [
   },
 ];
 
-export default function LocationsPage({ id, tab, data }: LocationsPageProps) {
+export default function LocationsPage({ id, tab, data, currentUserId }: LocationsPageProps) {
   const renderTab = (tab: string) => {
     switch (tab) {
       case "review":
-        return <ReviewTab id={id} />;
+        return <ReviewTab id={id} currentUserId={currentUserId} />;
       case "course":
         return <CourseTab lat={+data.poiDetailInfo.lat} lng={+data.poiDetailInfo.lon} />;
       default:
