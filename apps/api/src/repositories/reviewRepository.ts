@@ -17,6 +17,7 @@ class reviewController {
         user: {
           select: {
             nickName: true,
+            profileImage: true
           },
         },
       },

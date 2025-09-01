@@ -35,6 +35,7 @@ class ReviewService {
       reviewId: newReview.id,
       userId: newReview.userId,
       nickname: newReview.user.nickName,
+      profileImage: newReview.user.profileImage,
       spotId: newReview.spotId,
       content: newReview.text,
       rate: newReview.rate,
