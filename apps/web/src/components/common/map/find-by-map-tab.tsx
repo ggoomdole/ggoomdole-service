@@ -23,7 +23,7 @@ interface FindByMapTabProps {
   tab: string;
   currentPlaces: CoursePlaceProps[];
   id?: string;
-  view?: "private" | "replicate";
+  view?: "private" | "duplicate";
   onSelectPlace: (place: CoursePlaceProps) => void;
 }
 

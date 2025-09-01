@@ -30,7 +30,12 @@ interface CreateTabProps {
   form: UseFormReturn<UploadCourseForm>;
   isEditCourse: boolean;
   isPrivate: boolean;
-  view: "private" | "replicate";
+  view: "private" | "duplicate";
+  previewImage: string | null;
+  initialTitle: string;
+  isNameAvailable: boolean;
+  setPreviewImage: (image: string | null) => void;
+  setIsNameAvailable: (isNameAvailable: boolean) => void;
 }
 
 const CATEGORIES = COURSE_CATEGORIES.slice(1);
@@ -43,14 +48,23 @@ const getHeaderText = (isEditCourse: boolean, isPrivate: boolean) => {
   return isEditCourse ? "순례길 수정하기" : "순례길 생성하기";
 };
 
-export default function CreateTab({ id, form, isEditCourse, isPrivate, view }: CreateTabProps) {
-  const isReplicate = view === "replicate";
-  const initialDuplicateStatus = Boolean(id) && !isReplicate;
+export default function CreateTab({
+  id,
+  form,
+  isEditCourse,
+  isPrivate,
+  view,
+  previewImage,
+  initialTitle,
+  isNameAvailable,
+  setPreviewImage,
+  setIsNameAvailable,
+}: CreateTabProps) {
+  const isDuplicate = view === "duplicate";
 
   const [isEditOrderMode, setIsEditOrderMode] = useState(false);
-  const [isNameDuplicateChecked, setIsNameDuplicateChecked] = useState(initialDuplicateStatus);
-  const [isNameAvailable, setIsNameAvailable] = useState(initialDuplicateStatus);
-  const prevImageUrl = useRef(form.getValues("imageUrl"));
+  const prevImageUrl = form.getValues("imageUrl");
+  const title = form.watch("title");
 
   const { mutateAsync: uploadRoad, isPending: isUploadingRoad } = useUploadRoad();
   const { mutateAsync: checkRoadNameDuplicate, isPending: isCheckingDuplicate } =
@@ -60,12 +74,7 @@ export default function CreateTab({ id, form, isEditCourse, isPrivate, view }: C
   const { mutateAsync: removeRoad, isPending: isRemovingRoad } = useRemoveRoad();
 
   const categoryId = form.watch("categoryId");
-  const thumbnail = form.watch("imageUrl");
 
-  const [previewImage, setPreviewImage] = useState<string | null>(() => {
-    if (!thumbnail) return null;
-    return thumbnail.name;
-  });
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const { fields, update, remove } = useFieldArray({
@@ -74,13 +83,13 @@ export default function CreateTab({ id, form, isEditCourse, isPrivate, view }: C
     keyName: "fieldId",
   });
 
+  const duplicateButtonDisabled = isCheckingDuplicate || isNameAvailable || title === initialTitle;
   const submitDisabled =
     !form.formState.isValid ||
     fields.length === 0 ||
     isEditOrderMode ||
     isUploadingRoad ||
     isCheckingDuplicate ||
-    !isNameDuplicateChecked ||
     !isNameAvailable ||
     isUpdatingRoad ||
     isCreatingRoad ||
@@ -95,7 +104,6 @@ export default function CreateTab({ id, form, isEditCourse, isPrivate, view }: C
 
   const onCheckRoadNameDuplicate = async () => {
     const isDuplicate = await checkRoadNameDuplicate(form.getValues("title"));
-    setIsNameDuplicateChecked(true);
     if (!isDuplicate.data) {
       setIsNameAvailable(false);
       infoToast("이미 존재하는 순례길 이름이에요.");
@@ -114,9 +122,10 @@ export default function CreateTab({ id, form, isEditCourse, isPrivate, view }: C
     form.setValue("categoryId", +categoryPath);
   };
 
-  const onTitleChange = () => {
-    // 제목이 변경되면 중복확인 상태를 초기화
-    setIsNameDuplicateChecked(false);
+  const onTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.value === initialTitle) {
+      setIsNameAvailable(true);
+    }
     setIsNameAvailable(false);
   };
 
@@ -163,7 +172,7 @@ export default function CreateTab({ id, form, isEditCourse, isPrivate, view }: C
       spots,
     };
     formData.append("data", JSON.stringify(body));
-    if (isReplicate) {
+    if (isDuplicate) {
       if (data.imageUrl) {
         let file = data.imageUrl;
         if (data.imageUrl.name.startsWith("https://")) {
@@ -179,7 +188,7 @@ export default function CreateTab({ id, form, isEditCourse, isPrivate, view }: C
       }
       await createMyRoad(formData);
     } else if (isEditCourse && id) {
-      if (prevImageUrl.current !== data.imageUrl && data.imageUrl) {
+      if (prevImageUrl !== data.imageUrl && data.imageUrl) {
         formData.append("update-road-image", data.imageUrl);
       }
       await updateRoad({ formData, roadId: id });
@@ -246,7 +255,7 @@ export default function CreateTab({ id, form, isEditCourse, isPrivate, view }: C
                 />
                 <button
                   onClick={onCheckRoadNameDuplicate}
-                  disabled={isCheckingDuplicate}
+                  disabled={duplicateButtonDisabled}
                   className="bg-main-900 typo-regular text-nowrap rounded-full px-2 py-1 text-white transition-colors disabled:bg-gray-100 disabled:text-gray-300"
                 >
                   중복확인
@@ -309,10 +318,10 @@ export default function CreateTab({ id, form, isEditCourse, isPrivate, view }: C
               remove={remove}
             />
           )}
-          {isEditCourse && !isPrivate && !isReplicate && <NewCourses id={id || ""} />}
+          {isEditCourse && !isPrivate && !isDuplicate && <NewCourses id={id || ""} />}
           {isEditCourse ? (
             <div className="flex gap-5 py-5">
-              {!isReplicate && (
+              {!isDuplicate && (
                 <Dialog>
                   <DialogTrigger className="typo-semibold flex-1 rounded-xl bg-gradient-to-r from-red-300 to-red-500 py-5 text-white">
                     삭제하기
@@ -332,7 +341,7 @@ export default function CreateTab({ id, form, isEditCourse, isPrivate, view }: C
                 </Dialog>
               )}
               <Button disabled={submitDisabled} className="flex-1" onClick={onSubmit}>
-                {isReplicate ? "생성하기" : "수정하기"}
+                {isDuplicate ? "생성하기" : "수정하기"}
               </Button>
             </div>
           ) : (

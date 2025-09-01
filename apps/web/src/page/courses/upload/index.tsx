@@ -1,6 +1,6 @@
 "use client";
 
-import { Usable, use } from "react";
+import { Usable, use, useState } from "react";
 
 import FindByMapTab from "@/components/common/map/find-by-map-tab";
 import CreateTab from "@/components/courses/upload/create-tab";
@@ -15,7 +15,7 @@ interface UploadCoursePageProps {
   tab: string;
   word: string;
   id: string;
-  view: "private" | "replicate";
+  view: "private" | "duplicate";
   promisedResponse: Usable<BaseResponseDTO<RoadResponseDTO>> | undefined;
 }
 
@@ -28,7 +28,6 @@ const DEFAULT_VALUES = {
   removeCourseIds: [],
 };
 
-// 회원일 때만 접근 가능하도록 로직 작성하기
 export default function UploadCoursePage({
   tab,
   word,
@@ -63,6 +62,16 @@ export default function UploadCoursePage({
     defaultValues,
   });
 
+  const thumbnail = form.watch("imageUrl");
+  const initialDuplicateStatus = Boolean(id) && view !== "duplicate";
+  const initialTitle = promisedResponse ? use(promisedResponse).data.title : "";
+
+  const [isNameAvailable, setIsNameAvailable] = useState(initialDuplicateStatus);
+  const [previewImage, setPreviewImage] = useState<string | null>(() => {
+    if (!thumbnail) return null;
+    return thumbnail.name;
+  });
+
   const { append } = useFieldArray({
     control: form.control,
     name: "spots",
@@ -90,6 +99,11 @@ export default function UploadCoursePage({
           isEditCourse={isEditCourse}
           isPrivate={isPrivate}
           view={view}
+          previewImage={previewImage}
+          initialTitle={initialTitle}
+          isNameAvailable={isNameAvailable}
+          setPreviewImage={setPreviewImage}
+          setIsNameAvailable={setIsNameAvailable}
         />
       );
   }

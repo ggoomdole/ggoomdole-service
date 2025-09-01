@@ -12,7 +12,7 @@ interface UploadCourseProps {
     tab: string;
     word: string;
     id: string;
-    view: "private" | "replicate";
+    view: "private" | "duplicate";
   }>;
 }
 

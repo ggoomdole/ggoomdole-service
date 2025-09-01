@@ -7,7 +7,7 @@ import { getParams } from "@/utils/params";
 interface DefaultModeProps {
   id?: string;
   fields: CoursePlaceProps[];
-  view: "private" | "replicate";
+  view: "private" | "duplicate";
   onChangeReason: (index: number, reason: string) => void;
   remove: (index: number) => void;
 }

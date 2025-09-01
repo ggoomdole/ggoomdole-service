@@ -47,7 +47,7 @@ export default function FloatingActionButton({ id }: FloatingActionButtonProps) 
     if (value === "request") {
       router.push(`/courses/${id}/request`);
     } else if (value === "my-course") {
-      router.push(`/courses/upload?id=${id}&view=replicate`);
+      router.push(`/courses/upload?id=${id}&view=duplicate`);
     } else if (value === "participate") {
       await participateRoad(id);
     }
