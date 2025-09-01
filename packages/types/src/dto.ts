@@ -94,6 +94,7 @@ export interface AllReviewCheckDTO {
   content: string;
   rate: number;
   imageUrl: string;
+  userId: number;
   nickname: string;
   profileImage: string | null;
 }
