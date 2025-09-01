@@ -60,6 +60,7 @@ class reviewController {
       include: {
         user: {
           select: {
+            id: true,
             nickName: true,
             profileImage: true
           },

@@ -79,6 +79,7 @@ class ReviewService {
       content: p.text,
       rate: p.rate ?? 0,
       imageUrl: p.imageUrl ?? "",
+      userId: p.userId,
       nickname: p.user.nickName,
       profileImage: p.user.profileImage
     }));

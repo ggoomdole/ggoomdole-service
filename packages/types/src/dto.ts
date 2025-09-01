@@ -51,6 +51,7 @@ export interface RoadListResponseDTO {
 export type Native = "SHORT_TERM" | "MID_TERM" | "LONG_TERM" | "RESIDENT";
 
 export interface OneRoadResponseDTO {
+  isParti: boolean;
   roadId: number;
   title: string;
   intro: string;
@@ -94,6 +95,7 @@ export interface AllReviewCheckDTO {
   content: string;
   rate: number;
   imageUrl: string;
+  userId: number;
   nickname: string;
   profileImage: string | null;
 }
