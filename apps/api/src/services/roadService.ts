@@ -278,12 +278,14 @@ class RoadService {
     return !exists;
   }
 
-  async getOneRoadWithSpots(roadId: number, sortBy: string): Promise<OneRoadResponseDTO> {
+  async getOneRoadWithSpots(userId: number, roadId: number, sortBy: string): Promise<OneRoadResponseDTO> {
     const road = await roadRepository.findRoadWithSpots(roadId);
     if (!road) throw new NotFoundError("순례길이 존재하지 않습니다.");
 
     // 조회수 증가
     await roadRepository.incrementSearchCount(roadId);
+
+    const isParti = await roadRepository.isParticipateByUserId(userId, roadId);
 
     let spots = road.spots;
 
@@ -304,6 +306,7 @@ class RoadService {
     }
 
     return {
+      isParti: isParti,
       roadId: road.id,
       title: road.title,
       intro: road.intro,

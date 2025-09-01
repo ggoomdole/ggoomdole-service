@@ -107,13 +107,14 @@ class RoadController {
 
   async loadDetail(req: Request, res: Response, next: NextFunction) {
     try {
+      const userId = req.user.userId;
       const roadId = Number(req.params.roadId);
       if (!roadId) throw new NotFoundError("순례길 ID는 필수입니다.");
 
       const sortBy = (req.query.sortBy as string) || "default";
       if (!sortBy) throw new NotFoundError("정렬 기준이 존재하지 않습니다.");
 
-      const result = await roadService.getOneRoadWithSpots(roadId, sortBy);
+      const result = await roadService.getOneRoadWithSpots(userId, roadId, sortBy);
       return successHandler(res, "순례길 세부 내용 조회 성공", result);
     } catch (error) {
       next(error);

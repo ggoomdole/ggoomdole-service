@@ -51,6 +51,7 @@ export interface RoadListResponseDTO {
 export type Native = "SHORT_TERM" | "MID_TERM" | "LONG_TERM" | "RESIDENT";
 
 export interface OneRoadResponseDTO {
+  isParti: boolean;
   roadId: number;
   title: string;
   intro: string;

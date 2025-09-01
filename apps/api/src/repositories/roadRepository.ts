@@ -118,6 +118,19 @@ class RoadRepository {
     });
   }
 
+  async isParticipateByUserId(userId: number, roadId: number) {
+    const isParti = await prisma.pilgrimageUser.findUnique({
+      where: {
+        userId_pilgrimageId: {
+          userId,
+          pilgrimageId: roadId
+        },
+      },
+    })
+
+    return !!isParti;
+  }
+
   async findRoadByTitle(title: string) {
     return await prisma.pilgrimage.findFirst({
       where: { title },
