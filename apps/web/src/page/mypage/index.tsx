@@ -54,7 +54,7 @@ export default function MypagePage({ user }: MypagePageProps) {
           alt="default-profile"
           width={150}
           height={150}
-          className="rounded-full"
+          className="rounded-full object-cover"
         />
         <p className="typo-bold">{user.nickName}</p>
       </section>
