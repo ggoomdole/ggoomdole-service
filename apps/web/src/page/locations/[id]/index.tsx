@@ -54,7 +54,7 @@ export default function LocationsPage({ id, tab, data, currentUserId }: Location
                 {data.poiDetailInfo.name}
               </h1>
               <p className="typo-regular line-clamp-1 text-gray-500">
-                {data.poiDetailInfo.bldAddr}
+                {data.poiDetailInfo.bldAddr || "정보가 없어요."}
               </p>
             </div>
             <Link

@@ -28,6 +28,7 @@ const SORT_OPTIONS = COURSE_CATEGORIES.map((category) => ({
   value: category.path,
 }));
 
+// 탭에 따라서 등록된 순례길 멘트 수정하기
 export default function ParticipationsPage({
   promisedReponse,
   isCreatTab,
