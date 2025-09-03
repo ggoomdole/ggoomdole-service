@@ -14,6 +14,8 @@ export default function Logout() {
   const onLogout = async () => {
     setIsPending(true);
     await deleteCookie("jwtToken");
+    await deleteCookie("accessToken");
+    await deleteCookie("userId");
     revalidatePath("/mypage");
   };
 

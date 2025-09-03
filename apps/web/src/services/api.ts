@@ -114,6 +114,8 @@ const clientKy = ky.create({
         if (response.status === 401) {
           // 토큰 만료 처리
           deleteCookie("jwtToken");
+          deleteCookie("accessToken");
+          deleteCookie("userId");
           window.location.href = "/home";
         }
         return response;

@@ -129,13 +129,15 @@ export default function HomeTab({ data }: HomeTabProps) {
       <div className="flex items-center gap-2.5">
         <MapPin className="size-5" />
         <div className="flex gap-1">
-          <p>{data.poiDetailInfo.bldAddr}</p>
-          <button
-            className="text-gray-500 underline"
-            onClick={(e) => onCopy(e, data.poiDetailInfo.bldAddr)}
-          >
-            복사
-          </button>
+          <p>{data.poiDetailInfo.bldAddr || "정보가 없어요."}</p>
+          {data.poiDetailInfo.bldAddr && (
+            <button
+              className="text-gray-500 underline"
+              onClick={(e) => onCopy(e, data.poiDetailInfo.bldAddr)}
+            >
+              복사
+            </button>
+          )}
         </div>
       </div>
       <div className="flex items-center gap-2.5">
