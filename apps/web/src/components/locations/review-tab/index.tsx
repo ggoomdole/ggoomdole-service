@@ -43,7 +43,9 @@ export default function ReviewTab({ id, currentUserId }: ReviewTabProps) {
           <>
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2.5">
-                <p className="typo-medium text-gray-700">{totalRating / data!.data.length || 0}</p>
+                <p className="typo-medium text-gray-700">
+                  {(totalRating / data!.data.length).toFixed() || 0}
+                </p>
                 <StarRating rating={totalRating / data!.data.length || 0} className="size-5" />
               </div>
               <p className="typo-regular text-gray-500">후기 {data?.data.length}</p>
