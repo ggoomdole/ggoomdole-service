@@ -28,7 +28,7 @@ export default function StartButton() {
   return (
     <section className="mb-24 flex flex-col items-center">
       <button
-        className="typo-regular mb-4 text-gray-700 underline disabled:text-gray-300"
+        className="typo-semibold mb-4 text-gray-700 underline disabled:text-gray-300"
         onClick={onRouteOnboarding}
         disabled={isPending}
       >

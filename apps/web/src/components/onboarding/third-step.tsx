@@ -7,11 +7,18 @@ import Button from "@/components/common/button";
 
 const step3 = "/static/onboarding/step3.png";
 
+const KAKAO_CLIENT_ID = process.env.NEXT_PUBLIC_KAKAO_CLIENT_ID;
+const KAKAO_REDIRECT_URI = process.env.NEXT_PUBLIC_KAKAO_REDIRECT_URI;
+
 export default function ThirdStep() {
   const router = useRouter();
 
-  const onClickNext = () => {
+  const onRouteToHome = () => {
     router.push("/home");
+  };
+
+  const onKakaoLogin = () => {
+    window.location.href = `https://kauth.kakao.com/oauth/authorize?client_id=${KAKAO_CLIENT_ID}&redirect_uri=${KAKAO_REDIRECT_URI}&response_type=code`;
   };
 
   return (
@@ -27,9 +34,17 @@ export default function ThirdStep() {
           <p className="typo-medium text-center">좋아요와 후기로 길을 완성해요</p>
         </div>
       </div>
-      <Button className="mx-7.5 mb-10 mt-2.5" onClick={onClickNext}>
-        시작하기
-      </Button>
+      <div className="mx-7.5 mb-10 mt-2.5 flex gap-3">
+        <Button
+          className="border-main-700 text-foreground flex-1 border-2 bg-gradient-to-r from-white to-white"
+          onClick={onRouteToHome}
+        >
+          둘러보기
+        </Button>
+        <Button className="flex-1" onClick={onKakaoLogin}>
+          회원가입
+        </Button>
+      </div>
     </section>
   );
 }

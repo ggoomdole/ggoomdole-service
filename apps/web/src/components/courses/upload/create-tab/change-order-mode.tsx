@@ -90,7 +90,7 @@ export default function ChangeOrderMode({
       ) : (
         <div className="my-3 flex flex-col items-center gap-2.5">
           <p className="text-6xl">🫥</p>
-          <p className="typo-medium text-center text-gray-700">장소를 추가해주세요</p>
+          <p className="typo-medium text-center text-gray-700">최소 3개의 장소를 추가해주세요</p>
         </div>
       )}
     </>
