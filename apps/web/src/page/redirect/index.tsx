@@ -1,35 +1,42 @@
 "use client";
 
-import { Usable, use, useEffect } from "react";
+import { useEffect } from "react";
 import { redirect, RedirectType } from "next/navigation";
 
 import type { BaseResponseDTO } from "@/models";
 import type { KakaoLoginResponseDTO } from "@/models/auth";
+import { clientApi } from "@/services/api";
 import { setCookie } from "@/utils/cookie";
 
 import { Loader2 } from "lucide-react";
 
 interface RedirectPageProps {
-  promisedResponse: Usable<BaseResponseDTO<KakaoLoginResponseDTO>>;
+  code: string;
 }
 
-export default function RedirectPage({ promisedResponse }: RedirectPageProps) {
-  const response = use(promisedResponse);
-
+export default function RedirectPage({ code }: RedirectPageProps) {
   useEffect(() => {
-    if (response.success) {
-      setCookie("jwtToken", response.data.jwtToken);
-      setCookie("accessToken", response.data.accessToken);
+    const checkResponse = async () => {
+      const response = await clientApi.post<BaseResponseDTO<KakaoLoginResponseDTO>>("login/kakao", {
+        code,
+      });
 
-      if (response.data.isFirstLogin) {
-        redirect("/signup", RedirectType.replace);
+      if (response.success) {
+        await setCookie("jwtToken", response.data.jwtToken);
+        await setCookie("accessToken", response.data.accessToken);
+        await setCookie("userId", response.data.userId.toString());
+
+        if (response.data.isFirstLogin) {
+          redirect("/signup", RedirectType.replace);
+        } else {
+          redirect("/home", RedirectType.replace);
+        }
       } else {
-        redirect("/home", RedirectType.replace);
+        redirect("/", RedirectType.replace);
       }
-    } else {
-      redirect("/", RedirectType.replace);
-    }
-  }, [response]);
+    };
+    checkResponse();
+  }, []);
 
   return (
     <main className="flex flex-col items-center justify-center gap-4">

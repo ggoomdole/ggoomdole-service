@@ -11,6 +11,7 @@ interface LocationsPageProps {
   id: string;
   tab: string;
   data: GetDetailPOIDTO;
+  currentUserId: string | null;
 }
 
 const NAVS = [
@@ -28,11 +29,11 @@ const NAVS = [
   },
 ];
 
-export default function LocationsPage({ id, tab, data }: LocationsPageProps) {
+export default function LocationsPage({ id, tab, data, currentUserId }: LocationsPageProps) {
   const renderTab = (tab: string) => {
     switch (tab) {
       case "review":
-        return <ReviewTab id={id} />;
+        return <ReviewTab id={id} currentUserId={currentUserId} />;
       case "course":
         return <CourseTab lat={+data.poiDetailInfo.lat} lng={+data.poiDetailInfo.lon} />;
       default:
@@ -53,7 +54,7 @@ export default function LocationsPage({ id, tab, data }: LocationsPageProps) {
                 {data.poiDetailInfo.name}
               </h1>
               <p className="typo-regular line-clamp-1 text-gray-500">
-                {data.poiDetailInfo.bldAddr}
+                {data.poiDetailInfo.bldAddr || "정보가 없어요."}
               </p>
             </div>
             <Link

@@ -16,9 +16,10 @@ export default function Withdraw() {
   const onWithdraw = async () => {
     setIsPending(true);
     await withdraw(undefined, {
-      onSuccess: () => {
-        deleteCookie("jwtToken");
-        deleteCookie("accessToken");
+      onSuccess: async () => {
+        await deleteCookie("jwtToken");
+        await deleteCookie("accessToken");
+        await deleteCookie("userId");
         revalidatePath("/mypage");
       },
       onError: () => {

@@ -8,8 +8,9 @@ import {
   removeRoad,
   updateRoad,
   uploadRoad,
+  withdrawRoad,
 } from "@/services/road";
-import { revalidateTags } from "@/utils/revalidate";
+import { revalidatePath, revalidateTags } from "@/utils/revalidate";
 import { errorToast, infoToast, successToast } from "@/utils/toast";
 import { useMutation } from "@tanstack/react-query";
 
@@ -72,6 +73,7 @@ export const useParticipateRoad = () => {
       }
       successToast("순례길 참여가 완료되었어요.");
       invalidateQueries([ROAD.PARTICIPATIONS]);
+      revalidatePath(`/courses/${data.data.pilgrimageId}`);
     },
     onError: () => {
       errorToast("순례길 참여에 실패했어요.");
@@ -98,6 +100,20 @@ export const useRemoveRoad = () => {
     },
     onError: () => {
       errorToast("순례길 삭제에 실패했어요.");
+    },
+  });
+};
+
+export const useWithdrawRoad = () => {
+  return useMutation({
+    mutationFn: withdrawRoad,
+    onSuccess: (data) => {
+      successToast("순례길 탈퇴가 완료되었어요.");
+      revalidateTags([ROAD.PARTICIPATIONS]);
+      revalidatePath(`/courses/${data.data}`);
+    },
+    onError: () => {
+      errorToast("순례길 탈퇴에 실패했어요.");
     },
   });
 };

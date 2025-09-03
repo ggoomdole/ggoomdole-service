@@ -91,7 +91,7 @@ export interface ReviewCheckDTO {
 }
 
 export interface AllReviewCheckDTO {
-  spotId: string;
+  reviewId: number;
   content: string;
   rate: number;
   imageUrl: string;

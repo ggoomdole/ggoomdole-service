@@ -11,6 +11,7 @@ export interface RoadResponseDTO {
   participants: number;
   native: NativeType;
   spots: SpotReviewDTO[];
+  isParti: boolean;
 }
 
 export interface SearchRoadResponseDTO {

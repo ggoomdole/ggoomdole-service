@@ -353,7 +353,7 @@ class RoadRepository {
     });
   }
 
-  async checkPilgrimageParti(roadId: number, userId: number) {
+  async deleteRoadById(roadId: number, userId: number) {
     return prisma.pilgrimageUser.delete({
       where: {
         userId_pilgrimageId: {

@@ -82,7 +82,7 @@ function RegisterReviewDialogContent({ locationId }: RegisterReviewProps) {
       content: data.review,
       rate: data.rating,
     };
-
+    formData.append("data", JSON.stringify(body));
     if (data.images) {
       Array.from(data.images).forEach((file) => {
         formData.append("review-image", file);
@@ -90,7 +90,7 @@ function RegisterReviewDialogContent({ locationId }: RegisterReviewProps) {
     }
 
     try {
-      await createReview({ body, formData });
+      await createReview(formData);
       successToast("리뷰가 등록되었어요.");
       invalidateQueries([REVIEW.GET_REVIEWS_BY_ID, locationId]);
       close();

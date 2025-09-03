@@ -40,10 +40,16 @@ export const createMyRoad = async (formData: FormData): Promise<BaseResponseDTO<
   return clientApi.post("road/custom", undefined, { body: formData });
 };
 
-export const participateRoad = async (roadId: string): Promise<BaseResponseDTO<unknown>> => {
+export const participateRoad = async (
+  roadId: string
+): Promise<BaseResponseDTO<{ userId: number; pilgrimageId: number }>> => {
   return clientApi.post(`road/participation/${roadId}`);
 };
 
 export const removeRoad = async (roadId: string): Promise<BaseResponseDTO<unknown>> => {
   return clientApi.delete(`road/${roadId}`);
+};
+
+export const withdrawRoad = async (roadId: string): Promise<BaseResponseDTO<number>> => {
+  return clientApi.delete(`road/out/${roadId}`);
 };
