@@ -13,12 +13,16 @@ interface ReviewTabProps {
   currentUserId: string | null;
   data: ReviewItemDTO[];
   isLoading: boolean;
-  error: Error | null;
+  isNotFoundError: boolean;
 }
 
-export default function ReviewTab({ id, currentUserId, data, isLoading, error }: ReviewTabProps) {
-  const isNotFoundError = error?.message.includes("404");
-
+export default function ReviewTab({
+  id,
+  currentUserId,
+  data,
+  isLoading,
+  isNotFoundError,
+}: ReviewTabProps) {
   let totalRating = 0;
   if (data) {
     totalRating = data.reduce((acc, review) => acc + review.rate, 0);

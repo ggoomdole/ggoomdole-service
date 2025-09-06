@@ -36,6 +36,7 @@ const NAVS = [
 
 export default function LocationsPage({ id, tab, data, currentUserId }: LocationsPageProps) {
   const { data: reviewData, isLoading, error } = useGetReviewsById(id);
+  const isNotFoundError = error?.message.includes("404");
 
   const renderTab = (tab: string) => {
     switch (tab) {
@@ -46,7 +47,7 @@ export default function LocationsPage({ id, tab, data, currentUserId }: Location
             currentUserId={currentUserId}
             data={reviewData?.data || []}
             isLoading={isLoading}
-            error={error}
+            isNotFoundError={isNotFoundError ?? false}
           />
         );
       case "course":
@@ -79,8 +80,8 @@ export default function LocationsPage({ id, tab, data, currentUserId }: Location
               지도
             </Link>
           </div>
-          <DragCarousel>
-            {reviewData ? (
+          {reviewData ? (
+            <DragCarousel>
               <>
                 {reviewData?.data?.slice(0, 10).map(
                   (review) =>
@@ -113,12 +114,12 @@ export default function LocationsPage({ id, tab, data, currentUserId }: Location
                   </DragCarouselItem>
                 )}
               </>
-            ) : (
-              <DragCarouselItem>
-                <div className="aspect-thumbnail w-32 shrink-0 animate-pulse rounded-sm bg-gray-300" />
-              </DragCarouselItem>
-            )}
-          </DragCarousel>
+            </DragCarousel>
+          ) : (
+            !isNotFoundError && (
+              <div className="aspect-thumbnail w-32 shrink-0 animate-pulse rounded-sm bg-gray-300" />
+            )
+          )}
         </section>
         <section>
           <QueryTabNav navKey="tab" navs={NAVS} />
