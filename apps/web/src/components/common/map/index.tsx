@@ -17,6 +17,7 @@ export interface MapProps {
   className?: string;
   onClickMap?: () => void;
   onClickMarker?: (e: TMapMarkerClickEvent) => void;
+  onDragEnd?: () => void;
   fitBounds?: {
     north: number;
     south: number;
@@ -128,6 +129,7 @@ export default function Map({
   className,
   onClickMap,
   onClickMarker,
+  onDragEnd,
   fitBounds,
 }: MapProps) {
   const mapContainerRef = useRef<HTMLDivElement>(null);
@@ -163,6 +165,10 @@ export default function Map({
         onInitializeMap();
 
         onClickMap?.();
+      });
+
+      mapInstanceRef.current.on("DragEnd", () => {
+        onDragEnd?.();
       });
 
       isMapInitializedRef.current = true;
