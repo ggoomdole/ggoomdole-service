@@ -1,6 +1,6 @@
 "use client";
 
-import { useGetReviewsById } from "@/lib/tanstack/query/review";
+import { ReviewItemDTO } from "@/models/review";
 
 import { Loader2 } from "lucide-react";
 
@@ -11,18 +11,19 @@ import StarRating from "../../common/star/star-rating";
 interface ReviewTabProps {
   id: string;
   currentUserId: string | null;
+  data: ReviewItemDTO[];
+  isLoading: boolean;
+  error: Error | null;
 }
 
-export default function ReviewTab({ id, currentUserId }: ReviewTabProps) {
-  const { data, isLoading, error } = useGetReviewsById(id);
-
+export default function ReviewTab({ id, currentUserId, data, isLoading, error }: ReviewTabProps) {
   const isNotFoundError = error?.message.includes("404");
 
   let totalRating = 0;
-  if (data?.data) {
-    totalRating = data.data.reduce((acc, review) => acc + review.rate, 0);
+  if (data) {
+    totalRating = data.reduce((acc, review) => acc + review.rate, 0);
   }
-  // 후기 이미지들 보여주기
+
   return (
     <section className="divide-main-100 divide-y-8">
       <div className="typo-medium flex flex-col items-center gap-2 py-2.5">
@@ -44,14 +45,14 @@ export default function ReviewTab({ id, currentUserId }: ReviewTabProps) {
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2.5">
                 <p className="typo-medium text-gray-700">
-                  {(totalRating / data!.data.length).toFixed() || 0}
+                  {(totalRating / data?.length).toFixed() || 0}
                 </p>
-                <StarRating rating={totalRating / data!.data.length || 0} className="size-5" />
+                <StarRating rating={totalRating / data!.length || 0} className="size-5" />
               </div>
-              <p className="typo-regular text-gray-500">후기 {data?.data.length}</p>
+              <p className="typo-regular text-gray-500">후기 {data?.length}</p>
             </div>
             <div className="space-y-2.5">
-              {data?.data.map((review, index) => (
+              {data?.map((review, index) => (
                 <ReviewItem
                   key={`review-item-${index}`}
                   {...review}
