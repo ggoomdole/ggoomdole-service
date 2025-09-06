@@ -52,9 +52,9 @@ export default function MypagePage({ user }: MypagePageProps) {
         <Image
           src={profileImage}
           alt="default-profile"
-          width={150}
-          height={150}
-          className="shrink-0 rounded-full object-cover"
+          width={144}
+          height={144}
+          className="aspect-square rounded-full object-cover"
         />
         <p className="typo-bold">{user.nickName}</p>
       </section>

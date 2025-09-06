@@ -22,7 +22,7 @@ export default function ReviewTab({ id, currentUserId }: ReviewTabProps) {
   if (data?.data) {
     totalRating = data.data.reduce((acc, review) => acc + review.rate, 0);
   }
-
+  // 후기 이미지들 보여주기
   return (
     <section className="divide-main-100 divide-y-8">
       <div className="typo-medium flex flex-col items-center gap-2 py-2.5">
