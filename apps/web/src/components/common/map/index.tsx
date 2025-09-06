@@ -17,6 +17,12 @@ export interface MapProps {
   className?: string;
   onClickMap?: () => void;
   onClickMarker?: (e: TMapMarkerClickEvent) => void;
+  fitBounds?: {
+    north: number;
+    south: number;
+    east: number;
+    west: number;
+  };
 }
 
 const MARKER = "/static/map-pin.png";
@@ -122,6 +128,7 @@ export default function Map({
   className,
   onClickMap,
   onClickMarker,
+  fitBounds,
 }: MapProps) {
   const mapContainerRef = useRef<HTMLDivElement>(null);
   const markersRef = useRef<TMapMarker[]>([]);
@@ -167,6 +174,18 @@ export default function Map({
       isMapInitializedRef.current = false;
     };
   }, []);
+
+  // fitBounds가 변경될 때 지도 영역 조정
+  useEffect(() => {
+    if (mapInstanceRef.current && fitBounds && isMapInitializedRef.current) {
+      const bounds = new window.Tmapv3.LatLngBounds(
+        new window.Tmapv3.LatLng(fitBounds.south, fitBounds.west),
+        new window.Tmapv3.LatLng(fitBounds.north, fitBounds.east)
+      );
+
+      mapInstanceRef.current.fitBounds(bounds, 100); // 100px 패딩으로 증가
+    }
+  }, [fitBounds]);
 
   useEffect(() => {
     if (mapInstanceRef.current && isMapInitializedRef.current) {

@@ -17,6 +17,7 @@ import RouteItem from "@/components/courses/route-item";
 import { BaseResponseDTO } from "@/models";
 import { RoadResponseDTO } from "@/models/road";
 import type { TMap, TMapMarkerClickEvent, TMapTransitResponse } from "@/types/tmap";
+import { calculateMapView } from "@/utils/map";
 import { getParams } from "@/utils/params";
 import { formatDistance, formatTime } from "@/utils/time";
 import { searchTransitRoute } from "@/utils/tmap";
@@ -38,6 +39,7 @@ interface CourseDetailPageProps {
 
 const DEFAULT_THUMBNAIL = "/static/default-thumbnail.png";
 const LOADING_IMAGE = "/static/loading.png";
+const MAX_SPOTS_LENGTH = 5;
 
 const checkSameMarker = ({ start, end }: { start: string; end: string }): boolean => {
   const [startLat, startLng] = start?.split(",") || [];
@@ -78,6 +80,11 @@ export default function CourseDetailPage({
   const [transitData, setTransitData] = useState<TMapTransitResponse | null>(null);
   const [isShowDetailPath, setIsShowDetailPath] = useState(false);
   const [isLoadingGetTransitData, setIsLoadingGetTransitData] = useState(false);
+
+  // 장소들의 중심점과 적절한 줌 레벨 계산
+  const { center: initialCenter, zoom: initialZoom } = calculateMapView(
+    data.spots.slice(0, MAX_SPOTS_LENGTH)
+  );
 
   const isSearchMode = Boolean(start || end);
   const isShowPathMode = Boolean(start && end);
@@ -191,7 +198,7 @@ export default function CourseDetailPage({
       }
     };
     getTransitInfo();
-  }, [start, end]);
+  }, [start, end, isShowPathMode, startLat, startLng, endLat, endLng]);
 
   return (
     <>
@@ -231,6 +238,8 @@ export default function CourseDetailPage({
           isShowPathMode={isShowPathMode}
           onClickMap={onClickMap}
           onClickMarker={onClickMarker}
+          center={initialCenter}
+          zoom={initialZoom}
         />
 
         {isSearchMode && (
