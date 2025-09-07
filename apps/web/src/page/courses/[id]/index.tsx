@@ -1,6 +1,6 @@
 "use client";
 
-import { Usable, use, useEffect, useRef, useState } from "react";
+import { Usable, use, useCallback, useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -14,15 +14,18 @@ import Header from "@/components/common/header";
 import TransitRouteMap from "@/components/common/map/transit-route-map";
 import FloatingActionButton from "@/components/courses/floating-action-button";
 import RouteItem from "@/components/courses/route-item";
+import { MAP } from "@/constants/map";
 import { BaseResponseDTO } from "@/models";
 import { RoadResponseDTO } from "@/models/road";
-import type { TMap, TMapMarkerClickEvent, TMapTransitResponse } from "@/types/tmap";
+import type { TMap, TMapMarkerClickEvent, TMapPolyline, TMapTransitResponse } from "@/types/tmap";
+import { calculateMapView } from "@/utils/map";
 import { getParams } from "@/utils/params";
 import { formatDistance, formatTime } from "@/utils/time";
 import { searchTransitRoute } from "@/utils/tmap";
 import { errorToast, infoToast } from "@/utils/toast";
 
 interface LocationProps {
+  order: number;
   title: string;
   address: string;
   lat: string;
@@ -36,8 +39,11 @@ interface CourseDetailPageProps {
   promisedResponse: Usable<BaseResponseDTO<RoadResponseDTO>>;
 }
 
+const TMAP_API_KEY = process.env.NEXT_PUBLIC_TMAP_API_KEY!;
+
 const DEFAULT_THUMBNAIL = "/static/default-thumbnail.png";
 const LOADING_IMAGE = "/static/loading.png";
+const MAX_SPOTS_LENGTH = 5;
 
 const checkSameMarker = ({ start, end }: { start: string; end: string }): boolean => {
   const [startLat, startLng] = start?.split(",") || [];
@@ -74,18 +80,22 @@ export default function CourseDetailPage({
   const { data } = use(promisedResponse);
 
   const mapInstanceRef = useRef<TMap | null>(null);
+  const coursePolylineRef = useRef<TMapPolyline | null>(null);
   const [selectedMarker, setSelectedMarker] = useState<LocationProps | null>(null);
   const [transitData, setTransitData] = useState<TMapTransitResponse | null>(null);
   const [isShowDetailPath, setIsShowDetailPath] = useState(false);
   const [isLoadingGetTransitData, setIsLoadingGetTransitData] = useState(false);
+
+  // 장소들의 중심점과 적절한 줌 레벨 계산
+  const { center: initialCenter, zoom: initialZoom } = calculateMapView(
+    data.spots.slice(0, MAX_SPOTS_LENGTH)
+  );
 
   const isSearchMode = Boolean(start || end);
   const isShowPathMode = Boolean(start && end);
 
   const [startLat, startLng, startName] = start?.split(",") || [];
   const [endLat, endLng, endName] = end?.split(",") || [];
-
-  const router = useRouter();
 
   const markers = data.spots.map((spot) => ({
     detailBizName: spot.name,
@@ -102,18 +112,41 @@ export default function CourseDetailPage({
     },
   }));
 
+  // 선택된 마커 ID 계산
+  const selectedMarkerId =
+    selectedMarker?.lat && selectedMarker?.lng
+      ? markers.find(
+          (m) =>
+            m.newAddressList.newAddress[0].frontLat === selectedMarker.lat &&
+            m.newAddressList.newAddress[0].frontLon === selectedMarker.lng
+        )?.id
+      : undefined;
+
+  const router = useRouter();
+
+  // 기존 코스 경로 제거
+  const clearCourseRoute = () => {
+    if (coursePolylineRef.current) {
+      coursePolylineRef.current.setMap(null);
+      coursePolylineRef.current = null;
+    }
+  };
+
   // 출/도착 선택했을 때 선택된 마커 모양 없애는 로직 추가하기
   const onClickMap = () => {
     setSelectedMarker(null);
   };
 
   const onClickMarker = (e: TMapMarkerClickEvent) => {
-    const selectedPoi = markers.find((poi) => poi.id === e._marker_data.options.title);
+    const selectedPoiIndex = markers.findIndex((poi) => poi.id === e._marker_data.options.title);
+    const selectedPoi = markers[selectedPoiIndex];
+
     setSelectedMarker({
-      title: selectedPoi?.name || "",
-      address: selectedPoi?.newAddressList.newAddress[0].fullAddressRoad || "",
-      lat: selectedPoi?.newAddressList.newAddress[0].frontLat || "",
-      lng: selectedPoi?.newAddressList.newAddress[0].frontLon || "",
+      order: selectedPoiIndex,
+      title: selectedPoi.name || "",
+      address: selectedPoi.newAddressList.newAddress[0].fullAddressRoad || "",
+      lat: selectedPoi.newAddressList.newAddress[0].frontLat || "",
+      lng: selectedPoi.newAddressList.newAddress[0].frontLon || "",
     });
   };
 
@@ -167,6 +200,79 @@ export default function CourseDetailPage({
     router.push("?");
   };
 
+  const drawCourseRoute = useCallback(async () => {
+    if (!mapInstanceRef.current || markers.length < 2) return;
+
+    // 기존 경로 제거
+    clearCourseRoute();
+
+    try {
+      const markerLength = Math.min(MAX_SPOTS_LENGTH, markers.length);
+      const newMarkers = markers.slice(0, markerLength);
+
+      const start = {
+        lat: newMarkers[0].newAddressList.newAddress[0].frontLat,
+        lng: newMarkers[0].newAddressList.newAddress[0].frontLon,
+      };
+      const end = {
+        lat: newMarkers[markerLength - 1].newAddressList.newAddress[0].frontLat,
+        lng: newMarkers[markerLength - 1].newAddressList.newAddress[0].frontLon,
+      };
+
+      const passList = newMarkers.slice(1, markerLength - 1).reduce((acc, cur) => {
+        const path = `${cur.newAddressList.newAddress[0].frontLon},${cur.newAddressList.newAddress[0].frontLat}`;
+        if (acc === "") return path;
+        return `${acc}_${path}`;
+      }, "");
+
+      const response = await fetch("https://apis.openapi.sk.com/tmap/routes/pedestrian?version=1", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          appKey: TMAP_API_KEY,
+        },
+        body: JSON.stringify({
+          startX: start.lng,
+          startY: start.lat,
+          endX: end.lng,
+          endY: end.lat,
+          passList,
+          reqCoordType: "WGS84GEO",
+          resCoordType: "WGS84GEO",
+          startName: "출발지",
+          endName: "도착지",
+        }),
+        next: {
+          tags: [MAP.DRAW_COURSE_ROUTE, start.lng, start.lat, end.lng, end.lat, passList],
+        },
+      });
+
+      const routeData = await response.json();
+      const routeCoords = routeData.features
+        .filter((f: { geometry: { type: string } }) => f.geometry.type === "LineString")
+        .flatMap((f: { geometry: { coordinates: number[][] } }) => f.geometry.coordinates)
+        .map(([lng, lat]: [number, number]) => new window.Tmapv3.LatLng(lat, lng));
+
+      coursePolylineRef.current = new window.Tmapv3.Polyline({
+        path: routeCoords,
+        strokeColor: "#f3bf30",
+        strokeWeight: 6,
+        strokeOpacity: 0.8,
+        map: mapInstanceRef.current,
+      });
+    } catch (error) {
+      console.error("코스 경로 그리기 실패:", error);
+    }
+  }, [markers]);
+
+  useEffect(() => {
+    if (isSearchMode) {
+      clearCourseRoute();
+    } else if (mapInstanceRef.current && markers.length > 2) {
+      drawCourseRoute();
+    }
+  }, [isSearchMode]);
+
   useEffect(() => {
     if (!isShowPathMode) {
       setTransitData(null);
@@ -191,7 +297,7 @@ export default function CourseDetailPage({
       }
     };
     getTransitInfo();
-  }, [start, end]);
+  }, [start, end, isShowPathMode, startLat, startLng, endLat, endLng]);
 
   return (
     <>
@@ -228,9 +334,12 @@ export default function CourseDetailPage({
           mapInstanceRef={mapInstanceRef}
           transitData={transitData}
           markers={markers}
+          selectedMarkerId={selectedMarkerId}
           isShowPathMode={isShowPathMode}
           onClickMap={onClickMap}
           onClickMarker={onClickMarker}
+          center={initialCenter}
+          zoom={initialZoom}
         />
 
         {isSearchMode && (
@@ -331,7 +440,12 @@ export default function CourseDetailPage({
               className="aspect-thumbnail rounded-2xl object-cover"
             />
             <div className="flex flex-col justify-center gap-1">
-              <h2 className="typo-semibold line-clamp-1">{selectedMarker.title}</h2>
+              <div className="flex items-center gap-1">
+                <p className="typo-regular bg-main-900 flex size-5 items-center justify-center rounded-full text-white">
+                  {selectedMarker.order + 1}
+                </p>
+                <h2 className="typo-semibold line-clamp-1">{selectedMarker.title}</h2>
+              </div>
               <p className="typo-regular line-clamp-1 text-gray-500">{selectedMarker.address}</p>
               <div className="typo-regular flex gap-2.5 text-gray-500">
                 <button className="bg-main-100 rounded-xl px-5 py-1" onClick={onClickStart}>

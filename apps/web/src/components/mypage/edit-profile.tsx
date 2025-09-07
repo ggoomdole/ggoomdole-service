@@ -109,7 +109,7 @@ export default function EditProfile() {
             alt="default-profile"
             width={144}
             height={144}
-            className="border-main-700 rounded-full border object-cover"
+            className="border-main-700 aspect-square rounded-full border object-cover"
           />
           <div className="text-main-900 bg-main-100 border-main-700 absolute bottom-0 right-0 flex size-10 items-center justify-center rounded-full border">
             <Camera />

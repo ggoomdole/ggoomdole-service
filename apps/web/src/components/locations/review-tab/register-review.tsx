@@ -108,6 +108,7 @@ function RegisterReviewDialogContent({ locationId }: RegisterReviewProps) {
       return infoToast(errors.review.message!);
     }
   };
+
   return (
     <DialogContent>
       <div className="flex items-center gap-1">

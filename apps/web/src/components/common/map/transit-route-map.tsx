@@ -134,7 +134,7 @@ const fitMapToRoute = (map: TMap, transitData: TMapTransitResponse) => {
   });
 
   // 지도 영역 조정
-  map.fitBounds(bounds, 50);
+  map.fitBounds(bounds, 100);
 };
 
 export default function TransitRouteMap(props: TransitRouteMapProps) {

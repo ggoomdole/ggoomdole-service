@@ -54,12 +54,19 @@ function Dialog({ children }: DialogProps) {
 function DialogTrigger({
   children,
   className,
+  onClick,
   ...restProps
 }: React.ButtonHTMLAttributes<HTMLButtonElement>) {
   const { open } = useDialog();
 
+  const onClickDialogTrigger = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.stopPropagation();
+    open();
+    onClick?.(e);
+  };
+
   return (
-    <button className={className} onClick={open} {...restProps}>
+    <button className={className} onClick={onClickDialogTrigger} {...restProps}>
       {children}
     </button>
   );
