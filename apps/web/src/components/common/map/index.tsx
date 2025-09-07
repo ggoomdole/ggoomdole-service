@@ -9,6 +9,7 @@ import type { TMap, TMapMarker, TMapMarkerClickEvent, TMapPoi } from "@/types/tm
 export interface MapProps {
   mapInstanceRef: React.RefObject<TMap | null>;
   markers?: TMapPoi[];
+  selectedMarkerId?: string;
   center?: {
     lat: number;
     lng: number;
@@ -36,35 +37,31 @@ const onClearMarkers = (markers: TMapMarker[]) => {
 const onCreateMarkers = ({
   markers,
   map,
+  selectedMarkerId,
   onClickMarker,
 }: {
   markers: TMapPoi[];
   map: TMap;
+  selectedMarkerId?: string;
   onClickMarker: (e: TMapMarkerClickEvent) => void;
 }) => {
   const newMarkers: TMapMarker[] = [];
 
   markers.forEach((marker) => {
+    const isSelected = selectedMarkerId === marker.id;
     const newMarker: TMapMarker = new window.Tmapv3.Marker({
       position: new window.Tmapv3.LatLng(
         +marker.newAddressList.newAddress[0].frontLat,
         +marker.newAddressList.newAddress[0].frontLon
       ),
       map,
-      icon: MARKER,
-      iconSize: new window.Tmapv3.Size(36, 36),
+      icon: isSelected ? MARKER_SELECTED : MARKER,
+      iconSize: new window.Tmapv3.Size(isSelected ? 40 : 36, isSelected ? 52 : 36),
       title: marker.id.toString(),
       visible: true,
     });
 
     newMarker.on("Click", (e: TMapMarkerClickEvent) => {
-      onUpdateMarkerSelection({
-        prevMarkers: markers,
-        selectedId: marker.id,
-        markers: newMarkers,
-        map,
-        onClickMarker,
-      });
       onClickMarker(e);
     });
 
@@ -74,56 +71,10 @@ const onCreateMarkers = ({
   return newMarkers;
 };
 
-const onUpdateMarkerSelection = ({
-  prevMarkers,
-  selectedId,
-  markers,
-  map,
-  onClickMarker,
-}: {
-  prevMarkers: TMapPoi[];
-  selectedId: string;
-  markers: TMapMarker[];
-  map: TMap;
-  onClickMarker: (e: TMapMarkerClickEvent) => void;
-}) => {
-  markers.forEach((marker, index) => {
-    const prevMarker = prevMarkers[index];
-    const isSelected = selectedId === prevMarker.id;
-
-    // 마커를 새로 생성하여 아이콘과 크기 변경
-    const newMarker: TMapMarker = new window.Tmapv3.Marker({
-      position: new window.Tmapv3.LatLng(
-        +prevMarker.newAddressList.newAddress[0].frontLat,
-        +prevMarker.newAddressList.newAddress[0].frontLon
-      ),
-      map,
-      icon: isSelected ? MARKER_SELECTED : MARKER,
-      iconSize: new window.Tmapv3.Size(isSelected ? 40 : 36, isSelected ? 52 : 36),
-      title: prevMarker.id.toString(),
-      visible: true,
-    });
-
-    newMarker.on("Click", (e: TMapMarkerClickEvent) => {
-      onUpdateMarkerSelection({
-        prevMarkers,
-        selectedId: prevMarker.id,
-        markers,
-        map,
-        onClickMarker,
-      });
-      onClickMarker(e);
-    });
-
-    // 기존 마커 제거하고 새 마커로 교체
-    marker.setMap(null);
-    markers[index] = newMarker;
-  });
-};
-
 export default function Map({
   mapInstanceRef,
   markers,
+  selectedMarkerId,
   center,
   zoom,
   className,
@@ -143,6 +94,7 @@ export default function Map({
       markersRef.current = onCreateMarkers({
         markers: markers ?? [],
         map: mapInstanceRef.current!,
+        selectedMarkerId,
         onClickMarker: onClickMarker ?? (() => {}),
       });
     }
@@ -162,8 +114,6 @@ export default function Map({
       });
 
       mapInstanceRef.current.on("Click", () => {
-        onInitializeMap();
-
         onClickMap?.();
       });
 
