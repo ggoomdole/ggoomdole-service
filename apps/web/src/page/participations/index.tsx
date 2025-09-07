@@ -45,6 +45,7 @@ export default function ParticipationsPage({
             <CourseCard
               key={`course-item-${course.roadId}`}
               {...course}
+              isParticipate={!isCreatTab}
               href={
                 isCreatTab ? `/courses/upload?id=${course.roadId}` : `/courses/${course.roadId}`
               }
