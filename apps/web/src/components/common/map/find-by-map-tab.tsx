@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 
 import SearchHeader from "@/components/common/header/search-header";
 import Map from "@/components/common/map";
@@ -47,6 +47,9 @@ export default function FindByMapTab({
   const [isDragEnd, setIsDragEnd] = useState(false);
 
   const mapInstanceRef = useRef<TMap | null>(null);
+
+  const pathname = usePathname();
+  const buttonText = pathname.includes("upload") ? "추가하기" : "요청목록에 추가";
 
   const router = useRouter();
 
@@ -163,7 +166,7 @@ export default function FindByMapTab({
                 onClick={onAddNewPlace}
                 aria-label="요청목록에 추가"
               >
-                요청목록에 추가
+                {buttonText}
               </button>
             </div>
           </section>
