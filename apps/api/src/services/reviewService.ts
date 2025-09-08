@@ -82,11 +82,11 @@ class ReviewService {
     };
   }
 
-  async showAllReview(spotId: string): Promise<AllReviewCheckDTO[]> {
+  async showAllReview(spotId: string): Promise<{ reviews: AllReviewCheckDTO[]; reviewAvg: number }> {
     const rawReviews = await reviewRepository.findAllReviewById(spotId);  
     if (!rawReviews || rawReviews.length === 0) { throw new NotFoundError('해당 장소에 리뷰가 존재하지 않습니다.'); }
   
-    return rawReviews.map((p): AllReviewCheckDTO => ({
+    const reviews : AllReviewCheckDTO[] = rawReviews.map((p) => ({
       reviewId: p.id,
       spotId: p.spotId,
       content: p.text,
@@ -96,7 +96,21 @@ class ReviewService {
       nickname: p.user.nickName,
       profileImage: p.user.profileImage
     }));
+
+    const reviewAvg = calculateAverageRate(rawReviews);
+
+    return { reviews, reviewAvg };
   }
+}
+
+// 리뷰 평점 계산
+function calculateAverageRate(reviews: { rate: number }[]): number {
+  const rates = reviews
+    .filter(r => r.rate !== null && r.rate !== undefined)
+    .map(r => r.rate);
+
+  if (rates.length === 0) return 0;
+  return rates.reduce((a, b) => a + b, 0) / rates.length;
 }
 
 export default new ReviewService();

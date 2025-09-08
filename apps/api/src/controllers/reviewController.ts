@@ -51,8 +51,8 @@ class ReveiwController {
       const spotId = req.params.spotId;
       if (!spotId || typeof spotId !== 'string' || spotId.trim() === '') { throw new BadRequestError('장소ID는 필수이며 빈 문자열일 수 없습니다.'); }
       
-      const reviews = await reviewService.showAllReview(spotId)
-      return successHandler(res, "모든 리뷰 조회 성공", reviews);
+      const { reviews, reviewAvg } = await reviewService.showAllReview(spotId)
+      return successHandler(res, "모든 리뷰 조회 성공", { reviews, reviewAvg });
     } catch (error) {
       next(error)
     }
