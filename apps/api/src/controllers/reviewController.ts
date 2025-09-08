@@ -10,7 +10,7 @@ class ReveiwController {
   async createReview(req: Request, res: Response, next: NextFunction) {
     try {
       const userId = req.user.userId;
-      const dto = req.body as ReviewCreateDTO;
+      const dto = JSON.parse(req.body.data) as ReviewCreateDTO;
       if (!isAddRoadDTO(dto)) { throw new BadRequestError('요청 형식이 잘못되었습니다.'); }
       const files = req.files as Express.Multer.File[];
 
