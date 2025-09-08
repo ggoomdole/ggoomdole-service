@@ -27,7 +27,11 @@ class RoadService {
 
     switch (sortBy) {
       case "latest":
-        sortedPilgrimages.sort((a, b) => +new Date(b.createAt) - +new Date(a.createAt));
+        sortedPilgrimages.sort((a, b) => {
+          const dateA = a.createAt instanceof Date ? a.createAt.getTime() : new Date(a.createAt).getTime();
+          const dateB = b.createAt instanceof Date ? b.createAt.getTime() : new Date(b.createAt).getTime();
+          return dateB - dateA;
+        });
         break;
       case "views":
         sortedPilgrimages.sort((a, b) => b.search - a.search);
