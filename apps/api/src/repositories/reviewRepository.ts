@@ -69,6 +69,7 @@ class reviewController {
             profileImage: true
           },
         },
+        spot: true,
         imageUrls: true
       },
     });
