@@ -30,6 +30,8 @@ class ReviewService {
   ): Promise<ReviewCheckDTO> {
     let imageUrls : string[] = [];
 
+    const newReview = await reviewRepository.reveiwUpload(userId, data);
+
     if (files && files.length > 0) {
       const uploadPromises = files.map((file) =>
         this.uploadReviewImage(userId, file)
@@ -37,8 +39,6 @@ class ReviewService {
       imageUrls = await Promise.all(uploadPromises);
       data.imageUrls = imageUrls;
     }
-
-    const newReview = await reviewRepository.reveiwUpload(userId, data);
 
     return {
       reviewId: newReview.id,
