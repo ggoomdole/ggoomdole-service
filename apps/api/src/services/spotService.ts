@@ -84,7 +84,7 @@ class RoadService {
     const road = await roadRepository.findRoadById(roadId);
     if (!road) throw new NotFoundError('해당 순례길이 존재하지 않습니다.');
 
-    return await spotRepository.findRequestedSpots();
+    return await spotRepository.findRequestedSpots(roadId);
   }
 
   async processSpotRequests(userId: number, roadId: number,

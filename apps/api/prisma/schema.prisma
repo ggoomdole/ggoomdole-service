@@ -37,11 +37,19 @@ model Review {
   spotId    String
   text      String
   rate      Int
-  imageUrl  String?
+  imageUrls  ReviewImage[]
   createAt  DateTime @default(now())
 
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   spot      Spot     @relation(fields: [spotId], references: [id], onDelete: Cascade)
+}
+
+model ReviewImage {
+  id        Int     @id @default(autoincrement())
+  reviewId  Int
+  url       String
+
+  review    Review  @relation(fields: [reviewId], references: [id], onDelete: Cascade)
 }
 
 model PilgrimageSpot {

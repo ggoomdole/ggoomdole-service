@@ -90,9 +90,12 @@ class SpotRepository {
     });
   }
 
-  async findRequestedSpots() {
+  async findRequestedSpots(roadId: number) {
       return await prisma.pilgrimageSpot.findMany({
-        where: { request: true },
+        where: { 
+          pilgrimageId: roadId,
+          request: true
+        },
         include: {
           spot: true,
           pilgrimage: true,

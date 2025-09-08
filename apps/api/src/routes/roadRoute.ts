@@ -1,4 +1,5 @@
 import optionalAuth from "@/middlewares/optionalAuth";
+import roadService from "@/services/roadService";
 
 import { Router } from "express";
 import multer from "multer";
@@ -30,6 +31,8 @@ router.patch(
 );
 
 router.delete("/:roadId", authenticate, roadController.deleteRoad);
+router.delete("/out/:roadId", authenticate, roadController.partioutRoad);
+
 router.delete("/out/:roadId", authenticate, roadController.partioutRoad);
 
 export default router;
