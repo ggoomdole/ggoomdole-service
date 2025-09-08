@@ -39,6 +39,7 @@ export interface TMap {
   setZoomLimit: (minZoom: number, maxZoom: number) => void;
   setZoom: (zoomLevel: number) => void;
   setOptions: ({ zoomControl }: MapOptions) => void;
+  getCenter: () => TMapLatLng;
   getBounds: () => TMapGetBounds;
   destroy: () => void;
   on: (eventType: EventType, listener: (event: TMapEvent) => void) => void;
@@ -59,7 +60,7 @@ interface TMapGetBounds {
   };
 }
 
-export type EventType = "Click";
+export type EventType = "Click" | "DragEnd";
 
 export interface TMapEvent {
   data: {

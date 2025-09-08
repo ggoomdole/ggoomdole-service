@@ -1,6 +1,6 @@
 "use client";
 
-import { useGetReviewsById } from "@/lib/tanstack/query/review";
+import { ReviewItemDTO } from "@/models/review";
 
 import { Loader2 } from "lucide-react";
 
@@ -11,16 +11,21 @@ import StarRating from "../../common/star/star-rating";
 interface ReviewTabProps {
   id: string;
   currentUserId: string | null;
+  data: ReviewItemDTO[];
+  isLoading: boolean;
+  isNotFoundError: boolean;
 }
 
-export default function ReviewTab({ id, currentUserId }: ReviewTabProps) {
-  const { data, isLoading, error } = useGetReviewsById(id);
-
-  const isNotFoundError = error?.message.includes("404");
-
+export default function ReviewTab({
+  id,
+  currentUserId,
+  data,
+  isLoading,
+  isNotFoundError,
+}: ReviewTabProps) {
   let totalRating = 0;
-  if (data?.data) {
-    totalRating = data.data.reduce((acc, review) => acc + review.rate, 0);
+  if (data) {
+    totalRating = data.reduce((acc, review) => acc + review.rate, 0);
   }
 
   return (
@@ -43,13 +48,15 @@ export default function ReviewTab({ id, currentUserId }: ReviewTabProps) {
           <>
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2.5">
-                <p className="typo-medium text-gray-700">{totalRating / data!.data.length || 0}</p>
-                <StarRating rating={totalRating / data!.data.length || 0} className="size-5" />
+                <p className="typo-medium text-gray-700">
+                  {(totalRating / data?.length).toFixed() || 0}
+                </p>
+                <StarRating rating={totalRating / data!.length || 0} className="size-5" />
               </div>
-              <p className="typo-regular text-gray-500">후기 {data?.data.length}</p>
+              <p className="typo-regular text-gray-500">후기 {data?.length}</p>
             </div>
             <div className="space-y-2.5">
-              {data?.data.map((review, index) => (
+              {data?.map((review, index) => (
                 <ReviewItem
                   key={`review-item-${index}`}
                   {...review}

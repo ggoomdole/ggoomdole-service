@@ -1,10 +1,10 @@
-import { ReviewCreateDTO } from '@repo/types';
+import { ReviewCreateDTO } from "@repo/types";
 
-import { NextFunction,Request, Response } from 'express';
+import { NextFunction, Request, Response } from "express";
 
-import { successHandler } from '../middlewares/responseHandler';
-import reviewService from '../services/reviewService';
-import { BadRequestError } from '../utils/customError';
+import { successHandler } from "../middlewares/responseHandler";
+import reviewService from "../services/reviewService";
+import { BadRequestError } from "../utils/customError";
 
 class ReveiwController {
   async createReview(req: Request, res: Response, next: NextFunction) {
@@ -25,24 +25,28 @@ class ReveiwController {
     try {
       const userId = req.user.userId;
       const reviewId = parseInt(req.params.reviewId, 10);
-      if (isNaN(reviewId)) { throw new BadRequestError('리뷰ID는 필수이며 숫자여야 합니다.'); }
+      if (isNaN(reviewId)) {
+        throw new BadRequestError("리뷰ID는 필수이며 숫자여야 합니다.");
+      }
 
-      await reviewService.deleteReview(userId, reviewId)
-      return successHandler(res, '리뷰 삭제 완료', reviewId);
+      await reviewService.deleteReview(userId, reviewId);
+      return successHandler(res, "리뷰 삭제 완료", reviewId);
     } catch (error) {
-      next(error)
+      next(error);
     }
   }
 
   async showOneReview(req: Request, res: Response, next: NextFunction) {
     try {
       const reviewId = parseInt(req.params.reviewId, 10);
-      if (isNaN(reviewId)) { throw new BadRequestError('리뷰ID는 필수이며 숫자여야 합니다.'); }
-    
-      const reveiw = await reviewService.showOneReview(reviewId)
+      if (isNaN(reviewId)) {
+        throw new BadRequestError("리뷰ID는 필수이며 숫자여야 합니다.");
+      }
+
+      const reveiw = await reviewService.showOneReview(reviewId);
       return successHandler(res, "개별 리뷰 조회 성공", reveiw);
     } catch (error) {
-      next(error)
+      next(error);
     }
   }
 
@@ -54,16 +58,16 @@ class ReveiwController {
       const { reviews, reviewAvg } = await reviewService.showAllReview(spotId)
       return successHandler(res, "모든 리뷰 조회 성공", { reviews, reviewAvg });
     } catch (error) {
-      next(error)
+      next(error);
     }
   }
 }
 
 function isAddRoadDTO(obj: any): obj is ReviewCreateDTO {
   return (
-    typeof obj.spotId === 'string' &&
-    typeof obj.content === 'string' &&
-    typeof obj.rate === 'number'
+    typeof obj.spotId === "string" &&
+    typeof obj.content === "string" &&
+    typeof obj.rate === "number"
   );
 }
 

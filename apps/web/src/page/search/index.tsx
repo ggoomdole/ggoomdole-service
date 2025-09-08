@@ -6,11 +6,11 @@ import { useRouter } from "next/navigation";
 import Close from "@/assets/close.svg";
 import CourseCard from "@/components/common/card/course-card";
 import { SEARCH } from "@/constants/search";
+import { invalidateQueries } from "@/lib/tanstack";
 import { useClearAllRecentSearch, useRemoveRecentSearch } from "@/lib/tanstack/mutation/search";
 import { useGetRecentSearchWords } from "@/lib/tanstack/query/search";
 import { BaseResponseDTO } from "@/models";
 import { RoadResponseDTO } from "@/models/road";
-import { revalidateTags } from "@/utils/revalidate";
 
 interface SearchPageProps {
   isTokenExist: boolean;
@@ -34,7 +34,7 @@ export default function SearchPage({ isTokenExist, roadRecommendResponse }: Sear
   const onRemoveSearchKeyword = async (word: string) => {
     removeRecentSearch(word, {
       onSuccess: () => {
-        revalidateTags([SEARCH.RECENT]);
+        invalidateQueries([SEARCH.RECENT]);
       },
     });
   };
@@ -43,14 +43,14 @@ export default function SearchPage({ isTokenExist, roadRecommendResponse }: Sear
   const onClearAllSearchKeywords = async () => {
     clearAllRecentSearch(undefined, {
       onSuccess: () => {
-        revalidateTags([SEARCH.RECENT]);
+        invalidateQueries([SEARCH.RECENT]);
       },
     });
   };
 
   // 최근 검색어 클릭 시 검색 실행
-  const onSearchKeywordClick = (keyword: string) => {
-    revalidateTags([SEARCH.RECENT]);
+  const onSearchKeywordClick = async (keyword: string) => {
+    invalidateQueries([SEARCH.RECENT]);
     router.push(`/search?word=${encodeURIComponent(keyword)}`);
   };
 

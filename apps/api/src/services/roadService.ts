@@ -444,7 +444,7 @@ export function averageRate(spot: any): number {
     .map((r: any) => r.rate);
 
   if (rates.length === 0) return 0;
-  return rates.reduce((a: number, b: number) => a + b, 0) / rates.length;
+  return parseFloat((rates.reduce((a: number, b: number) => a + b, 0) / rates.length).toFixed(1));
 }
 
 export default new RoadService();

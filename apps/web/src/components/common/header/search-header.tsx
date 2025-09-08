@@ -10,12 +10,13 @@ import { getParams } from "@/utils/params";
 import { revalidateTags } from "@/utils/revalidate";
 
 interface SearchHeaderProps {
+  onSearch?: () => void;
   word: string;
-  [key: string]: string | undefined;
+  [key: string]: string | undefined | (() => void);
 }
 
 export default function SearchHeader(props: SearchHeaderProps) {
-  const { word, page, ...restProps } = props;
+  const { word, page, onSearch, ...restProps } = props;
   const [searchQuery, setSearchQuery] = useState(word || "");
 
   const router = useRouter();
@@ -27,7 +28,11 @@ export default function SearchHeader(props: SearchHeaderProps) {
   const onSubmit = (e: React.FormEvent<HTMLFormElement> | React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     if (!searchQuery.trim()) return;
-    const params = getParams(restProps, { word: searchQuery });
+    const trimmedSearchQuery = searchQuery.trim();
+    if (word === trimmedSearchQuery && onSearch) {
+      return onSearch();
+    }
+    const params = getParams(restProps, { word: trimmedSearchQuery });
     if (page === "road") revalidateTags([SEARCH.ROAD]);
     router.push(`?${params}`);
   };

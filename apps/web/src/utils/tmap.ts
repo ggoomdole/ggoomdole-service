@@ -1,3 +1,4 @@
+import { MAP } from "@/constants/map";
 import type { TMapTransitResponse } from "@/types/tmap";
 
 const TMAP_API_KEY = process.env.NEXT_PUBLIC_TMAP_API_KEY!;
@@ -27,6 +28,9 @@ export const fetchTransitRoute = async (
       count: 1, // 첫 번째 경로만 가져오기
       ...params,
     }),
+    next: {
+      tags: [MAP.GET_TRANSIT_ROUTE, params.startX, params.startY, params.endX, params.endY],
+    },
   });
 
   if (!response.ok) {

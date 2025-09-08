@@ -79,7 +79,7 @@ export default function NicknameStep({ form, onNext }: NameStepProps) {
           <br />
           입력해주세요
         </h1>
-        <div className="focus-within:border-main-900 space-y-1 space-y-4 rounded-2xl border px-4 py-2.5 transition-colors">
+        <div className="focus-within:border-main-900 space-y-4 rounded-2xl border px-4 py-2.5 transition-colors">
           <label htmlFor="nickname" className="typo-regular text-gray-700">
             닉네임을 입력해 주세요
           </label>

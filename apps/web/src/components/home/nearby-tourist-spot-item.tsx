@@ -1,11 +1,12 @@
 import Image from "next/image";
-import Link from "next/link";
 
 interface NearbyTouristSpotItemProps {
   title: string;
   image: string;
   address: string;
   rating: number;
+  onRouteToLocation: () => void;
+  disabled: boolean;
 }
 
 const DEFAULT_IMAGE = "/static/default-thumbnail.png";
@@ -14,14 +15,14 @@ export default function NearbyTouristSpotItem({
   title,
   image,
   address,
+  onRouteToLocation,
+  disabled,
 }: NearbyTouristSpotItemProps) {
-  // TODO: 제목으로 장소 검색하고 결과가 있으면
-  // 해당 ID로 locations 페이지로 이동하기
-
   return (
-    <Link
-      href={`/locations/${title}`}
-      className="w-max max-w-40 shrink-0 overflow-hidden rounded-sm shadow-lg"
+    <button
+      onClick={onRouteToLocation}
+      className="flex w-max max-w-40 shrink-0 flex-col overflow-hidden rounded-sm text-start shadow-lg"
+      disabled={disabled}
     >
       <Image
         src={image || DEFAULT_IMAGE}
@@ -30,10 +31,10 @@ export default function NearbyTouristSpotItem({
         height={160}
         className="aspect-square object-cover"
       />
-      <div className="space-y-0.5 bg-white p-1">
+      <div className="h-full space-y-0.5 bg-white p-1">
         <p className="typo-medium truncate">{title}</p>
         <p className="typo-regular">{address}</p>
       </div>
-    </Link>
+    </button>
   );
 }
