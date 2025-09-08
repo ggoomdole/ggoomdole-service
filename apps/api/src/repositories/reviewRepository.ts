@@ -11,9 +11,11 @@ class reviewController {
         spotId: data.spotId,
         text: data.content,
         rate: data.rate,
-        imageUrls: {
-          create: data.imageUrls?.map(url => ({ url }))
-        }
+        imageUrls: data.imageUrls?.length
+        ? {
+            create: data.imageUrls.map(url => ({ url }))
+          }
+        : undefined,
       },
       include: {
         user: {
