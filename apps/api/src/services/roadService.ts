@@ -27,7 +27,11 @@ class RoadService {
 
     switch (sortBy) {
       case "latest":
-        sortedPilgrimages.sort((a, b) => +new Date(b.createAt) - +new Date(a.createAt));
+        sortedPilgrimages.sort((a, b) => {
+          const dateA = a.createAt instanceof Date ? a.createAt.getTime() : new Date(a.createAt).getTime();
+          const dateB = b.createAt instanceof Date ? b.createAt.getTime() : new Date(b.createAt).getTime();
+          return dateB - dateA;
+        });
         break;
       case "views":
         sortedPilgrimages.sort((a, b) => b.search - a.search);
@@ -289,8 +293,7 @@ class RoadService {
     // 조회수 증가
     await roadRepository.incrementSearchCount(roadId);
 
-    const isParti =
-      userId !== undefined ? await roadRepository.isParticipateByUserId(userId, roadId) : false;
+    const isParti = userId !== undefined ? await roadRepository.isParticipateByUserId(userId, roadId) : false;
 
     let spots = road.spots;
 
@@ -377,8 +380,16 @@ class RoadService {
     const road = await roadRepository.findRoadWithSpots(roadId);
     if (!road) throw new NotFoundError("순례길이 존재하지 않습니다.");
 
-    const exist = await roadRepository.findParticipation(userId, roadId);
+    const owner = await roadRepository.checkPilgrimageOwner(userId, roadId);
+    if (owner) {
+      return {
+        userId,
+        pilgrimageId: roadId,
+        message: "본인이 만든 순례길에는 참여할 수 없습니다.",
+      };
+    }
 
+    const exist = await roadRepository.findParticipation(userId, roadId);
     if (exist) {
       return {
         userId: exist.userId,
@@ -402,9 +413,7 @@ class RoadService {
     }
 
     const isAdmin = await roadRepository.checkPilgrimageOwner(userId, roadId);
-    if (!isAdmin) {
-      throw new UnauthorizedError("관리자 권한이 없습니다.");
-    }
+    if (!isAdmin) { throw new UnauthorizedError("관리자 권한이 없습니다."); }
 
     await roadRepository.deleteRoad(roadId);
     return roadId;
@@ -412,14 +421,13 @@ class RoadService {
 
   async outByRoadId(userId: number, roadId: number): Promise<Number> {
     const road = await roadRepository.findRoadById(roadId);
-    if (!road) {
-      throw new NotFoundError("해당 순례길이 존재하지 않습니다.");
-    }
+    if (!road) { throw new NotFoundError("해당 순례길이 존재하지 않습니다."); }
 
     const isAdmin = await roadRepository.isParticipateByUserId(userId, roadId);
-    if (!isAdmin) {
-      throw new UnauthorizedError("순례길에 참여하고 있지 않습니다.");
-    }
+    if (!isAdmin) { throw new UnauthorizedError("순례길에 참여하고 있지 않습니다."); }
+
+    const owner = await roadRepository.checkPilgrimageOwner(userId, roadId);
+    if (owner) { throw new UnauthorizedError("본인의 순례길을 나갈 수 없습니다."); }
 
     await roadRepository.deleteRoadById(roadId, userId);
     return roadId;

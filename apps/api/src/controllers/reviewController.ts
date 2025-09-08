@@ -10,14 +10,12 @@ class ReveiwController {
   async createReview(req: Request, res: Response, next: NextFunction) {
     try {
       const userId = req.user.userId;
-      const dto = JSON.parse(req.body.data) as ReviewCreateDTO;
-      if (!isAddRoadDTO(dto)) {
-        throw new BadRequestError("요청 형식이 잘못되었습니다.");
-      }
-      const file = req.file;
+      const dto = req.body as ReviewCreateDTO;
+      if (!isAddRoadDTO(dto)) { throw new BadRequestError('요청 형식이 잘못되었습니다.'); }
+      const files = req.files as Express.Multer.File[];
 
-      const newReview = await reviewService.createReview(userId, dto, file);
-      return successHandler(res, "리뷰 생성 완료", { newReivew: newReview, userId: userId });
+      const newReview = await reviewService.createReview(userId, dto, files);
+      return successHandler(res, '리뷰 생성 완료', { newReivew: newReview, userId: userId });
     } catch (error) {
       next(error);
     }
@@ -55,12 +53,10 @@ class ReveiwController {
   async showAllReview(req: Request, res: Response, next: NextFunction) {
     try {
       const spotId = req.params.spotId;
-      if (!spotId || typeof spotId !== "string" || spotId.trim() === "") {
-        throw new BadRequestError("장소ID는 필수이며 빈 문자열일 수 없습니다.");
-      }
-
-      const reviews = await reviewService.showAllReview(spotId);
-      return successHandler(res, "모든 리뷰 조회 성공", reviews);
+      if (!spotId || typeof spotId !== 'string' || spotId.trim() === '') { throw new BadRequestError('장소ID는 필수이며 빈 문자열일 수 없습니다.'); }
+      
+      const { reviews, reviewAvg } = await reviewService.showAllReview(spotId)
+      return successHandler(res, "모든 리뷰 조회 성공", { reviews, reviewAvg });
     } catch (error) {
       next(error);
     }
