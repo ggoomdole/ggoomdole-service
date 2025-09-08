@@ -376,8 +376,16 @@ class RoadService {
     const road = await roadRepository.findRoadWithSpots(roadId);
     if (!road) throw new NotFoundError("순례길이 존재하지 않습니다.");
 
-    const exist = await roadRepository.findParticipation(userId, roadId);
+    const owner = await roadRepository.checkPilgrimageOwner(userId, roadId);
+    if (owner) {
+      return {
+        userId,
+        pilgrimageId: roadId,
+        message: "본인이 만든 순례길에는 참여할 수 없습니다.",
+      };
+    }
 
+    const exist = await roadRepository.findParticipation(userId, roadId);
     if (exist) {
       return {
         userId: exist.userId,
