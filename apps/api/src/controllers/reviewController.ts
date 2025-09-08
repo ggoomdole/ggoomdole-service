@@ -12,9 +12,9 @@ class ReveiwController {
       const userId = req.user.userId;
       const dto = req.body as ReviewCreateDTO;
       if (!isAddRoadDTO(dto)) { throw new BadRequestError('요청 형식이 잘못되었습니다.'); }
-      const file = req.file;
+      const files = req.files as Express.Multer.File[];
 
-      const newReview = await reviewService.createReview(userId, dto, file);
+      const newReview = await reviewService.createReview(userId, dto, files);
       return successHandler(res, '리뷰 생성 완료', { newReivew: newReview, userId: userId });
     } catch (error) {
       next(error);

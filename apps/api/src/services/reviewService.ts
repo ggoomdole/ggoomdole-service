@@ -26,11 +26,16 @@ class ReviewService {
   async createReview(
     userId: number,
     data: ReviewCreateDTO,
-    file?: Express.Multer.File
+    files?: Express.Multer.File[]
   ): Promise<ReviewCheckDTO> {
-    if (file) {
-      const imageUrl = await this.uploadReviewImage(userId, file);
-      data.imageUrl = imageUrl;
+    let imageUrls : string[] = [];
+
+    if (files && files.length > 0) {
+      const uploadPromises = files.map((file) =>
+        this.uploadReviewImage(userId, file)
+      );
+      imageUrls = await Promise.all(uploadPromises);
+      data.imageUrls = imageUrls;
     }
 
     const newReview = await reviewRepository.reveiwUpload(userId, data);
@@ -43,7 +48,7 @@ class ReviewService {
       spotId: newReview.spotId,
       content: newReview.text,
       rate: newReview.rate,
-      imageUrl: newReview.imageUrl ?? "",
+      imageUrls: newReview.imageUrls.map(img => img.url) ?? [],
     };
   }
 
@@ -73,7 +78,7 @@ class ReviewService {
       spotId: reviewById.spotId,
       content: reviewById.text,
       rate: reviewById.rate,
-      imageUrl: reviewById.imageUrl,
+      imageUrls: reviewById.imageUrls.map(img => img.url) ?? [],
     };
   }
 
@@ -82,10 +87,11 @@ class ReviewService {
     if (!rawReviews || rawReviews.length === 0) { throw new NotFoundError('해당 장소에 리뷰가 존재하지 않습니다.'); }
   
     return rawReviews.map((p): AllReviewCheckDTO => ({
+      reviewId: p.id,
       spotId: p.spotId,
       content: p.text,
       rate: p.rate ?? 0,
-      imageUrl: p.imageUrl ?? "",
+      imageUrls: p.imageUrls?.map(img => img.url) ?? [],
       userId: p.userId,
       nickname: p.user.nickName,
       profileImage: p.user.profileImage

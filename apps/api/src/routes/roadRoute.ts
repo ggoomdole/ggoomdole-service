@@ -1,11 +1,11 @@
 import optionalAuth from "@/middlewares/optionalAuth";
+import roadService from "@/services/roadService";
 
 import { Router } from "express";
 import multer from "multer";
 
 import roadController from "../controllers/roadController";
 import authenticate from "../middlewares/authenticate";
-import roadService from "@/services/roadService";
 
 const router = Router();
 const upload = multer({ storage: multer.memoryStorage() });

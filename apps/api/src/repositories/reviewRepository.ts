@@ -1,4 +1,4 @@
-import { Prisma,PrismaClient } from '@prisma/client';
+import { PrismaClient } from '@prisma/client';
 const prisma = new PrismaClient();
 
 import { ReviewCreateDTO } from '@repo/types';
@@ -11,7 +11,9 @@ class reviewController {
         spotId: data.spotId,
         text: data.content,
         rate: data.rate,
-        imageUrl: data.imageUrl
+        imageUrls: {
+          create: data.imageUrls?.map(url => ({ url }))
+        }
       },
       include: {
         user: {
@@ -20,6 +22,7 @@ class reviewController {
             profileImage: true
           },
         },
+        imageUrls: true
       },
     });
   }
@@ -40,6 +43,7 @@ class reviewController {
             profileImage: true
           },
         },
+        imageUrls: true
       },
     });
   }
@@ -65,6 +69,7 @@ class reviewController {
             profileImage: true
           },
         },
+        imageUrls: true
       },
     });
   }
