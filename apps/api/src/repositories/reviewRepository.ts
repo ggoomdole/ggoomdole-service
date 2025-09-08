@@ -22,6 +22,7 @@ class reviewController {
             profileImage: true
           },
         },
+        spot: true,
         imageUrls: true
       },
     });
@@ -43,6 +44,7 @@ class reviewController {
             profileImage: true
           },
         },
+        spot: true,
         imageUrls: true
       },
     });
