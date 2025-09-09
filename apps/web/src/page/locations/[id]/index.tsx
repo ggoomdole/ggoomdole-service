@@ -38,6 +38,8 @@ export default function LocationsPage({ id, tab, data, currentUserId }: Location
   const { data: reviewData, isLoading, error } = useGetReviewsById(id);
   const isNotFoundError = error?.message.includes("404");
 
+  const reviewImages = reviewData?.data?.reviews?.map((review) => review.imageUrls).flat();
+
   const renderTab = (tab: string) => {
     switch (tab) {
       case "review":
@@ -45,7 +47,7 @@ export default function LocationsPage({ id, tab, data, currentUserId }: Location
           <ReviewTab
             id={id}
             currentUserId={currentUserId}
-            data={reviewData?.data || []}
+            data={reviewData?.data}
             isLoading={isLoading}
             isNotFoundError={isNotFoundError ?? false}
           />
@@ -83,13 +85,13 @@ export default function LocationsPage({ id, tab, data, currentUserId }: Location
           {reviewData ? (
             <DragCarousel>
               <>
-                {reviewData?.data?.slice(0, 10).map(
-                  (review) =>
-                    review.imageUrl && (
-                      <DragCarouselItem key={review.reviewId}>
+                {reviewImages?.slice(0, 10).map(
+                  (imageUrl, idx) =>
+                    imageUrl && (
+                      <DragCarouselItem key={`${imageUrl}-${idx}`}>
                         <div className="aspect-thumbnail relative w-32 shrink-0 rounded-sm">
                           <Image
-                            src={review.imageUrl}
+                            src={imageUrl}
                             alt="review-image"
                             fill
                             className="rounded-sm object-cover"
@@ -98,7 +100,7 @@ export default function LocationsPage({ id, tab, data, currentUserId }: Location
                       </DragCarouselItem>
                     )
                 )}
-                {reviewData?.data && reviewData.data.length > 10 && (
+                {reviewImages && reviewData.data.reviews.length > 10 && (
                   <DragCarouselItem>
                     <Link
                       href={`/locations/${id}?tab=review`}
@@ -107,7 +109,7 @@ export default function LocationsPage({ id, tab, data, currentUserId }: Location
                       <div className="text-center">
                         <div className="typo-regular text-gray-600">더보기</div>
                         <div className="typo-caption text-gray-500">
-                          +{(reviewData.data.length - 10).toLocaleString()}
+                          +{(reviewData.data.reviews.length - 10).toLocaleString()}
                         </div>
                       </div>
                     </Link>

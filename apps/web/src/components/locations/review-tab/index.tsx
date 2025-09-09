@@ -1,6 +1,6 @@
 "use client";
 
-import { ReviewItemDTO } from "@/models/review";
+import type { ReviewDTO } from "@/models/review";
 
 import { Loader2 } from "lucide-react";
 
@@ -11,7 +11,7 @@ import StarRating from "../../common/star/star-rating";
 interface ReviewTabProps {
   id: string;
   currentUserId: string | null;
-  data: ReviewItemDTO[];
+  data: ReviewDTO | undefined;
   isLoading: boolean;
   isNotFoundError: boolean;
 }
@@ -23,11 +23,6 @@ export default function ReviewTab({
   isLoading,
   isNotFoundError,
 }: ReviewTabProps) {
-  let totalRating = 0;
-  if (data) {
-    totalRating = data.reduce((acc, review) => acc + review.rate, 0);
-  }
-
   return (
     <section className="divide-main-100 divide-y-8">
       <div className="typo-medium flex flex-col items-center gap-2 py-2.5">
@@ -48,20 +43,17 @@ export default function ReviewTab({
           <>
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2.5">
-                <p className="typo-medium text-gray-700">
-                  {(totalRating / data?.length).toFixed() || 0}
-                </p>
-                <StarRating rating={totalRating / data!.length || 0} className="size-5" />
+                <p className="typo-medium text-gray-700">{data?.reviewAvg.toFixed() || 0}</p>
+                <StarRating rating={data?.reviewAvg || 0} className="size-5" />
               </div>
-              <p className="typo-regular text-gray-500">후기 {data?.length}</p>
+              <p className="typo-regular text-gray-500">후기 {data?.reviews.length}</p>
             </div>
             <div className="space-y-2.5">
-              {data?.map((review, index) => (
+              {data?.reviews.map((review, index) => (
                 <ReviewItem
                   key={`review-item-${index}`}
                   {...review}
                   currentUserId={currentUserId}
-                  spotId={id}
                 />
               ))}
             </div>
