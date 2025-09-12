@@ -69,6 +69,9 @@ export default function ChangeOrderMode({
     setTouchCurrentY(touch.clientY);
     touchStartIndex.current = index;
     setDraggedIndex(index);
+
+    // 텍스트 선택 방지
+    e.preventDefault();
   };
 
   const onTouchMove = (e: React.TouchEvent<HTMLDivElement>) => {
@@ -132,7 +135,7 @@ export default function ChangeOrderMode({
             onTouchMove={onTouchMove}
             onTouchEnd={onTouchEnd}
             className={cn(
-              "flex touch-none items-center gap-2.5 bg-white px-5 py-2.5 transition-all duration-200",
+              "flex touch-none select-none items-center gap-2.5 bg-white px-5 py-2.5 transition-all duration-200",
               draggedIndex === index && "opacity-50",
               dragOverIndex === index && "translate-y-1 transform"
             )}
