@@ -13,7 +13,7 @@ interface CoursesPageProps {
 }
 
 export default async function Courses({ searchParams }: CoursesPageProps) {
-  const resolvedSearchParams = await searchParams;
+  const { category, sort } = await searchParams;
 
   return (
     <>
@@ -26,7 +26,7 @@ export default async function Courses({ searchParams }: CoursesPageProps) {
         }
         sticky
       />
-      <CoursesPage {...resolvedSearchParams} />
+      <CoursesPage category={category} sort={sort || "popular"} />
       <FloatingNavButton />
     </>
   );
