@@ -52,10 +52,14 @@ const SortableItem = ({ place, index, onChangeReason, remove }: SortableItemProp
         "flex select-none items-center gap-2.5 bg-white px-5 py-2.5 transition-opacity duration-200",
         isDragging && "opacity-50"
       )}
-      {...attributes}
-      {...listeners}
     >
-      <Menu />
+      <div
+        className="cursor-grab touch-none p-1 active:cursor-grabbing"
+        {...attributes}
+        {...listeners}
+      >
+        <Menu />
+      </div>
       <LocationInputCard
         placeName={place.placeName}
         value={place.reason}
@@ -74,7 +78,11 @@ export default function ChangeOrderMode({
   onReorder,
 }: ChangeOrderModeProps) {
   const sensors = useSensors(
-    useSensor(PointerSensor),
+    useSensor(PointerSensor, {
+      activationConstraint: {
+        distance: 8,
+      },
+    }),
     useSensor(KeyboardSensor, {
       coordinateGetter: sortableKeyboardCoordinates,
     })
