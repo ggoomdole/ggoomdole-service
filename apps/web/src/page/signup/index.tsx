@@ -64,7 +64,7 @@ export default function SignupPage({ step }: SignupPageProps) {
     );
   });
 
-  if (+step < 4 && signupComplete.current) {
+  if (+step < 3 && signupComplete.current) {
     throw new Error("회원가입이 완료되었어요.");
   }
 
