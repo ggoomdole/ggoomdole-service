@@ -14,8 +14,7 @@ const app = express();
 app
   .use(cors())
   .use(express.urlencoded({ extended: true }))
-  .use(express.json({ limit: "20mb" }))
-  .use(express.urlencoded({ limit: "20mb", extended: true }))
+  .use(express.json())
 
   .get("/", (_, res) => {
     return res.json({ message: "서버 실행 완료" });
