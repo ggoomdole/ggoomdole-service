@@ -4,12 +4,13 @@ import { getNearbyTouristSpots, getRequestSpots } from "@/services/spot";
 import { useQuery } from "@tanstack/react-query";
 
 export const useGetNearbyTouristSpots = (location?: { lat: number; lng: number }) => {
-  const { latitude: userLat, longitude: userLon } = useGeolocation();
+  const { latitude: userLat, longitude: userLon, loading } = useGeolocation();
 
   return useQuery({
-    queryKey: [SPOT.NEARBY_TOURIST_SPOTS],
+    queryKey: [SPOT.NEARBY_TOURIST_SPOTS, userLat, userLon],
     queryFn: () =>
       getNearbyTouristSpots({ lat: location?.lat || userLat, lng: location?.lng || userLon }),
+    enabled: !loading,
   });
 };
 
