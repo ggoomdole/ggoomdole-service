@@ -7,7 +7,7 @@ export const useGetNearbyTouristSpots = (location?: { lat: number; lng: number }
   const { latitude: userLat, longitude: userLon, loading } = useGeolocation();
 
   return useQuery({
-    queryKey: [SPOT.NEARBY_TOURIST_SPOTS, userLat, userLon],
+    queryKey: [SPOT.NEARBY_TOURIST_SPOTS, location?.lat, location?.lng, userLat, userLon],
     queryFn: () =>
       getNearbyTouristSpots({ lat: location?.lat || userLat, lng: location?.lng || userLon }),
     enabled: !loading,

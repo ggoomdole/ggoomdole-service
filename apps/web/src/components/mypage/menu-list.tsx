@@ -12,7 +12,7 @@ interface MenuListProps {
 
 const MENUS = [
   {
-    name: "나의 순례길",
+    name: "나만의 순례길",
     value: "courses",
     type: "link" as const,
   },
