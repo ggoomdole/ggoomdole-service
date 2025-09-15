@@ -45,9 +45,9 @@ class ReviewService {
 
     return {
       reviewId: newReview.id,
-      userId: newReview.userId,
-      nickname: newReview.user.nickName,
-      profileImage: newReview.user.profileImage,
+      userId: newReview.userId ?? 0,
+      nickname: newReview.user?.nickName ?? '알 수 없는 이용자',
+      profileImage: newReview.user?.profileImage ?? null,
       spotId: newReview.spotId,
       content: newReview.text,
       rate: newReview.rate,
@@ -75,9 +75,9 @@ class ReviewService {
 
     return {
       reviewId: reviewById.id,
-      userId: reviewById.userId,
-      nickname: reviewById.user.nickName,
-      profileImage: reviewById.user.profileImage,
+      userId: reviewById.userId ?? 0,
+      nickname: reviewById.user?.nickName ?? '알 수 없는 이용자',
+      profileImage: reviewById.user?.profileImage ?? null,
       spotId: reviewById.spotId,
       content: reviewById.text,
       rate: reviewById.rate,
@@ -95,9 +95,9 @@ class ReviewService {
       content: p.text,
       rate: p.rate ?? 0,
       imageUrls: p.imageUrls?.map(img => img.url) ?? [],
-      userId: p.userId,
-      nickname: p.user.nickName,
-      profileImage: p.user.profileImage
+      userId: p.userId ?? 0,
+      nickname: p.user?.nickName ?? '알 수 없는 이용자',
+      profileImage: p.user?.profileImage ?? null
     }));
 
     const reviewAvg = calculateAverageRate(rawReviews);

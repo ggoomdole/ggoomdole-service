@@ -4,24 +4,32 @@ import { averageRate } from './roadService';
 import searchRepository from '../repositories/searchRepository';
 
 class SearchService {
-  async searchRoad(userId: number | null, word: string, sortBy: string = 'popular'): Promise<{ results: RoadListResponseDTO[] }> {
-    const rawResults = await searchRepository.searchPilgrimages([word]);
+  async searchRoad(userId: number | null, word: string, sortBy: string = 'popular', categoryId?: number): Promise<{ results: RoadListResponseDTO[] }> {
+    const rawResults = await searchRepository.searchPilgrimages([word], categoryId);
     if (userId) { await searchRepository.saveSearchKeyword(userId, word); }
     const sortedResults = [...rawResults];
 
     switch (sortBy) {
-      case 'latest':
-        sortedResults.sort((a, b) => +new Date(b.createAt) - +new Date(a.createAt));
+      case "latest":
+        sortedResults.sort((a, b) => {
+          const dateA = a.createAt instanceof Date ? a.createAt.getTime() : new Date(a.createAt).getTime();
+          const dateB = b.createAt instanceof Date ? b.createAt.getTime() : new Date(b.createAt).getTime();
+          return dateB - dateA;
+        });
         break;
-      case 'views':
+      case "views":
         sortedResults.sort((a, b) => b.search - a.search);
         break;
-      case 'participants':
+      case "participants":
         sortedResults.sort((a, b) => b.participants.length - a.participants.length);
         break;
-      case 'popular':
+      case "popular":
       default:
-        sortedResults.sort((a, b) => averageRate(b) - averageRate(a));
+        sortedResults.sort((a, b) => {
+          const avgA = averageRate(a);
+          const avgB = averageRate(b);
+          return avgB - avgA;
+        });
         break;
     }
 

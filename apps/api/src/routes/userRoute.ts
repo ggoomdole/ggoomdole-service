@@ -20,4 +20,6 @@ router.post(
 router.post("/", authenticate, userController.createUserInfo);
 router.get("/", authenticate, upload.single("profile-image"), userController.getUserInfo);
 
+router.patch("/term", authenticate, userController.changeTerm);
+
 export default router;
