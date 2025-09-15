@@ -58,6 +58,19 @@ class UserController {
     }
   }
 
+  async changeTerm(req: Request, res: Response, next: NextFunction) {
+    try {
+      const userId = req.user.userId;
+      const { term } = req.body;
+      if (!term) { throw new BadRequestError('거주기간은 필수입니다.'); }
+      
+      const updateTerm = await userService.uploadTerm(userId, term);
+      return successHandler(res, '거주기간 변경 완료', updateTerm);
+    } catch (error: any) {
+      next(error);
+    }
+  }
+
   async createUserInfo(req: Request, res: Response, next: NextFunction) {
     try {
       const userId = req.user.userId;

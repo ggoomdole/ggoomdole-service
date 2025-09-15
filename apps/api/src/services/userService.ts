@@ -50,7 +50,7 @@ class UserService {
   }
 
   async uploadTerm(userId: number, term?: string) {
-    const nativeValue = term ? parseTermToNative(term) : 'SHORT_TERM';
+    const nativeValue = term ? parseTermToNative(term) : Native.SHORT_TERM;
     return await UserRepository.updateUserNative(userId, nativeValue);
   }
 
