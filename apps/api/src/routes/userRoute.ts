@@ -17,7 +17,7 @@ router.post(
   userController.uploadProfileImage
 );
 
-router.patch("/", authenticate, userController.createUserInfo);
+router.post("/", authenticate, userController.createUserInfo);
 router.get("/", authenticate, upload.single("profile-image"), userController.getUserInfo);
 
 router.patch("/term", authenticate, userController.changeTerm);
