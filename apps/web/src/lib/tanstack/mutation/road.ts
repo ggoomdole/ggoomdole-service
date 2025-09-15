@@ -95,7 +95,7 @@ export const useRemoveRoad = () => {
         [ROAD.PARTICIPATIONS],
         [ROAD.RECOMMEND],
       ]);
-      revalidateTags([ROAD.MY_CUSTOM_ROADS]);
+      revalidateTags([ROAD.MY_CUSTOM_ROADS, ROAD.PARTICIPATIONS]);
       router.back();
     },
     onError: () => {
