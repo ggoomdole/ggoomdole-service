@@ -26,8 +26,10 @@ export default function ReviewTab({
   return (
     <section className="divide-main-100 divide-y-8">
       <div className="typo-medium flex flex-col items-center gap-2 py-2.5">
-        <h3 className="text-gray-700">방문 후기를 남겨주세요!</h3>
-        <RegisterReview locationId={id} />
+        <h3 className="text-gray-700">
+          {currentUserId === null ? "로그인 후 후기를 남겨주세요!" : "방문 후기를 남겨주세요!"}
+        </h3>
+        <RegisterReview currentUserId={currentUserId} locationId={id} />
       </div>
       <div className="space-y-2.5 p-5">
         {isLoading ? (
