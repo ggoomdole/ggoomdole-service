@@ -59,6 +59,7 @@ export default function FindByMapTab({
 
   const onClickMarker = (e: TMapMarkerClickEvent) => {
     const selectedPoi = searchResult.find((poi) => poi.id === e._marker_data.options.title);
+
     setSelectedMarker({
       title: selectedPoi?.name || "",
       address: selectedPoi?.newAddressList.newAddress[0].fullAddressRoad || "",
@@ -139,6 +140,7 @@ export default function FindByMapTab({
           onClickMap={onClickMap}
           onClickMarker={onClickMarker}
           onDragEnd={() => setIsDragEnd(true)}
+          selectedMarkerId={selectedMarker?.id}
         />
         {isDragEnd && (
           <button
