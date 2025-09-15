@@ -16,11 +16,11 @@ interface CoursesPageProps {
 const SORT_OPTIONS = [
   {
     name: "인기순",
-    value: "",
+    value: "popular",
   },
   {
     name: "최신순",
-    value: "recent",
+    value: "latest",
   },
   {
     name: "참여순",
