@@ -15,12 +15,10 @@ class RoadRepository {
       orderBy: order,
       include: {
         spots: {
-          include: {
+          select: {
             spot: {
-              include: {
-                reviews: {
-                  select: {rate: true},
-                },
+              select: {
+                avgRate: true,
               },
             },
           },

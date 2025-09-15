@@ -449,7 +449,7 @@ export function averageRate(spot: any): number {
 }
 
 // 장소 전체 평균 평점 계산
-function pilgrimageAverageRate(pilgrimage: any): number {
+export function pilgrimageAverageRate(pilgrimage: any): number {
   const allRates = (pilgrimage.spots ?? [])
     .flatMap((s: any) => {
       const rates = (s.spot?.reviews ?? [])

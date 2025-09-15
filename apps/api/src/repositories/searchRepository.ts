@@ -2,7 +2,9 @@ import { PrismaClient } from '@prisma/client';
 const prisma = new PrismaClient();
 
 class SearchRepository {
-  async searchPilgrimages(nouns: string[], categoryId?: number) {
+  async searchPilgrimages(nouns: string[], categoryId?: number, sortBy?: string) {
+    const order: any = sortBy === "latest" ? { createAt: 'desc' } : undefined;
+
     return await prisma.pilgrimage.findMany({
       where: {
         public: true,
@@ -16,6 +18,7 @@ class SearchRepository {
           }
         })),
       },
+      orderBy: order,
       select: {
         id: true,
         title: true,
@@ -29,6 +32,15 @@ class SearchRepository {
             user: {
               select: {
                 native: true,
+              },
+            },
+          },
+        },
+        spots: {
+          select: {
+            spot: {
+              select: {
+                avgRate: true,
               },
             },
           },
