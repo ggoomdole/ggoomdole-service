@@ -81,7 +81,7 @@ export interface ReviewCreateDTO {
 
 export interface ReviewCheckDTO {
   reviewId: number;
-  userId: number;
+  userId: number | null;
   nickname: string;
   profileImage: string | null;
   spotId: string;
@@ -96,7 +96,7 @@ export interface AllReviewCheckDTO {
   content: string;
   rate: number;
   imageUrls: string[];
-  userId: number;
+  userId: number | null;
   nickname: string;
   profileImage: string | null;
 }

@@ -14,7 +14,7 @@ model SearchKeyword {
   createAt  DateTime @default(now())
   updateAt  DateTime @updatedAt
 
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade) // 유저 삭제 시 자동 삭제
 }
 
 model Spot {
@@ -27,21 +27,21 @@ model Spot {
   hours     String?
   avgRate   Int?
 
-  reviews   Review[] 
+  reviews        Review[] 
   pilgrimageSpots PilgrimageSpot[]
 }
 
 model Review {
   id        Int       @id @default(autoincrement())
-  userId    Int
+  userId    Int?       // nullable, 유저 삭제 시 NULL
   spotId    String
   text      String
   rate      Int
-  imageUrls  ReviewImage[]
+  imageUrls ReviewImage[]
   createAt  DateTime @default(now())
 
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  spot      Spot     @relation(fields: [spotId], references: [id], onDelete: Cascade)
+  user      User?     @relation(fields: [userId], references: [id], onDelete: SetNull) // 유저 삭제 시 NULL
+  spot      Spot      @relation(fields: [spotId], references: [id], onDelete: Cascade)
 }
 
 model ReviewImage {
@@ -74,7 +74,7 @@ model PilgrimageUser {
   createAt     DateTime  @default(now())
   updateAt     DateTime  @updatedAt
 
-  user         User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user         User       @relation(fields: [userId], references: [id], onDelete: Cascade) // 유저 삭제 시 자동 삭제
   pilgrimage   Pilgrimage @relation(fields: [pilgrimageId], references: [id], onDelete: Cascade)
 
   @@id([userId, pilgrimageId])
@@ -93,7 +93,7 @@ model Pilgrimage {
   categoryId Int
   category   Category   @relation(fields: [categoryId], references: [id], onDelete: Cascade)
 
-  spots      PilgrimageSpot[]
+  spots        PilgrimageSpot[]
   participants PilgrimageUser[]
 }
 
