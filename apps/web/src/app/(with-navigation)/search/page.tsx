@@ -10,7 +10,7 @@ interface SearchProps {
   searchParams: Promise<{
     word: string;
     category: string;
-    sort: string;
+    sortBy: string;
   }>;
 }
 
