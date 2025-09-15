@@ -147,7 +147,7 @@ export default function Map({
     if (mapInstanceRef.current && isMapInitializedRef.current) {
       onInitializeMap();
     }
-  }, [markers]);
+  }, [markers, selectedMarkerId]);
 
   return <div ref={mapContainerRef} className={cn("flex-1", className)} />;
 }

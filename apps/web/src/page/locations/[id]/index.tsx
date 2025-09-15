@@ -53,7 +53,13 @@ export default function LocationsPage({ id, tab, data, currentUserId }: Location
           />
         );
       case "course":
-        return <CourseTab lat={+data.poiDetailInfo.lat} lng={+data.poiDetailInfo.lon} />;
+        return (
+          <CourseTab
+            title={data.poiDetailInfo.name}
+            lat={+data.poiDetailInfo.lat}
+            lng={+data.poiDetailInfo.lon}
+          />
+        );
       default:
         return <HomeTab data={data} />;
     }
