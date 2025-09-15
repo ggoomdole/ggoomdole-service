@@ -17,12 +17,16 @@ interface CourseDetailListPageProps {
 
 const SORT_OPTIONS = [
   {
-    name: "인기순",
+    name: "코스순",
     value: "",
   },
   {
     name: "후기순",
-    value: "review",
+    value: "review", // 리뷰 개수가 많은 순서
+  },
+  {
+    name: "평점순",
+    value: "popular", // 평점이 높은 순서
   },
 ];
 
