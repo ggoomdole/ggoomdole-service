@@ -78,7 +78,7 @@ export default function ReviewItem({
         </div>
         <p className="typo-regular">{content}</p>
       </div>
-      {currentUserId === userId.toString() && (
+      {currentUserId === userId?.toString() && (
         <Dialog>
           <DialogTrigger
             className="ml-auto flex h-8 w-8 items-center justify-center rounded-lg bg-gray-50 text-gray-500 transition-colors hover:bg-red-50 hover:text-red-500 focus:outline-none focus:ring-2 focus:ring-red-200 focus:ring-offset-2"
