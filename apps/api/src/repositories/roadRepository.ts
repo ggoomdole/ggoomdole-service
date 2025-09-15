@@ -4,12 +4,15 @@ const prisma = new PrismaClient();
 import { RoadRequestDTO, SpotDTO } from "@repo/types";
 
 class RoadRepository {
-  async allRoadList(categoryId?: number) {
+  async allRoadList(categoryId?: number, sortBy?: string) {
+    const order: any = sortBy === "latest" ? { createAt: 'desc' } : undefined;
+
     return await prisma.pilgrimage.findMany({
       where: {
         public: true,
         ...(categoryId && { categoryId })
       },
+      orderBy: order,
       include: {
         spots: {
           include: {

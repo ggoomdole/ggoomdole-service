@@ -19,20 +19,13 @@ class RoadService {
     categoryId?: number,
     sortBy: string = "popular"
   ): Promise<RoadListResponseDTO[]> {
-    const rawPilgrimages = await roadRepository.allRoadList(categoryId);
+    const rawPilgrimages = await roadRepository.allRoadList(categoryId, sortBy);
     if (!rawPilgrimages || rawPilgrimages.length === 0) return [];
 
     // 후처리 정렬
     const sortedPilgrimages = [...rawPilgrimages];
 
     switch (sortBy) {
-      case "latest":
-        sortedPilgrimages.sort((a, b) => {
-          const dateA = a.createAt instanceof Date ? a.createAt.getTime() : new Date(a.createAt).getTime();
-          const dateB = b.createAt instanceof Date ? b.createAt.getTime() : new Date(b.createAt).getTime();
-          return dateB - dateA;
-        });
-        break;
       case "views":
         sortedPilgrimages.sort((a, b) => b.search - a.search);
         break;
@@ -457,17 +450,20 @@ export function averageRate(spot: any): number {
 
 // 장소 전체 평균 평점 계산
 function pilgrimageAverageRate(pilgrimage: any): number {
-  const allRates = (pilgrimage.spots ?? []).flatMap((s: any) =>
-    (s.spot?.reviews ?? [])
-      .filter((r: any) => r.rate !== null && r.rate !== undefined)
-      .map((r: any) => r.rate)
-  );
+  const allRates = (pilgrimage.spots ?? [])
+    .flatMap((s: any) => {
+      const rates = (s.spot?.reviews ?? [])
+        .filter((r: any) => r.rate !== null && r.rate !== undefined)
+        .map((r: any) => r.rate);
+      return rates.length > 0 ? rates : [];
+    });
 
   if (allRates.length === 0) return 0;
 
   const sum = allRates.reduce((a: number, b: number) => a + b, 0);
   return parseFloat((sum / allRates.length).toFixed(1));
 }
+
 
 
 export default new RoadService();
