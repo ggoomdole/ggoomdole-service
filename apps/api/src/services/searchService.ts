@@ -4,8 +4,8 @@ import { averageRate } from './roadService';
 import searchRepository from '../repositories/searchRepository';
 
 class SearchService {
-  async searchRoad(userId: number | null, word: string, sortBy: string = 'popular'): Promise<{ results: RoadListResponseDTO[] }> {
-    const rawResults = await searchRepository.searchPilgrimages([word]);
+  async searchRoad(userId: number | null, word: string, sortBy: string = 'popular', categoryId?: number): Promise<{ results: RoadListResponseDTO[] }> {
+    const rawResults = await searchRepository.searchPilgrimages([word], categoryId);
     if (userId) { await searchRepository.saveSearchKeyword(userId, word); }
     const sortedResults = [...rawResults];
 

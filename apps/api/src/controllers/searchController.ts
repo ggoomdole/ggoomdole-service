@@ -7,7 +7,9 @@ import { NotFoundError } from '../utils/customError';
 class SearchController {
   async searchRoad(req: Request, res: Response, next: NextFunction) {
     try{
-        const userId = req.user?.userId ?? null; 
+        const userId = req.user?.userId ?? null;
+
+        const categoryId = req.query.categoryId ? Number(req.query.categoryId) : undefined;
 
         const word = req.query.word;
         if (!word || typeof word !== 'string') { throw new NotFoundError('검색어는 필수입니다.'); }
@@ -15,7 +17,7 @@ class SearchController {
         const sortBy = (req.query.sortBy as string) || 'popular';
         if (!sortBy) throw new NotFoundError('정렬 기준이 존재하지 않습니다.');
 
-        const result = await searchService.searchRoad(userId, word, sortBy);
+        const result = await searchService.searchRoad(userId, word, sortBy, categoryId);
         return successHandler(res, '순례길 검색 성공', result);
     } catch (error) {
         next(error);

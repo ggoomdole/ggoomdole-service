@@ -2,14 +2,20 @@ import { PrismaClient } from '@prisma/client';
 const prisma = new PrismaClient();
 
 class SearchRepository {
-  async searchPilgrimages(nouns: string[]) {
+  async searchPilgrimages(nouns: string[], categoryId?: number) {
     return await prisma.pilgrimage.findMany({
       where: {
         public: true,
+        ...(categoryId ? { categoryId } : {}),
         OR: nouns.map((noun) => ({
           title: {
-            contains: noun
+            contains: noun,
+            mode: "insensitive"
           },
+          intro: {
+            contains: noun,
+            mode: "insensitive"
+          }
         })),
       },
       select: {
@@ -23,15 +29,15 @@ class SearchRepository {
         participants: {
           select: {
             user: {
-            select: {
-              native: true,
-            },
+              select: {
+                native: true,
+              },
             },
           },
         },
       }
     });
-  }           
+  }
 
   async saveSearchKeyword(userId: number, word: string) {
     const existing = await prisma.searchKeyword.findFirst({

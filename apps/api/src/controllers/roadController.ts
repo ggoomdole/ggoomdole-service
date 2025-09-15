@@ -9,9 +9,7 @@ import { BadRequestError, NotFoundError } from "../utils/customError";
 class RoadController {
   async loadAllRoad(req: Request, res: Response, next: NextFunction) {
     try {
-      const categoryId = req.query.categoryId
-        ? parseInt(req.query.categoryId as string)
-        : undefined;
+      const categoryId = req.query.categoryId ? parseInt(req.query.categoryId as string) : undefined;
 
       const sortBy = (req.query.sortBy as string) || "popular";
       if (!sortBy) throw new NotFoundError("정렬 기준이 존재하지 않습니다.");
