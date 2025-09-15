@@ -15,7 +15,9 @@ class RoadRepository {
           include: {
             spot: {
               include: {
-                reviews: true,
+                reviews: {
+                  select: {rate: true},
+                },
               },
             },
           },

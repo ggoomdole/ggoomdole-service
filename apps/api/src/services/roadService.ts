@@ -41,7 +41,11 @@ class RoadService {
         break;
       case "popular":
       default:
-        sortedPilgrimages.sort((a, b) => averageRate(b) - averageRate(a));
+        sortedPilgrimages.sort((a, b) => {
+          const avgA = pilgrimageAverageRate(a.spots);
+          const avgB = pilgrimageAverageRate(b.spots);
+          return avgB - avgA;
+        });
         break;
     }
 
@@ -450,5 +454,20 @@ export function averageRate(spot: any): number {
   if (rates.length === 0) return 0;
   return parseFloat((rates.reduce((a: number, b: number) => a + b, 0) / rates.length).toFixed(1));
 }
+
+// 장소 전체 평균 평점 계산
+function pilgrimageAverageRate(pilgrimage: any): number {
+  const allRates = pilgrimage.spots.flatMap((s: any) =>
+    (s.spot?.reviews ?? [])
+      .filter((r: any) => r.rate !== null && r.rate !== undefined)
+      .map((r: any) => r.rate)
+  );
+
+  if (allRates.length === 0) return 0;
+  return parseFloat(
+    (allRates.reduce((a: number, b: number) => a + b, 0) / allRates.length).toFixed(1)
+  );
+}
+
 
 export default new RoadService();
