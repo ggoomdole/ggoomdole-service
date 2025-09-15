@@ -19,9 +19,10 @@ import { FieldErrors, useForm } from "react-hook-form";
 
 interface RegisterReviewProps {
   locationId: string;
+  currentUserId: string | null;
 }
 
-function RegisterReviewDialogContent({ locationId }: RegisterReviewProps) {
+function RegisterReviewDialogContent({ locationId }: Omit<RegisterReviewProps, "currentUserId">) {
   const { mutateAsync: createReview, isPending } = useCreateReview();
   const { close } = useDialog();
 
@@ -171,10 +172,10 @@ function RegisterReviewDialogContent({ locationId }: RegisterReviewProps) {
   );
 }
 
-export default function RegisterReview({ locationId }: RegisterReviewProps) {
+export default function RegisterReview({ currentUserId, locationId }: RegisterReviewProps) {
   return (
     <Dialog>
-      <DialogTrigger className="flex">
+      <DialogTrigger className="flex" disabled={currentUserId === null}>
         <StarRating rating={0} className="size-5" />
       </DialogTrigger>
       <RegisterReviewDialogContent locationId={locationId} />
