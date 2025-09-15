@@ -10,9 +10,17 @@ import { Loader2 } from "lucide-react";
 
 const DEFAULT_THUMBNAIL = "/static/default-thumbnail.png";
 
-export default function CourseTab({ lat, lng }: { lat: number; lng: number }) {
+interface CourseTabProps {
+  title: string;
+  lat: number;
+  lng: number;
+}
+
+export default function CourseTab({ title, lat, lng }: CourseTabProps) {
   const { data, isLoading, isError } = useGetNearbyTouristSpots({ lat, lng });
   const { mutateAsync: searchTmap, isPending } = useSearchTmap();
+
+  const filteredData = data?.data.filter((location) => location.title !== title);
 
   const onRouteToLocation = async (tourist: NearbyTouristSpotResponseDTO) => {
     await searchTmap(tourist);
@@ -29,7 +37,7 @@ export default function CourseTab({ lat, lng }: { lat: number; lng: number }) {
     </div>
   ) : (
     <section className="px-5">
-      {data?.data.map((location) => (
+      {filteredData?.map((location) => (
         <button
           key={location.title}
           className="flex w-full items-center gap-2.5 border-b border-b-gray-100 px-1 py-2.5 text-start"
