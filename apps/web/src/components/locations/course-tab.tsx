@@ -2,14 +2,29 @@
 
 import Image from "next/image";
 
+import { useSearchTmap } from "@/lib/tanstack/mutation/tmap";
 import { useGetNearbyTouristSpots } from "@/lib/tanstack/query/spot";
+import { NearbyTouristSpotResponseDTO } from "@/models/spot";
 
 import { Loader2 } from "lucide-react";
 
 const DEFAULT_THUMBNAIL = "/static/default-thumbnail.png";
 
-export default function CourseTab({ lat, lng }: { lat: number; lng: number }) {
+interface CourseTabProps {
+  title: string;
+  lat: number;
+  lng: number;
+}
+
+export default function CourseTab({ title, lat, lng }: CourseTabProps) {
   const { data, isLoading, isError } = useGetNearbyTouristSpots({ lat, lng });
+  const { mutateAsync: searchTmap, isPending } = useSearchTmap();
+
+  const filteredData = data?.data.filter((location) => location.title !== title);
+
+  const onRouteToLocation = async (tourist: NearbyTouristSpotResponseDTO) => {
+    await searchTmap(tourist);
+  };
 
   return isLoading ? (
     <div className="flex flex-col items-center gap-2.5">
@@ -22,10 +37,12 @@ export default function CourseTab({ lat, lng }: { lat: number; lng: number }) {
     </div>
   ) : (
     <section className="px-5">
-      {data?.data.map((location) => (
-        <div
+      {filteredData?.map((location) => (
+        <button
           key={location.title}
-          className="flex items-center gap-2.5 border-b border-b-gray-100 px-1 py-2.5"
+          className="flex w-full items-center gap-2.5 border-b border-b-gray-100 px-1 py-2.5 text-start"
+          onClick={() => onRouteToLocation(location)}
+          disabled={isPending}
         >
           <div className="relative">
             <Image
@@ -40,7 +57,7 @@ export default function CourseTab({ lat, lng }: { lat: number; lng: number }) {
             <h2 className="typo-semibold line-clamp-1">{location.title}</h2>
             <p className="typo-medium line-clamp-1">{location.address}</p>
           </div>
-        </div>
+        </button>
       ))}
     </section>
   );

@@ -1,9 +1,9 @@
 import { BaseResponseDTO } from "@/models";
-import type { ReviewCheckDTO } from "@repo/types";
+import type { ReviewDTO } from "@/models/review";
 
 import { clientApi } from "./api";
 
-export const getReviewsById = async (id: string): Promise<BaseResponseDTO<ReviewCheckDTO[]>> => {
+export const getReviewsById = async (id: string): Promise<BaseResponseDTO<ReviewDTO>> => {
   return clientApi.get(`review/spot/${id}`);
 };
 

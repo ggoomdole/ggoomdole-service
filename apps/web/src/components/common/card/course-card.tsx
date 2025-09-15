@@ -18,6 +18,7 @@ import { Dialog, DialogClose, DialogContent, DialogTrigger } from "../dialog";
 interface CourseCardProps extends RoadResponseDTO {
   href: string;
   isParticipate?: boolean;
+  isMyCourse?: boolean;
 }
 
 const getLevelIcon = (level: NativeType) => {
@@ -45,6 +46,7 @@ export default function CourseCard({
   native,
   href,
   isParticipate,
+  isMyCourse,
 }: CourseCardProps) {
   const router = useRouter();
 
@@ -66,7 +68,9 @@ export default function CourseCard({
           <CategoryChip category={categoryId as CategoryType} />
         </div>
         <p className="typo-semibold truncate">{title}</p>
-        <p className="typo-regular text-gray-500">현재 {participants}명이 참여했어요!</p>
+        {!isMyCourse && (
+          <p className="typo-regular text-gray-500">현재 {participants}명이 참여했어요!</p>
+        )}
         <p className="typo-medium truncate">{intro}</p>
       </div>
       <div className="space-y-0.5">

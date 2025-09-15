@@ -24,6 +24,7 @@ export default function MyCoursesPage({ promisedReponse }: MyCoursesPageProps) {
             <CourseCard
               key={`course-item-${course.roadId}`}
               href={`/courses/upload?id=${course.roadId}&view=private`}
+              isMyCourse
               {...course}
             />
           ))

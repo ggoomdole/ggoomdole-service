@@ -10,15 +10,14 @@ import {
 } from "@/components/common/dialog";
 import StarRating from "@/components/common/star/star-rating";
 import { useRemoveReview } from "@/lib/tanstack/mutation/review";
-import { ReviewItemDTO } from "@/models/review";
+import { ReviewCheckDTO } from "@repo/types";
 
 import { Trash2 } from "lucide-react";
 
 const DEFAULT_IMAGE_URL = "/static/default-thumbnail.png";
 
-interface ReviewItemProps extends ReviewItemDTO {
+interface ReviewItemProps extends ReviewCheckDTO {
   currentUserId: string | null;
-  spotId: string;
 }
 
 function RemoveReviewItemContent({ reviewId, spotId }: { reviewId: number; spotId: string }) {

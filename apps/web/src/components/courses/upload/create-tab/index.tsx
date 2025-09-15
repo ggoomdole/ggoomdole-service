@@ -17,7 +17,7 @@ import { useCreateMyRoad } from "@/lib/tanstack/mutation/road";
 import { cn } from "@/lib/utils";
 import { UploadCourseForm } from "@/schemas/course";
 import { CoursePlaceProps } from "@/types/course";
-import { infoToast, successToast } from "@/utils/toast";
+import { errorToast, infoToast, successToast } from "@/utils/toast";
 
 import { useFieldArray, UseFormReturn } from "react-hook-form";
 
@@ -154,51 +154,57 @@ export default function CreateTab({
     await removeRoad(id || "");
   };
 
-  const onSubmit = form.handleSubmit(async (data) => {
-    const formData = new FormData();
-    const spots = data.spots.map((spot, index) => ({
-      number: index + 1,
-      spotId: spot.placeId,
-      name: spot.placeName,
-      introSpot: spot.reason,
-      address: spot.address,
-      latitude: spot.latitude,
-      longitude: spot.longitude,
-    }));
-    const body = {
-      title: data.title,
-      categoryId: data.categoryId,
-      intro: data.intro,
-      spots,
-    };
-    formData.append("data", JSON.stringify(body));
-    if (isDuplicate) {
-      if (data.imageUrl) {
-        let file = data.imageUrl;
-        if (data.imageUrl.name.startsWith("https://")) {
-          const res = await fetch(data.imageUrl.name);
+  const onSubmit = form.handleSubmit(
+    async (data) => {
+      const formData = new FormData();
+      const spots = data.spots.map((spot, index) => ({
+        number: index + 1,
+        spotId: spot.placeId,
+        name: spot.placeName,
+        introSpot: spot.reason,
+        address: spot.address,
+        latitude: spot.latitude,
+        longitude: spot.longitude,
+      }));
+      const body = {
+        title: data.title,
+        categoryId: data.categoryId,
+        intro: data.intro,
+        spots,
+      };
+      formData.append("data", JSON.stringify(body));
+      if (isDuplicate) {
+        if (data.imageUrl) {
+          let file = data.imageUrl;
+          if (data.imageUrl.name.startsWith("https://")) {
+            const res = await fetch(data.imageUrl.name);
 
-          if (!res.ok) throw new Error("이미지 요청 실패");
+            if (!res.ok) throw new Error("이미지 요청 실패");
 
-          const blob = await res.blob();
+            const blob = await res.blob();
 
-          file = new File([blob], `origin-road-image-${id}`, { type: blob.type });
+            file = new File([blob], `origin-road-image-${id}`, { type: blob.type });
+          }
+          formData.append("road-image", file);
         }
-        formData.append("road-image", file);
+        await createMyRoad(formData);
+      } else if (isEditCourse && id) {
+        if (prevImageUrl !== data.imageUrl && data.imageUrl) {
+          formData.append("update-road-image", data.imageUrl);
+        }
+        await updateRoad({ formData, roadId: id });
+      } else {
+        if (data.imageUrl) {
+          formData.append("road-image", data.imageUrl);
+        }
+        await uploadRoad({ formData });
       }
-      await createMyRoad(formData);
-    } else if (isEditCourse && id) {
-      if (prevImageUrl !== data.imageUrl && data.imageUrl) {
-        formData.append("update-road-image", data.imageUrl);
-      }
-      await updateRoad({ formData, roadId: id });
-    } else {
-      if (data.imageUrl) {
-        formData.append("road-image", data.imageUrl);
-      }
-      await uploadRoad({ formData });
+    },
+    (error) => {
+      errorToast("순례길 생성에 실패했어요.");
+      console.error(error);
     }
-  });
+  );
 
   return (
     <>

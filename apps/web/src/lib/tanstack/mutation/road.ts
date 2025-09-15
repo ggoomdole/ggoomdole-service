@@ -56,7 +56,7 @@ export const useCreateMyRoad = () => {
   return useMutation({
     mutationFn: createMyRoad,
     onSuccess: () => {
-      successToast("커스텀 순례길 생성이 완료되었어요.");
+      successToast("나만의 순례길 생성이 완료되었어요.");
       revalidateTags([ROAD.PARTICIPATIONS]);
       router.replace("/mypage/courses");
     },
@@ -95,7 +95,7 @@ export const useRemoveRoad = () => {
         [ROAD.PARTICIPATIONS],
         [ROAD.RECOMMEND],
       ]);
-      revalidateTags([ROAD.MY_CUSTOM_ROADS]);
+      revalidateTags([ROAD.MY_CUSTOM_ROADS, ROAD.PARTICIPATIONS]);
       router.back();
     },
     onError: () => {

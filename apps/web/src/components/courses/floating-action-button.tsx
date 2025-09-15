@@ -37,7 +37,7 @@ export default function FloatingActionButton({ id, isParticipate }: FloatingActi
     },
     {
       icon: Folder,
-      text: "나의 순례길로 가져오기",
+      text: "나만의 순례길로 가져오기",
       value: "my-course" as const,
     },
   ];

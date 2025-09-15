@@ -80,7 +80,9 @@ export default function UploadCoursePage({
   const currentPlaces = form.getValues("spots");
 
   useEffect(() => {
-    form.setValue("spots", defaultValues.spots);
+    if (!isPrivate) {
+      form.setValue("spots", defaultValues.spots);
+    }
   }, [promisedResponse]);
 
   switch (tab) {
