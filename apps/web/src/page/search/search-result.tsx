@@ -9,7 +9,7 @@ import { useSearchRoad } from "@/lib/tanstack/query/search";
 import { Loader2 } from "lucide-react";
 
 interface SearchResultPageProps {
-  sort: string;
+  sortBy: string;
   word: string;
   category: string;
 }
@@ -33,8 +33,12 @@ const SORT_OPTIONS = [
   },
 ];
 
-export default function SearchResultPage({ sort, category, word }: SearchResultPageProps) {
-  const { data, isLoading, isError } = useSearchRoad({ word, sort: sort || "popular" });
+export default function SearchResultPage({ sortBy, category, word }: SearchResultPageProps) {
+  const { data, isLoading, isError } = useSearchRoad({
+    word,
+    sortBy: sortBy || "popular",
+    categoryId: category,
+  });
 
   return (
     <main className="pb-navigation">

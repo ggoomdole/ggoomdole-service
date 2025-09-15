@@ -4,7 +4,7 @@ import { getParams } from "@/utils/params";
 
 import { clientApi } from "./api";
 
-export const searchRoad = async (props: { word: string; sort: string }) => {
+export const searchRoad = async (props: { word: string; sortBy: string; categoryId: string }) => {
   const params = getParams(props);
   return clientApi.get<BaseResponseDTO<SearchRoadResponseDTO>>(`search/road?${params}`);
 };
