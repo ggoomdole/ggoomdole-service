@@ -18,7 +18,8 @@
     "dotenv": "^17.0.1",
     "express": "^4.21.2",
     "jsonwebtoken": "^9.0.2",
-    "multer": "^2.0.2"
+    "multer": "^2.0.2",
+    "uuid": "^13.0.0"
   },
   "devDependencies": {
     "@repo/types": "workspace:*",

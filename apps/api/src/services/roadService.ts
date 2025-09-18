@@ -8,6 +8,8 @@ import {
   SpotDTO,
 } from "@repo/types";
 
+import { v4 } from "uuid";
+
 import s3 from "../config/s3-config";
 import roadRepository from "../repositories/roadRepository";
 import { ExistsError, NotFoundError, UnauthorizedError } from "../utils/customError";
@@ -88,7 +90,7 @@ class RoadService {
     let imageUrl: string | null = null;
     if (imageFile) {
       const fileExt = imageFile.originalname.split(".").pop();
-      const key = `road-image/${data.title}.${fileExt}`;
+      const key = `road-image/${v4()}.${fileExt}`;
 
       await s3.send(
         new PutObjectCommand({
@@ -153,7 +155,7 @@ class RoadService {
     let imageUrl: string | null = null;
     if (imageFile) {
       const fileExt = imageFile.originalname.split(".").pop();
-      const key = `road-image/${data.title}.${fileExt}`;
+      const key = `road-image/${v4()}.${fileExt}`;
 
       await s3.send(
         new PutObjectCommand({
@@ -290,7 +292,8 @@ class RoadService {
     // 조회수 증가
     await roadRepository.incrementSearchCount(roadId);
 
-    const isParti = userId !== undefined ? await roadRepository.isParticipateByUserId(userId, roadId) : false;
+    const isParti =
+      userId !== undefined ? await roadRepository.isParticipateByUserId(userId, roadId) : false;
 
     let spots = road.spots;
 
@@ -410,7 +413,9 @@ class RoadService {
     }
 
     const isAdmin = await roadRepository.checkPilgrimageOwner(userId, roadId);
-    if (!isAdmin) { throw new UnauthorizedError("관리자 권한이 없습니다."); }
+    if (!isAdmin) {
+      throw new UnauthorizedError("관리자 권한이 없습니다.");
+    }
 
     await roadRepository.deleteRoad(roadId);
     return roadId;
@@ -418,13 +423,19 @@ class RoadService {
 
   async outByRoadId(userId: number, roadId: number): Promise<Number> {
     const road = await roadRepository.findRoadById(roadId);
-    if (!road) { throw new NotFoundError("해당 순례길이 존재하지 않습니다."); }
+    if (!road) {
+      throw new NotFoundError("해당 순례길이 존재하지 않습니다.");
+    }
 
     const isAdmin = await roadRepository.isParticipateByUserId(userId, roadId);
-    if (!isAdmin) { throw new UnauthorizedError("순례길에 참여하고 있지 않습니다."); }
+    if (!isAdmin) {
+      throw new UnauthorizedError("순례길에 참여하고 있지 않습니다.");
+    }
 
     const owner = await roadRepository.checkPilgrimageOwner(userId, roadId);
-    if (owner) { throw new UnauthorizedError("본인의 순례길을 나갈 수 없습니다."); }
+    if (owner) {
+      throw new UnauthorizedError("본인의 순례길을 나갈 수 없습니다.");
+    }
 
     await roadRepository.deleteRoadById(roadId, userId);
     return roadId;
@@ -450,20 +461,17 @@ export function averageRate(spot: any): number {
 
 // 장소 전체 평균 평점 계산
 export function pilgrimageAverageRate(pilgrimage: any): number {
-  const allRates = (pilgrimage.spots ?? [])
-    .flatMap((s: any) => {
-      const rates = (s.spot?.reviews ?? [])
-        .filter((r: any) => r.rate !== null && r.rate !== undefined)
-        .map((r: any) => r.rate);
-      return rates.length > 0 ? rates : [];
-    });
+  const allRates = (pilgrimage.spots ?? []).flatMap((s: any) => {
+    const rates = (s.spot?.reviews ?? [])
+      .filter((r: any) => r.rate !== null && r.rate !== undefined)
+      .map((r: any) => r.rate);
+    return rates.length > 0 ? rates : [];
+  });
 
   if (allRates.length === 0) return 0;
 
   const sum = allRates.reduce((a: number, b: number) => a + b, 0);
   return parseFloat((sum / allRates.length).toFixed(1));
 }
-
-
 
 export default new RoadService();
