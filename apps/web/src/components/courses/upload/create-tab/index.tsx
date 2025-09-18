@@ -63,7 +63,8 @@ export default function CreateTab({
   const isDuplicate = view === "duplicate";
 
   const [isEditOrderMode, setIsEditOrderMode] = useState(false);
-  const prevImageUrl = form.getValues("imageUrl");
+  const prevImageUrl = useRef<File | null>(form.getValues("imageUrl"));
+
   const title = form.watch("title");
 
   const { mutateAsync: uploadRoad, isPending: isUploadingRoad } = useUploadRoad();
@@ -189,7 +190,7 @@ export default function CreateTab({
         }
         await createMyRoad(formData);
       } else if (isEditCourse && id) {
-        if (prevImageUrl !== data.imageUrl && data.imageUrl) {
+        if (prevImageUrl.current !== data.imageUrl && data.imageUrl) {
           formData.append("update-road-image", data.imageUrl);
         }
         await updateRoad({ formData, roadId: id });
