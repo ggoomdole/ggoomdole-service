@@ -20,7 +20,7 @@ export const metadata: Metadata = {
     title: "순례해유",
     description: "나만의 대전 순례길을 만들고 다른 사람들과 공유하세요.",
     images: "/og-image.png",
-    url: "https://ggoomdole.vercel.app/",
+    url: "https://ggoomdole.kro.kr/",
     siteName: "순례해유",
     locale: "ko_KR",
     type: "website",
@@ -39,7 +39,7 @@ export const metadata: Metadata = {
   ],
   applicationName: "순례해유",
   alternates: {
-    canonical: "https://ggoomdole.vercel.app/",
+    canonical: "https://ggoomdole.kro.kr/",
   },
   robots: {
     index: true,
