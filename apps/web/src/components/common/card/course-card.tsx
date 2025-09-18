@@ -74,13 +74,14 @@ export default function CourseCard({
         <p className="typo-medium truncate">{intro}</p>
       </div>
       <div className="space-y-0.5">
-        <Image
-          src={imageUrl || DEFAULT_IMAGE_URL}
-          alt={title}
-          width={60}
-          height={60}
-          className="aspect-square rounded-sm object-cover"
-        />
+        <div className="relative size-16">
+          <Image
+            src={imageUrl || DEFAULT_IMAGE_URL}
+            alt={title}
+            fill
+            className="aspect-square rounded-sm object-cover"
+          />
+        </div>
         {isParticipate && (
           <Dialog>
             <DialogTrigger className="typo-regular bg-main-300 w-full rounded-sm">
